@@ -35,6 +35,6 @@ jobs:
           git push
       - name: Refrescar la caché de jsDelivr
         run: |
-          for f in indice estadisticas especiales; do
+          for f in indice estadisticas especiales meta catalogo; do
             curl -s "https://purge.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/datos/$f.json" > /dev/null || true
           done

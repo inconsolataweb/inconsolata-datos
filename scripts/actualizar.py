@@ -262,12 +262,36 @@ def main():
     json.dump(IDX, open(D('indice.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     json.dump(ESP, open(D('especiales.json'), 'w'), ensure_ascii=False, indent=0)
     estadisticas(posts)
+    escribir_meta(IDX)
     for k in PEND:
         for n in PEND[k]:
             PEND[k][n] = sorted(set(PEND[k][n]))
     json.dump(PEND, open(D('pendientes.json'), 'w'), ensure_ascii=False, indent=1)
     print('Pendientes de revisar:', {k: len(v) for k, v in PEND.items()})
     print(f'Posts nuevos: {nuevos} · releídos: {releidos} · total: {len(posts)}')
+
+CDN = 'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/'
+def escribir_meta(idx):
+    """Archivos ligeros para el tema: qué medio, autores, temas y tipo tiene cada post, y el catálogo de nombres."""
+    meta = {q['i']: [q['s'], q['k'], q['m'], q['a'], q['h']] for q in idx['posts']}
+    json.dump(meta, open(D('meta.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
+    FM = json.load(open(D('fichas_medios.json')))
+    AS = json.load(open(D('assets.json')))
+    fam = lambda n: re.sub(r'\s+(USA|UK)$', '', n)
+    def asset(kind, n):
+        d = AS.get(kind, {})
+        v = d.get(n) or d.get(fam(n))
+        return CDN + v if v else ''
+    med = []
+    for m in idx['medios']:
+        f = FM.get(m['n'], {})
+        logo = asset('logos', m['n']) or (f.get('logo_url', '') + '?width=500' if f.get('logo_url') else '')
+        med.append({'n': m['n'], 'slug': f.get('slug', ''), 'ficha': bool(f.get('ficha')), 'logo': logo,
+                    'av': asset('avatares', m['n']), 'avw': asset('avatar_blanco', m['n']) or asset('avatares', m['n']),
+                    'pais': f.get('pais', ''), 'cc': f.get('cc', '')})
+    cat = {'medios': med, 'autores': [a['n'] for a in idx['autores']],
+           'temas': [{'n': t['n'], 'b': t['b']} for t in idx['temas']]}
+    json.dump(cat, open(D('catalogo.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
 
 def estadisticas(P):
     M, A, T = MED, AUT, TEM
