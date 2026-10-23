@@ -1,0 +1,254 @@
+[
+ {
+  "tema": "Elecciones",
+  "bloque": "Actualidad",
+  "etiquetas": "elecciones.*|usa20\\d\\d|20n|20d|26j|28a|10n|23j|24m|26m|28m|27s|29m|europeas 2014|9 ?-?n|encuestas",
+  "texto": "\\belecci[oó]n(es)?\\b|\\belectoral(es)?\\b|\\bcomicios\\b|\\bescrutinio\\b|\\bsondeos?\\b|\\bencuestas? electoral"
+ },
+ {
+  "tema": "Elecciones en EEUU",
+  "bloque": "Actualidad",
+  "etiquetas": "usa20\\d\\d",
+  "texto": "(elecciones|presidenciales|electoral)\\b.{0,40}\\b(EEUU|EE\\.UU\\.|Estados Unidos|estadounidense)|\\b(Trump|Obama|Romney|Clinton|Biden|Kamala Harris)\\b.{0,60}\\b(elecci|vota|campaña|candidat)"
+ },
+ {
+  "tema": "Guerras y conflictos",
+  "bloque": "Actualidad",
+  "etiquetas": "conflicto.*|guerra.*|ataque a irán|crisis en ucrania|primavera árabe|eeuu ataca venezuela",
+  "texto": "\\bguerras?\\b|\\bconflicto armado\\b|\\bbombarde\\w+|\\binvasi[oó]n\\b|\\bofensiva\\b|\\btropas\\b|\\bmisil(es)?\\b"
+ },
+ {
+  "tema": "Guerra en Ucrania",
+  "bloque": "Actualidad",
+  "etiquetas": "conflicto rusia ucrania|crisis en ucrania|guerra rusia ucrania",
+  "texto": "\\bUcrania\\b|\\bucranian\\w+|\\bKiev\\b|\\bDonbás\\b|\\bCrimea\\b"
+ },
+ {
+  "tema": "Israel, Gaza y Palestina",
+  "bloque": "Actualidad",
+  "etiquetas": "guerra israel hamás|conflicto israel gaza",
+  "texto": "\\bGaza\\b|\\bHam[aá]s\\b|\\bHezbol[aá]\\b|\\bCisjordania\\b|\\bpalestin\\w+"
+ },
+ {
+  "tema": "Guerra en Siria",
+  "bloque": "Actualidad",
+  "etiquetas": "conflicto en siria",
+  "texto": "\\bSiria\\b|\\bsiri[oa]s?\\b|\\bAlepo\\b|\\bEstado Isl[aá]mico\\b|\\bISIS\\b"
+ },
+ {
+  "tema": "Guerra en Irán",
+  "bloque": "Actualidad",
+  "etiquetas": "ataque a irán",
+  "texto": "\\bIr[aá]n\\b|\\biran[ií]\\w*|\\bTeher[aá]n\\b|\\bOrmuz\\b"
+ },
+ {
+  "tema": "Terrorismo y atentados",
+  "bloque": "Actualidad",
+  "etiquetas": "ataque a charlie hebdo|ataques en parís|atentado bcn|atentados bruselas|terrorismo en occidente",
+  "texto": "\\batentados?\\b|\\bterroris\\w+|\\byihadis\\w+|\\b11-?S\\b|\\b11-?M\\b"
+ },
+ {
+  "tema": "Catástrofes y accidentes",
+  "bloque": "Actualidad",
+  "etiquetas": "accidente ferroviario santiago|germanwings|mh370|dana valencia|volcán la palma|tifón haiyan",
+  "texto": "\\bterremotos?\\b|\\bse[ií]smo\\b|\\btsunami\\b|\\bhurac[aá]n\\b|\\btif[oó]n\\b|\\binundaci\\w+|\\bDANA\\b|\\bvolc[aá]n\\b|\\berupci[oó]n\\b|\\baccidente (a[eé]reo|ferroviario)\\b|\\bnaufragio\\b|\\bincendios? forestal|\\bcat[aá]strofe\\b|\\bapag[oó]n\\b"
+ },
+ {
+  "tema": "COVID-19",
+  "bloque": "Actualidad",
+  "etiquetas": "coronavirus",
+  "texto": "\\bcoronavirus\\b|\\bcovid\\w*|\\bpandemia\\b|\\bconfinamiento\\b|\\bSARS-CoV"
+ },
+ {
+  "tema": "Salud",
+  "bloque": "Actualidad",
+  "etiquetas": "brote de ébola|hantavirus",
+  "texto": "\\b[eé]bola\\b|\\bvacunas?\\b|\\bc[aá]ncer\\b|\\bgripe\\b|\\bepidemia\\b|\\bsanidad\\b|\\bsalud\\b"
+ },
+ {
+  "tema": "Economía",
+  "bloque": "Actualidad",
+  "etiquetas": "europa en crisis",
+  "texto": "\\beconom[ií]as?\\b|\\becon[oó]mic[oa]s?\\b|\\bcrisis financiera\\b|\\brescate (bancario|financiero|a Grecia)\\b|\\bprima de riesgo\\b|\\bbolsas?\\b|\\bPIB\\b|\\bparo\\b|\\bpresupuestos\\b|\\binflaci[oó]n\\b|\\baranceles?\\b"
+ },
+ {
+  "tema": "Brexit y Europa",
+  "bloque": "Actualidad",
+  "etiquetas": "brexit|europa en crisis",
+  "texto": "\\bBrexit\\b|\\bUni[oó]n Europea\\b|\\bBruselas\\b.{0,30}\\b(cumbre|comisi)"
+ },
+ {
+  "tema": "Monarquía y realeza",
+  "bloque": "Actualidad",
+  "etiquetas": "monarquia en crisis|abdica juan carlos i|muere isabel ii",
+  "texto": "\\bmonarqu[ií]a\\b|\\babdica\\w*|\\bFelipe VI\\b|\\bJuan Carlos I\\b|\\bIsabel II\\b|\\bCarlos III\\b|\\bcoronaci[oó]n\\b|\\bboda real\\b|\\bLeonor\\b"
+ },
+ {
+  "tema": "El Papa y el Vaticano",
+  "bloque": "Actualidad",
+  "etiquetas": "renuncia del papa|muere francisco",
+  "texto": "\\bPapa\\b|\\bpont[ií]fice\\b|\\bVaticano\\b|\\bc[oó]nclave\\b|\\bBenedicto XVI\\b|\\bLe[oó]n XIV\\b"
+ },
+ {
+  "tema": "Cataluña y el procés",
+  "bloque": "Actualidad",
+  "etiquetas": "juicio procés|27s|9 ?-?n|atentado bcn",
+  "texto": "\\bproc[eé]s\\b|\\bindependen\\w+\\b.{0,30}\\bCatalu|\\b1-?O\\b|\\bPuigdemont\\b|\\bDiada\\b|\\breferéndum\\b.{0,30}\\bCatalu"
+ },
+ {
+  "tema": "Necrológicas",
+  "bloque": "Actualidad",
+  "etiquetas": "muere .*|nelson mandela|david bowie|muhammad ali|margaret thatcher|garcia marquez|gabo|johan cruyff|adolfo suárez|luis aragonés|paco de lucía|di stéfano|umberto eco|leonard nimoy|satoru iwata|antoni tàpies|niemeyer|josé luis sampedro|constantino romero|ana maria matute|epílogo",
+  "texto": "\\bmuere\\b|\\bfallec\\w+|\\bha muerto\\b|\\bdescanse en paz\\b|\\badi[oó]s a\\b|\\bobituario\\b|\\bnecrol[oó]gic\\w+"
+ },
+ {
+  "tema": "Historia",
+  "bloque": "Actualidad",
+  "etiquetas": "luna50",
+  "texto": "\\baniversario\\b|\\bse cumplen \\d+ años\\b|\\bcentenario\\b|\\bhace \\d+ años\\b|\\bhist[oó]ric\\w+ (portada|imagen)"
+ },
+ {
+  "tema": "Resúmenes del año",
+  "bloque": "Actualidad",
+  "etiquetas": "resumen 20\\d\\d",
+  "texto": "\\bresumen del año\\b|\\bel año en (im[aá]genes|gr[aá]ficos)\\b|\\banuario\\b|\\blo mejor del año\\b"
+ },
+ {
+  "tema": "Ciencia y espacio",
+  "bloque": "Ciencia y sociedad",
+  "etiquetas": "luna50|eclipse|science|nature",
+  "texto": "\\bNASA\\b|\\bespacial\\b|\\bMarte\\b|\\bla Luna\\b|\\beclipse\\b|\\bcometa\\b|\\bastronaut\\w+|\\bcient[ií]fic\\w+|\\bdinosaurio\\w*|\\btelescopio\\b|\\bADN\\b|\\bgen[eé]tic\\w+"
+ },
+ {
+  "tema": "Clima y medio ambiente",
+  "bloque": "Ciencia y sociedad",
+  "etiquetas": "",
+  "texto": "\\bcambio clim[aá]tico\\b|\\bcalentamiento global\\b|\\bola de calor\\b|\\bsequ[ií]a\\b|\\bdeshielo\\b|\\bemisiones\\b|\\bmedio ?ambient\\w+|\\bclima\\b|\\bCOP\\d\\d\\b"
+ },
+ {
+  "tema": "Biodiversidad",
+  "bloque": "Ciencia y sociedad",
+  "etiquetas": "",
+  "texto": "\\bbiodiversidad\\b|\\banimal(es)?\\b|\\bespecies (amenazadas|en peligro|invasoras|animales|vegetales|marinas)\\b|\\bfauna\\b|\\bflora\\b|\\bextin(ci[oó]n|t[oa]s?)\\b|\\baves\\b|\\binsectos?\\b|\\babejas?\\b|\\bballenas?\\b|\\btiburones?\\b|\\blobos?\\b|\\belefantes?\\b|\\bmariposas?\\b|\\bara[ñn]as?\\b|\\bbosques?\\b|\\bseres vivos\\b|\\bespecies de\\b"
+ },
+ {
+  "tema": "Viajes",
+  "bloque": "Ciencia y sociedad",
+  "etiquetas": "condé nast traveler",
+  "texto": "\\bescapadas?\\b|\\bturis(mo|tas?|tic[oa]s?)\\b|\\bviajeros?\\b|\\bpaisajes?\\b|\\bTraveler\\b|\\bgu[ií]a de viaje\\b|\\bdestinos? (tur|de viaje|para)\\w*"
+ },
+ {
+  "tema": "Tecnología",
+  "bloque": "Ciencia y sociedad",
+  "etiquetas": "apple",
+  "texto": "\\bApple\\b|\\biPhone\\b|\\biPad\\b|\\bGoogle\\b|\\bFacebook\\b|\\binteligencia artificial\\b|\\bredes sociales\\b|\\bvideojuegos?\\b"
+ },
+ {
+  "tema": "Deportes",
+  "bloque": "Deportes",
+  "etiquetas": "deportes|londres 2012|r[ií]o 2016|tokio 2020|par[ií]s 2024|sochi 2014|mundial 20\\d\\d|euro20\\d\\d|qatar 2022",
+  "texto": "\\bdeport\\w+"
+ },
+ {
+  "tema": "Fútbol",
+  "bloque": "Deportes",
+  "etiquetas": "mundial 20\\d\\d|euro20\\d\\d|qatar 2022|johan cruyff|di stéfano|luis aragonés",
+  "texto": "\\bf[uú]tbol\\w*|\\bChampions\\b|\\bReal Madrid\\b|\\bBar[cç]a\\b|\\bBarcelona\\b.{0,20}\\b(gol|partido|liga|club)|\\bAtl[eé]tico\\b|\\bMessi\\b|\\bCristiano\\b|\\bLaLiga\\b|\\bla Liga\\b|\\bEurocopa\\b|\\bgoles?\\b"
+ },
+ {
+  "tema": "Juegos Olímpicos",
+  "bloque": "Deportes",
+  "etiquetas": "londres 2012|r[ií]o 2016|tokio 2020|par[ií]s 2024|sochi 2014",
+  "texto": "\\bol[ií]mpic\\w+|\\bJJOO\\b|\\bJuegos de (Londres|R[ií]o|Tokio|Par[ií]s|Sochi|Pek[ií]n|Pyeongchang|Milán)"
+ },
+ {
+  "tema": "Mundiales y Eurocopas",
+  "bloque": "Deportes",
+  "etiquetas": "mundial 20\\d\\d|euro20\\d\\d|qatar 2022",
+  "texto": "(?-i:\\bMundial(es)?\\b)(?! de (Atletismo|Nataci|Baloncesto|Balonmano|Ciclismo|Motociclismo))(?<!Guerra Mundial)(?<!D[ií]a Mundial)|\\bEurocopa\\b|\\bCopa del Mundo\\b|\\bCopa Am[eé]rica\\b"
+ },
+ {
+  "tema": "Motor y ciclismo",
+  "bloque": "Deportes",
+  "etiquetas": "",
+  "texto": "\\bF[oó]rmula 1\\b|\\bF1\\b|\\bMotoGP\\b|\\bAlonso\\b.{0,30}\\b(carrera|piloto)|\\bTour de Francia\\b|\\bVuelta a Espa[ñn]a\\b|\\bciclis\\w+|\\bDakar\\b"
+ },
+ {
+  "tema": "Tenis",
+  "bloque": "Deportes",
+  "etiquetas": "",
+  "texto": "\\btenis\\b|\\bNadal\\b|\\bAlcaraz\\b|\\bRoland Garros\\b|\\bWimbledon\\b"
+ },
+ {
+  "tema": "Cine",
+  "bloque": "Cultura",
+  "etiquetas": "cine|oscars|cinemania|empire|true detective",
+  "texto": "\\bcine\\b|\\bpel[ií]culas?\\b|\\bOscars?\\b|\\bGoya\\b|\\bCannes\\b|\\bHollywood\\b|\\bStar Wars\\b"
+ },
+ {
+  "tema": "Música",
+  "bloque": "Cultura",
+  "etiquetas": "música|rolling stone|david bowie|paco de lucía",
+  "texto": "\\bm[uú]sic\\w+|\\bconcierto\\b|\\bcanci[oó]n\\b|\\b[aá]lbum\\b|\\bEurovisi[oó]n\\b|\\bBeatles\\b|\\bRosal[ií]a\\b"
+ },
+ {
+  "tema": "Televisión y series",
+  "bloque": "Cultura",
+  "etiquetas": "televisión|the good wife|true detective|rtve|tv3|bbc",
+  "texto": "\\btelevisi[oó]n\\b|\\bserie de (TV|televisi)|\\bseries\\b|\\bJuego de Tronos\\b|\\bNetflix\\b|\\bHBO\\b"
+ },
+ {
+  "tema": "Libros y literatura",
+  "bloque": "Cultura",
+  "etiquetas": "garcia marquez|gabo|umberto eco|ana maria matute|josé luis sampedro",
+  "texto": "\\blibros?\\b|\\bnovelas?\\b|\\bescritor\\w*|\\bliteratur\\w+|\\bNobel de Literatura\\b|\\bQuijote\\b"
+ },
+ {
+  "tema": "Arte y arquitectura",
+  "bloque": "Cultura",
+  "etiquetas": "antoni tàpies|niemeyer",
+  "texto": "\\bmuseos?\\b|\\bexposici[oó]n\\b|\\bPicasso\\b|\\bel Prado\\b|\\bpintor\\w*|\\barquitect\\w+"
+ },
+ {
+  "tema": "Gastronomía",
+  "bloque": "Cultura",
+  "etiquetas": "tapas",
+  "texto": "\\bgastronom\\w+|\\brecetas?\\b|\\bcocina\\b|\\brestaurantes?\\b|\\bvinos?\\b|\\bcerveza\\b|\\bhelados?\\b"
+ },
+ {
+  "tema": "Rediseños",
+  "bloque": "El oficio",
+  "etiquetas": "rediseño",
+  "texto": "\\brediseñ\\w+|\\bnuevo diseño\\b|\\bnueva maqueta\\w*|\\bcambio de imagen\\b|\\bnueva cabecera\\b"
+ },
+ {
+  "tema": "Tipografía",
+  "bloque": "El oficio",
+  "etiquetas": "tipografía",
+  "texto": "\\btipograf\\w+|\\bfuentes? tipogr|\\bletras capitales\\b"
+ },
+ {
+  "tema": "Humor gráfico",
+  "bloque": "El oficio",
+  "etiquetas": "humor gráfico|forges|el roto|peridis|mingote|gallego&rey|ricardo|ulises|xaora|toni batllori|idigoras y pachi|sciammarella|j\\. r\\. mora|ferreres|el jueves|jm nieto",
+  "texto": "\\bvi[ñn]etas?\\b|\\bhumor gr[aá]fico\\b|\\bhumoristas?\\b|\\bcaricatur\\w+"
+ },
+ {
+  "tema": "Titulares",
+  "bloque": "El oficio",
+  "etiquetas": "titulares",
+  "texto": "\\btitulares?\\b"
+ },
+ {
+  "tema": "Industria y crisis de medios",
+  "bloque": "El oficio",
+  "etiquetas": "crisis de medios|egm|inconsolab",
+  "texto": "\\bERE\\b|\\bdespidos?\\b|\\bcierra\\b|\\bcierre de\\b|\\b[uú]ltimo n[uú]mero\\b|\\bdifusi[oó]n\\b|\\bOJD\\b|\\bEGM\\b|\\bmuro de pago\\b|\\bsuscriptores\\b|\\bnuevo director\\b|\\bdirectora?\\b.{0,20}\\b(destitu|nombra|cese)"
+ },
+ {
+  "tema": "Datos y visualización",
+  "bloque": "El oficio",
+  "etiquetas": "",
+  "texto": "\\bvisualizaci[oó]n de datos\\b|\\bperiodismo de datos\\b|\\bdataviz\\b|\\binteractivo\\b|\\bscrollytelling\\b"
+ }
+]
