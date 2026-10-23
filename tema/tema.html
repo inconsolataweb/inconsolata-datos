@@ -242,7 +242,7 @@ footer{background:var(--ink);color:var(--paper)}
 <header class="head"><a href="/" class="brand soft" aria-label="inconsolata&#xbb;, ir a la portada">inc<span>&#xbb;</span></a><div class="hd-right"><nav aria-label="Secciones"><a href="/sobre-mi">Sobre m&#xed;</a><a href="/buscador#k=info">Infograf&#xed;a</a><a href="/medios">Medios</a><a href="/archive">Archivo</a><form class="srch" role="search" action="#" onsubmit="return false"><label for="q-top" class="sr" data-en="Search inconsolata&#xbb;">Buscar en inconsolata&#xbb;</label><input id="q-top" type="search" placeholder="Temas, medios, periodistas&#x2026;" data-en-ph="Topics, outlets, journalists&#x2026;" autocomplete="off"><button type="submit" aria-label="Buscar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form><a href="https://buymeacoffee.com/saulcastillo" class="btn-ink">Ap&#xf3;yanos &#xbb;</a></nav><div class="hd-row2"><div class="soc"><a class="soc-b" href="https://x.com/inconsolata" aria-label="inconsolata&#xbb; en X" title="X"><img src="https://cdn.jsdelivr.net/npm/simple-icons@11.0.0/icons/x.svg" alt="" width="19" height="19" onerror="this.replaceWith('X')"></a><a class="soc-b" href="mailto:inconsolataweb@gmail.com" aria-label="Escr&#xed;beme un correo" title="Correo"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14"/><path d="M3 6 L12 13 L21 6"/></svg></a><a class="soc-b web" href="https://saulcastillo.es" aria-label="saulcastillo.es" title="saulcastillo.es"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M9.3 13.2a2.9 2.9 0 0 1 5.8 0a5.8 5.8 0 0 1-11.6 0a8.7 8.7 0 0 1 17.4 0a8.7 8.7 0 0 1-5.6 8.1" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg></a></div></div></div></header><div class="mini-head" id="mini-head"><div class="mh-in"><a class="mh-brand soft" href="/" aria-label="inconsolata&#xbb;, ir a la portada">inc<span>&#xbb;</span></a><nav class="mh-nav" aria-label="Secciones"><a href="/buscador#k=info">Infograf&#xed;a</a><a href="/medios">Medios</a><a href="/archive">Archivo</a></nav><form class="srch" role="search" action="#" onsubmit="return false"><label for="q-mini" class="sr" data-en="Search inconsolata&#xbb;">Buscar en inconsolata&#xbb;</label><input id="q-mini" type="search" placeholder="Temas, medios, periodistas&#x2026;" data-en-ph="Topics, outlets, journalists&#x2026;" autocomplete="off"><button type="submit" aria-label="Buscar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form><a class="mh-apoya" href="https://buymeacoffee.com/saulcastillo">Ap&#xf3;yanos &#xbb;</a></div><div class="mh-prog" aria-hidden="true"><span id="mh-bar"></span></div></div>
 <main class="wrap">
 {block:PermalinkPage}{block:Posts}
-<article class="post" data-id="{PostID}" data-date="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}">
+<article class="post" data-id="{PostID}" data-root="{block:RebloggedFrom}{ReblogRootURL}{/block:RebloggedFrom}" data-date="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}">
 <div style="padding-top:20px"><div class="legacy" role="note" hidden><span class="lg-i" aria-hidden="true">&#xbb;</span><p><b>Post del archivo.</b> Se public&#xf3; originalmente en una versi&#xf3;n anterior de inconsolata&#xbb; y puede que alg&#xfa;n elemento no se vea como deber&#xed;a. <a href="mailto:inconsolataweb@gmail.com?subject=Algo%20roto%20en%20un%20post">&#xbf;Ves algo roto? Av&#xed;same &#xbb;</a></p></div></div>
 <div class="crumbs caps"><a href="/">Portada</a></div>
 <section class="title"><h1 class="soft">{block:Title}{Title}{/block:Title}</h1></section>
@@ -264,7 +264,7 @@ footer{background:var(--ink);color:var(--paper)}
 {block:IndexPage}
 {block:TagPage}<div class="tag-head"><span class="caps" style="color:var(--accent)">Etiqueta &#xbb;</span><h1 class="soft">{Tag}</h1></div>{/block:TagPage}
 {block:SearchPage}<div class="tag-head"><span class="caps" style="color:var(--accent)">B&#xfa;squeda &#xbb;</span><h1 class="soft">{SearchQuery}</h1></div>{/block:SearchPage}
-<div class="lst">{block:Posts}<a class="lc" href="{Permalink}" data-id="{PostID}" data-txt="{block:Text}{PlaintextBody}{/block:Text}{block:Photo}{PlaintextCaption}{/block:Photo}{block:Photoset}{PlaintextCaption}{/block:Photoset}" data-img="{block:Photo}{PhotoURL-500}{/block:Photo}{block:Photoset}{block:Photos}{block:Odd}{/block:Odd}{/block:Photos}{/block:Photoset}{block:Text}{block:Thumbnail}{ThumbnailURL}{/block:Thumbnail}{/block:Text}"><div class="ph"><img loading="lazy" src="" alt=""></div><span class="kicker">&#xbb; {DayOfMonth} {ShortMonth} {Year}</span><span class="tt">{block:Title}{Title}{/block:Title}</span><template class="lb-body">{block:Text}{Body}{/block:Text}</template></a>{/block:Posts}</div>
+<div class="lst">{block:Posts}<a class="lc" href="{Permalink}" data-id="{PostID}" data-root="{block:RebloggedFrom}{ReblogRootURL}{/block:RebloggedFrom}" data-txt="{block:Text}{PlaintextBody}{/block:Text}{block:Photo}{PlaintextCaption}{/block:Photo}{block:Photoset}{PlaintextCaption}{/block:Photoset}" data-img="{block:Photo}{PhotoURL-500}{/block:Photo}{block:Photoset}{block:Photos}{block:Odd}{/block:Odd}{/block:Photos}{/block:Photoset}{block:Text}{block:Thumbnail}{ThumbnailURL}{/block:Thumbnail}{/block:Text}"><div class="ph"><img loading="lazy" src="" alt=""></div><span class="kicker">&#xbb; {DayOfMonth} {ShortMonth} {Year}</span><span class="tt">{block:Title}{Title}{/block:Title}</span><template class="lb-body">{block:Text}{Body}{/block:Text}</template></a>{/block:Posts}</div>
 {block:Pagination}<nav class="pag">{block:PreviousPage}<a href="{PreviousPage}">&#xab; M&#xe1;s recientes</a>{/block:PreviousPage}<span></span>{block:NextPage}<a href="{NextPage}">M&#xe1;s antiguos &#xbb;</a>{/block:NextPage}</nav>{/block:Pagination}
 {/block:IndexPage}
 </main>
@@ -339,6 +339,9 @@ function get(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'
 function fecha(d){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+' de '+d.slice(0,4);}
 function ico(k,cls){return '<svg class="'+(cls||'')+'" viewBox="0 0 64 64" role="img" aria-label="'+esc(TN[k])+'" style="overflow:visible"><title>'+esc(TN[k])+'</title><use href="#i-'+k+'" class="k"/><use href="#i-'+k+'" class="m" x="3" y="2.5"/></svg>';}
 var TIT={};
+// en el blog de pruebas los posts son reblogueos: usamos el id del post original
+function rid(el){var m=(el.dataset.root||'').match(/\/post\/(\d+)/);return m?m[1]:el.dataset.id;}
+function unwrap(b){var p=b.firstElementChild,q=p&&p.nextElementSibling;if(p&&q&&p.tagName==='P'&&q.tagName==='BLOCKQUOTE'&&(p.querySelector('a.tumblr_blog')||/:\s*$/.test(p.textContent))){b.innerHTML=q.innerHTML;}}
 // Tumblr da un nombre de archivo distinto a cada tama\u00f1o: hay que elegirlo del srcset, no cambiar el tama\u00f1o en la URL
 function srcDe(i,t){var ss=(i.getAttribute('srcset')||'').split(',').map(function(x){var p=x.trim().split(/\s+/);return {u:p[0],w:parseInt(p[1])||0};}).filter(function(x){return x.u&&x.w;}).sort(function(a,b){return a.w-b.w;});
  if(!ss.length)return i.getAttribute('src');var ok=ss.filter(function(x){return x.w>=t;});return (ok[0]||ss[ss.length-1]).u;}
@@ -349,9 +352,9 @@ function esPortadilla(s,k,im,d){if((s!=='m'&&s!=='x')||!im.w||!im.h)return false
 
 // ------------------------------------------------------------------ p\u00e1gina de post
 function post(art,meta,cat){
- var id=art.dataset.id, d=art.dataset.date, mt=meta[id]||['',[],[],[],[]];
+ var id=rid(art), d=art.dataset.date, mt=meta[id]||['',[],[],[],[]];
  var s=mt[0], tipos=mt[1], meds=mt[2].map(function(i){return cat.medios[i];}), auts=mt[3].map(function(i){return cat.autores[i];}), tems=mt[4];
- var body=art.querySelector('.body'), raw=art.querySelector('.post-raw');
+ var body=art.querySelector('.body'), raw=art.querySelector('.post-raw'); unwrap(body);
  // im\u00e1genes: fotos \u00abantiguas\u00bb de Tumblr + figuras del cuerpo (formato nuevo)
  var ims=[];
  [].forEach.call(raw.querySelectorAll('img[data-hr]'),function(i){ims.push({src:i.dataset.hr,w:+i.dataset.w||0,h:+i.dataset.h||0,cap:''});});
@@ -441,11 +444,11 @@ function post(art,meta,cat){
 // ------------------------------------------------------------------ listados (provisional)
 function listado(meta,cat){
  [].forEach.call(document.querySelectorAll('.lc'),function(c){
-  var mt=meta[c.dataset.id]; if(!mt)return;
+  var cid=rid(c), mt=meta[cid]; if(!mt)return;
   var m=cat.medios[mt[2][0]], k=c.querySelector('.kicker');
   if(mt[0]&&SECN[mt[0]])c.insertAdjacentHTML('afterbegin','<span class="sec">'+SECN[mt[0]]+'</span>');
   if(m)k.innerHTML=(m.avw?'<img src="'+m.avw+'" alt="">':'')+'\u00bb '+esc(m.n)+' \u00b7 '+k.textContent.replace(/^\u00bb\s*/,'');
-  var tt=c.querySelector('.tt'),tid=TIT[c.dataset.id]; if(!tt.textContent.trim()&&tid&&mt[0]!=='m')tt.textContent=tid; if(!tt.textContent.trim()){var tx=(c.dataset.txt||'').replace(/^[\s\u2a54]+/,'');var f=tx.match(/^(.{20,120}?[.!?:])(\s|$)/);tt.textContent=f?f[1]:tx.slice(0,100)+'\u2026';}
+  var tt=c.querySelector('.tt'),tid=TIT[cid]; if(!tt.textContent.trim()&&tid&&mt[0]!=='m')tt.textContent=tid; if(!tt.textContent.trim()){var tx=(c.dataset.txt||'').replace(/^[\s\u2a54]+/,'');var f=tx.match(/^(.{20,120}?[.!?:])(\s|$)/);tt.textContent=f?f[1]:tx.slice(0,100)+'\u2026';}
   if(mt[0]==='m'){var mm=((tid||'')+' '+(c.dataset.txt||'')).replace(/&nbsp;/g,' ').match(/semana\s+([IVXLCDM]+)/i);tt.textContent='mucho m\u00e1s \u00bb semana '+(mm?mm[1].toUpperCase():'');}
   var ph=c.querySelector('.ph img'); if(ph&&!ph.getAttribute('src')){var u=c.dataset.img;
    if(!u){var tp=c.querySelector('template.lb-body');if(tp){var ims=[].map.call(tp.content.querySelectorAll('img'),function(i){return {u:srcDe(i,600),w:+(i.getAttribute('data-orig-width')||0),h:+(i.getAttribute('data-orig-height')||0)};});
