@@ -58,12 +58,21 @@ def attr(tag, name):
     m = re.search(name + r'="([^"]*)"', tag)
     return m.group(1) if m else None
 
+def srcset(t):
+    out = []
+    for x in (attr(t, 'srcset') or '').split(','):
+        q = x.split()
+        if len(q) == 2 and q[1].endswith('w') and q[1][:-1].isdigit():
+            out.append((q[0], int(q[1][:-1])))
+    return out
+
 def imagenes(p):
     out = []
     if p['type'] == 'photo':
         for ph in p.get('photos', []):
             o = ph.get('original_size', {})
-            out.append({'url': o.get('url'), 'w': o.get('width'), 'h': o.get('height')})
+            out.append({'url': o.get('url'), 'w': o.get('width'), 'h': o.get('height'),
+                        'ss': [(a['url'], a['width']) for a in ph.get('alt_sizes', []) if a.get('url') and a.get('width')]})
     if p['type'] == 'video' and p.get('thumbnail_url'):
         out.append({'url': p['thumbnail_url'], 'w': p.get('thumbnail_width'), 'h': p.get('thumbnail_height')})
     for field in ('body', 'caption'):
@@ -71,7 +80,7 @@ def imagenes(p):
             u = attr(t, 'src')
             if u and 'media.tumblr.com' in u:
                 w, h = attr(t, 'data-orig-width'), attr(t, 'data-orig-height')
-                out.append({'url': u, 'w': int(w) if w else None, 'h': int(h) if h else None})
+                out.append({'url': u, 'w': int(w) if w else None, 'h': int(h) if h else None, 'ss': srcset(t)})
     return out
 
 def seccion(tags, titulo):
@@ -92,8 +101,18 @@ def es_portadilla(sec, k, im, fecha):
     return (r >= 4.5 and 1200 <= im['w'] <= 1400) or (sec == 'muchomas' and k == 0 and r >= 4.5) or \
            (sec == 'muchomas' and k == 0 and 2.6 <= r <= 2.9 and fecha >= '2013')
 
-def miniatura(u):
-    u = re.sub(r'/s\d+x\d+/', '/s400x600/', u)
+def miniatura(im, ancho=400):
+    """Versión pequeña de una imagen. En las imágenes nuevas de Tumblr cada tamaño tiene otro nombre de archivo,
+    así que hay que elegirla de su lista de tamaños (srcset); cambiar el tamaño en la URL da un enlace roto."""
+    if isinstance(im, str):
+        im = {'url': im}
+    ss = sorted(im.get('ss') or [], key=lambda x: x[1])
+    if ss:
+        ok = [u for u, w in ss if w >= ancho]
+        return ok[0] if ok else ss[-1][0]
+    u = im['url']
+    if re.search(r'/s\d+x\d+/', u):     # formato nuevo sin lista de tamaños: mejor la original que un enlace roto
+        return u
     return re.sub(r'_(\d+)(\.\w+)$', lambda m: '_400' + m.group(2) if int(m.group(1)) > 400 else m.group(0), u)
 
 def primera_frase(t):
@@ -210,9 +229,10 @@ def clasificar(p):
         'a': sorted(AUT.index(a) for a in autores if a in AUT and a not in NO_AUTORES),
         'h': sorted(TEM.index(t) for t in temas if t in TEM),
         'g': [s for s in SERIES if s in tl],
-        'im': miniatura(th['url']) if th else '', 'r': round(th['w'] / th['h'], 2) if th and th.get('w') and th.get('h') else 1.3,
+        'im': miniatura(th) if th else '', 'r': round(th['w'] / th['h'], 2) if th and th.get('w') and th.get('h') else 1.3,
         'n': len(ims),
         '_tags': tl,
+        '_fr': [[miniatura(im), (items[k][1] if k < len(items) else '')] for k, im in enumerate([im for im in ims if not im['cover']][:10])] if sec in ('muchomas', 'extra') else None,
     }
     return post
 
@@ -253,8 +273,9 @@ def main():
         fechas = sorted(q['d'] for q in posts if q['i'] in set(e['posts']))
         if fechas:
             e['desde'], e['hasta'] = fechas[0], fechas[-1]
+    frames = {q['i']: q.pop('_fr') for q in posts if q.get('_fr')}
     for q in posts:
-        q.pop('_tags', None)
+        q.pop('_tags', None); q.pop('_fr', None)
     # recuentos y años
     for key, cat in (('m', IDX['medios']), ('a', IDX['autores']), ('h', IDX['temas'])):
         c = Counter(i for q in posts for i in q[key])
@@ -271,6 +292,7 @@ def main():
     json.dump(ESP, open(D('especiales.json'), 'w'), ensure_ascii=False, indent=0)
     estadisticas(posts)
     escribir_meta(IDX)
+    escribir_portada(IDX, frames)
     for k in PEND:
         for n in PEND[k]:
             PEND[k][n] = sorted(set(PEND[k][n]))
@@ -300,6 +322,70 @@ def escribir_meta(idx):
     cat = {'medios': med, 'autores': [a['n'] for a in idx['autores']],
            'temas': [{'n': t['n'], 'b': t['b']} for t in idx['temas']]}
     json.dump(cat, open(D('catalogo.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
+
+def escribir_portada(idx, frames):
+    """Datos ligeros de la portada: lo último, el último mucho más y EXTRA! con sus fotogramas, el escaparate de temas,
+    los medios del año y las efemérides («tal día como hoy», un archivo por mes)."""
+    posts = idx['posts']
+    try:
+        TIT = json.load(open(D('titulos.json')))
+    except Exception:
+        TIT = {}
+    try:
+        old = json.load(open(D('portada.json')))
+    except Exception:
+        old = {}
+    MN = [m['n'] for m in idx['medios']]
+    def titulo(q):
+        return TIT.get(q['i']) or q['t'] or q['b']
+    def corto(q):
+        return [q['i'], q['u'], q['d'], q['s'], q['k'], titulo(q), q['b'], [MN[i] for i in q['m'][:3]], q['im']]
+    out = {'rec': [corto(q) for q in posts[:40]]}
+    for sec in ('m', 'x'):
+        q = next((q for q in posts if q['s'] == sec), None)
+        if not q:
+            continue
+        fr = frames.get(q['i'])
+        if not fr and (old.get(sec) or {}).get('i') == q['i']:
+            fr = old[sec].get('fr')
+        out[sec] = {'i': q['i'], 'u': q['u'], 'd': q['d'], 't': titulo(q), 'n': q['n'], 'fr': fr or ([[q['im'], '']] if q['im'] else []),
+                    'm': [MN[i] for i in q['m']]}
+        if sec == 'x':
+            out[sec]['num'] = 1 + sum(1 for p in posts if p['s'] == 'x' and p['d'] < q['d'])
+    # escaparate de temas: recuento y tres imágenes recientes de cada uno
+    TE = idx['temas']
+    vit = []
+    for i, t in enumerate(TE):
+        ims = [q['im'] for q in posts if i in q['h'] and q['im'] and q['s'] not in ('m', 'x')][:3]
+        vit.append([i, t['n'], t['p'], t.get('b', ''), ims])
+    out['temas'] = vit
+    out['esp'] = [[e['titulo'], e['slug'], e.get('tema', ''), len(e['posts']), e.get('hasta', '')] for e in ESP]
+    # medios: los del año en curso (y los de siempre para el desplegable)
+    y = str(datetime.now(timezone.utc).year)
+    cy = Counter(i for q in posts if q['d'].startswith(y) for i in q['m'])
+    ct = Counter(i for q in posts for i in q['m'])
+    out['med'] = {'y': y, 'posts': sum(1 for q in posts if q['d'].startswith(y)),
+                  'l': [[MN[i], cy.get(i, 0), ct[i]] for i in sorted(ct, key=lambda i: (-cy.get(i, 0), -ct[i]))]}
+    out['anios'] = sorted({q['d'][:4] for q in posts})[0]
+    json.dump(out, open(D('portada.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
+    # efemérides: hasta tres posts de años distintos para cada día del año
+    os.makedirs(D('efemerides'), exist_ok=True)
+    por_dia = {}
+    for q in posts:
+        if q['s'] in ('m',) or not q['im']:
+            continue
+        por_dia.setdefault(q['d'][5:], {}).setdefault(q['d'][:4], q)
+    for mes in range(1, 13):
+        mm = '%02d' % mes
+        res = {}
+        for md, ys in por_dia.items():
+            if not md.startswith(mm):
+                continue
+            años = sorted(ys)
+            if len(años) > 3:      # repartidos: el más antiguo, uno intermedio y el más reciente
+                años = [años[0], años[len(años) // 2], años[-1]]
+            res[md[3:]] = [[a, ys[a]['u'], titulo(ys[a]), [MN[i] for i in ys[a]['m'][:1]], ys[a]['im']] for a in años]
+        json.dump(res, open(D('efemerides/%s.json' % mm), 'w'), ensure_ascii=False, separators=(',', ':'))
 
 def estadisticas(P):
     M, A, T = MED, AUT, TEM
