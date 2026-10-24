@@ -65,6 +65,8 @@ with zipfile.ZipFile(out + '.zip', 'w', zipfile.ZIP_DEFLATED) as z:
     if os.environ.get('PAGINAS'):
         for k in ('indice', 'archivo', 'estadisticas', 'fichas_medios', 'especiales', 'autores_fichas'):
             D[k] = json.load(open('/home/claude/inconsolata-datos/datos/%s.json' % k))
+    if os.environ.get('FICHAS_EXTRA'):
+        for k, v in json.load(open(os.environ['FICHAS_EXTRA'])).items(): D['fichas_medios'].setdefault(k, {}).update(v)
     D['avisos'] = json.load(open(os.environ.get('AVISOS', '/home/claude/inconsolata-datos/datos/avisos.json')))
     js = 'window.__D=' + json.dumps(D, ensure_ascii=True, separators=(',', ':')) + ';'
     open(os.path.join(out, 'datos.js'), 'w').write(js); z.writestr(os.path.basename(out) + '/datos.js', js)

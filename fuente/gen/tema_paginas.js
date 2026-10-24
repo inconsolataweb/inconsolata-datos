@@ -77,7 +77,35 @@ function bandera(cc){return cc?'<img class="flag" src="https://cdn.jsdelivr.net/
 function redes(o){var L=[];(o.otros||'').split(/\n+/).forEach(function(u){u=u.trim();if(/^https?:/.test(u))L.push([u.replace(/^https?:\/\/(www\.)?/,'').split('/')[0],u]);});if(o.web)L.push(['Web',o.web]);if(o.x)L.push(['X','https://x.com/'+o.x.replace(/^@/,'')]);if(o.bsky)L.push(['Bluesky','https://bsky.app/profile/'+o.bsky.replace(/^@/,'')]);
  if(o.ig)L.push(['Instagram','https://instagram.com/'+o.ig.replace(/^@/,'')]);if(o.linkedin)L.push(['LinkedIn',o.linkedin]);return L;}
 
-function medioFicha(A,cat,FM,mi){
+// ---------- extras de la ficha de medio: propiedad en árbol, formato dibujado y coronas
+var PAISES_CC={'España':'es','Estados Unidos':'us','EEUU':'us','EE. UU.':'us','Reino Unido':'gb','Francia':'fr','Italia':'it','Alemania':'de','México':'mx','Argentina':'ar','Chile':'cl','Brasil':'br','China':'cn','Portugal':'pt','Bélgica':'be','Canadá':'ca','Omán':'om','Uruguay':'uy','Ciudad del Vaticano':'va','Vaticano':'va','Ecuador':'ec','Colombia':'co','Perú':'pe','Venezuela':'ve','Suiza':'ch','Países Bajos':'nl','Holanda':'nl','Austria':'at','Suecia':'se','Noruega':'no','Dinamarca':'dk','Finlandia':'fi','Irlanda':'ie','Polonia':'pl','Grecia':'gr','Rusia':'ru','Ucrania':'ua','Japón':'jp','Corea del Sur':'kr','India':'in','Australia':'au','Nueva Zelanda':'nz','Sudáfrica':'za','Israel':'il','Turquía':'tr','Catar':'qa','Qatar':'qa','Emiratos Árabes Unidos':'ae','Hong Kong':'hk','Singapur':'sg','Cuba':'cu','Luxemburgo':'lu','Hungría':'hu','República Checa':'cz','Egipto':'eg','Marruecos':'ma','Taiwán':'tw','Arabia Saudí':'sa','Mongolia':'mn','Andorra':'ad'};
+// «PRISA (España)» y debajo, con guion o con %, los que la controlan: «- Amber Capital (Reino Unido, 29,9%)»
+function arbolProp(t){
+ var L=[];String(t||'').split(/\n+/).forEach(function(l){if(!l.trim())return;
+  var nv=(l.match(/^\s*(-+|·+|>+)/)||[''])[0].replace(/\s/g,'').length;l=l.replace(/^\s*[-·>]+\s*/,'');
+  // varias en una línea: «A (España), B (Francia, 20%)»
+  (l.match(/[^,(]+(\([^)]*\))?/g)||[]).forEach(function(x){x=x.trim();if(x)L.push([nv,x]);});});
+ var raiz=-1;L=L.map(function(it){var m=it[1].match(/^(.*?)\s*\(([^)]*)\)\s*$/),n=m?m[1]:it[1],dentro=m?m[2]:'',pm=dentro.match(/(\d+(?:[.,]\d+)?)\s*%/),pct=pm?pm[1]+'%':'',pais=dentro.replace(/(\d+(?:[.,]\d+)?)\s*%/,'').replace(/^[\s,;]+|[\s,;]+$/g,'');
+  var nv=it[0];if(!nv&&pct&&raiz>=0)nv=1;if(!nv)raiz=1;return {n:n,pais:pais,pct:pct,nv:nv};});
+ if(!L.length)return '';
+ return '<ul class="prop">'+L.map(function(o){var cc=PAISES_CC[o.pais];return '<li class="nv'+Math.min(o.nv,3)+'">'+(o.nv?'<span class="rama" aria-hidden="true"></span>':'')+
+  '<span class="pnom">'+(cc?bandera(cc):'')+esc(o.n)+(o.pais&&!cc?' <small>('+esc(o.pais)+')</small>':'')+'</span>'+
+  (o.pct?'<span class="pct"><i style="width:'+Math.min(100,parseFloat(o.pct.replace(',','.'))||0)+'%"></i><b>'+esc(o.pct)+'</b></span>':'')+'</li>';}).join('')+'</ul>';}
+// tamaños de página habituales (mm, ancho × alto)
+var FORMATOS=[['sábana',380,600,/s[aá]bana|broadsheet|gran formato/i],['berlinés',315,470,/berlin/i],['tabloide',280,430,/tabloid|compact/i],['revista (A4)',210,297,/revista|a4|magazine/i]];
+function formatoSVG(t){var k=FORMATOS.findIndex(function(f){return f[3].test(t||'');});if(k<0)return '';
+ var S=.2,W=FORMATOS[0][1]*S+20,H=FORMATOS[0][2]*S+30,h='';
+ FORMATOS.slice().reverse().forEach(function(f){var on=FORMATOS[k]===f,w=f[1]*S,hh=f[2]*S;
+  h+='<rect x="10" y="'+(H-10-hh)+'" width="'+w+'" height="'+hh+'" class="'+(on?'on':'')+'"/>';
+});
+ return '<span class="fmt"><svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Formato '+esc(FORMATOS[k][0])+': '+FORMATOS[k][1]+' por '+FORMATOS[k][2]+' milímetros, comparado con otros formatos">'+h+'</svg><small><b>'+FORMATOS[k][1]+' × '+FORMATOS[k][2]+' mm</b><br>'+FORMATOS.map(function(f,i){return '<i class="'+(i===k?'on':'')+'">'+f[0]+'</i>';}).join(' · ')+'</small></span>';}
+// coronas: años en que el medio fue el 1.º, 2.º o 3.º más presente
+function coronas(ST,n){if(!ST||!ST.years)return '';var y1=String(new Date().getFullYear()),out=[];
+ Object.keys(ST.years).sort().forEach(function(y){var L=ST.years[y].medios||[];for(var i=0;i<3&&i<L.length;i++)if(L[i][0]===n)out.push([y,i]);});
+ if(!out.length)return '';var C=['oro','plata','bronce'],T=['1.º','2.º','3.º'];
+ return '<div class="coronas">'+out.map(function(o){return '<span class="cor '+C[o[1]]+(o[0]===y1?' prov':'')+'" title="'+T[o[1]]+' medio más presente en '+o[0]+(o[0]===y1?' (provisional)':'')+'"><svg viewBox="0 0 64 44" aria-hidden="true"><path d="M4 40 L2 8 L18 22 L32 2 L46 22 L62 8 L60 40 Z"/></svg><b>'+o[0]+'</b></span>';}).join('')+'</div>';}
+
+function medioFicha(A,cat,FM,mi,ST){
  var m=A.medios[mi],c=cat.medios[mi]||{},f=FM[m.n]||{},ps=A.posts.filter(function(p){return p.m.indexOf(mi)>=0;});
  document.title=m.n+' · inconsolata»';
  var auts=contar(ps,function(p){return p.a.filter(function(a){return (A.autores[a].m||[]).indexOf(m.n)>=0;});}).slice(0,8);
@@ -94,11 +122,12 @@ function medioFicha(A,cat,FM,mi){
   var tipo=f.tipo||(o.tipo||[]).map(function(i){return TIPO_ES[i]||(o.l||{})[i];}).filter(Boolean)[0]||'';if(tipo)document.getElementById('m-tipo').textContent=' · '+tipo;
   var d=[],anio=f.fundacion||o.anio,fin=f.cierre||o.fin;
   if(anio)d.push(['Fundación',anio+(fin?' · cierre en '+fin:'')]);var fu=f.fundador?[f.fundador]:lab(o.fund);if(fu.length)d.push([fu.length>1?'Fundadores':'Fundador',fu.slice(0,3).join(', ')]);
-  var se=f.sede?[f.sede]:lab(o.sede);if(se.length)d.push(['Sede',se[0]]);var pr=f.propietario?[f.propietario]:lab(o.prop);if(pr.length)d.push(['Propietario',pr.join(', ')]);
-  var fo=f.formato?[f.formato]:lab(o.formato);if(fo.length)d.push(['Formato',fo[0]]);var id=f.idioma?[f.idioma]:lab(o.idioma);if(id.length)d.push(['Idioma',id.join(', ')]);
+  var se=f.sede?[f.sede]:lab(o.sede);if(se.length)d.push(['Sede',se[0]]);var pr=f.propietario?[f.propietario]:lab(o.prop);if(pr.length)d.push(['Propietario',f.propietario?arbolProp(f.propietario):esc(pr.join(', ')),1]);if(f.director)d.push(['Dirección',f.director+(f.director_desde?' · desde '+f.director_desde:'')]);
+  var fo=f.formato?[f.formato]:lab(o.formato);if(fo.length)d.push(['Formato',esc(fo[0])+formatoSVG(fo[0]),1]);var id=f.idioma?[f.idioma]:lab(o.idioma);if(id.length)d.push(['Idioma',id.join(', ')]);
   if(f.pais)d.push(['País',f.pais]);if(o.issn)d.push(['ISSN',o.issn]);
   var web=f.web||o.web;if(web)d.push(['Web','<a href="'+esc(web)+'" target="_blank" rel="noopener">'+esc(web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))+'</a>']);
-  document.getElementById('wk-dl').innerHTML=d.map(function(x){return '<div><dt>'+x[0]+'</dt><dd>'+(x[0]==='Web'?x[1]:esc(x[1]))+'</dd></div>';}).join('');
+  d.sort(function(a,b){return (a[0]==='Propietario'||a[0]==='Formato')-(b[0]==='Propietario'||b[0]==='Formato');});
+  document.getElementById('wk-dl').innerHTML=d.map(function(x){return '<div'+(x[0]==='Propietario'||x[0]==='Formato'?' class="ancho"':'')+'><dt>'+x[0]+'</dt><dd>'+(x[0]==='Web'||x[2]?x[1]:esc(x[1]))+'</dd></div>';}).join('');
   var L=redes({web:web,x:f.x||o.x,bsky:f.bsky||o.bsky,ig:f.ig||o.ig});var wp=o.es?'https://es.wikipedia.org/wiki/'+encodeURIComponent(o.es.replace(/ /g,'_')):(f.wikipedia&&/\/\/es\./.test(f.wikipedia)?f.wikipedia:'');
   if(wp)L.push(['Wikipedia',wp]);
   document.getElementById('m-links').innerHTML=L.map(function(x){return '<a href="'+esc(x[1])+'" target="_blank" rel="noopener">'+x[0]+' »</a>';}).join('')+'<a href="/buscador#m='+mi+'">En el buscador »</a>';
@@ -107,7 +136,7 @@ function medioFicha(A,cat,FM,mi){
   var t=o.es||(f.wikipedia&&/\/\/es\./.test(f.wikipedia)?decodeURIComponent(f.wikipedia.split('/wiki/')[1]||'').replace(/_/g,' '):'');
   if(t)resumenES(t).then(function(j){var r=document.getElementById('wk-r');if(r&&j.x){r.textContent=corto(j.x,200);r.hidden=false;}}).catch(function(){});}
  return {html:'<div class="wrap">'+html+'</div><section class="band">'+(c.avw?'<img class="wm-av" src="'+esc(c.avw)+'" alt="" aria-hidden="true">':'')+'<div class="wrap in">'+
-  '<div class="stat"><b>'+ps.length+'</b><span>entradas en inconsolata»</span></div>'+big2+
+  '<div class="stat"><b>'+ps.length+'</b><span>entradas en inconsolata»</span>'+coronas(ST,m.n)+'</div>'+big2+
   (auts.length?'<div class="stat"><span>Autores más citados</span><ol class="tops">'+auts.map(function(a){return '<li><a href="'+fichaAutor(A.autores[a[0]].n)+'">'+esc(A.autores[a[0]].n)+'<small>'+a[1]+'</small></a></li>';}).join('')+'</ol></div>':'')+
   '<div class="stat" style="grid-column:1/-1"><span>Tipos de pieza</span>'+tiposBanda(ps,'m='+mi)+fechasBanda(ps)+'</div></div></section>'+
   '<div class="wrap">'+barrasAnios(ps)+entradas(A,ps)+'</div>',
@@ -218,9 +247,9 @@ function pagina(meta,cat){
  if(RUTA==='especiales'){Promise.all([get('archivo'),get('especiales')]).then(function(r){
    function ve(){var s=hash(),x=r[1].find(function(e){return e.slug===s;});pon(x?espPag(r[0],cat,r[1],x):espIdx(r[1],cat));if(!x)document.title='Especiales · inconsolata»';scrollTo(0,0);}
    ve();addEventListener('hashchange',ve);}).catch(falla);return;}
- if(RUTA==='medios'){Promise.all([get('archivo'),get('fichas_medios')]).then(function(r){
+ if(RUTA==='medios'){Promise.all([get('archivo'),get('fichas_medios'),get('estadisticas').catch(function(){return null;})]).then(function(r){
    function ve(){var s=hash(),mi=s?cat.medios.findIndex(function(m){return m.slug===s;}):-1;if(mi<0&&s)mi=r[0].medios.findIndex(function(m){return fold(m.n)===fold(s);});
-    if(mi>=0)pon(medioFicha(r[0],cat,r[1],mi),'v-ficha');else{document.title='Medios · inconsolata»';pon(medioIdx(r[0],cat),'v-ficha');}scrollTo(0,0);}
+    if(mi>=0)pon(medioFicha(r[0],cat,r[1],mi,r[2]),'v-ficha');else{document.title='Medios · inconsolata»';pon(medioIdx(r[0],cat),'v-ficha');}scrollTo(0,0);}
    ve();addEventListener('hashchange',ve);}).catch(falla);return;}
  if(RUTA==='autores'){Promise.all([get('archivo'),get('fichas_medios'),get('autores_fichas').catch(function(){return {};})]).then(function(r){var A=r[0];
    function ve(){var s=fold(hash()),ai=s?A.autores.findIndex(function(a){return fold(a.n)===s;}):-1;

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisión de fichas · inconsolata»</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&display=swap">
+<style>
+:root{--paper:#ECE7DC;--ink:#16140F;--accent:#D1006F;--yellow:#FFD400;--muted:#5E5A50}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Archivo',sans-serif;font-size:15px}
+.soft{font-family:'Fraunces',serif;font-style:italic;font-weight:900}
+header{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--paper);padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+header h1{margin:0;font-size:26px;margin-right:auto}
+header h1 em{color:var(--yellow)}
+header button,header label.btn{background:transparent;border:2px solid var(--paper);color:var(--paper);font:inherit;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:8px 12px;cursor:pointer;min-height:38px}
+header button[aria-pressed=true]{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+header .go{background:var(--accent);border-color:var(--accent)}
+.n-ed{background:var(--yellow);color:var(--ink);font-weight:900;padding:2px 8px;font-size:12px}
+.w{max-width:1200px;margin:0 auto;padding:20px}
+.intro{font-family:'Fraunces',serif;font-size:18px;line-height:1.5;max-width:860px;margin:6px 0 18px}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.tools input,.tools select{min-height:42px;border:2px solid var(--ink);background:#fff;font:inherit;padding:0 10px}
+.tools input{width:min(320px,100%)}
+.tools .cnt{font-size:13px;font-weight:700;color:var(--muted)}
+.row{background:#fff;border:2px solid var(--ink);margin-bottom:10px}
+.row.ed{border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)}
+.rh{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 12px;cursor:pointer}
+.rh img,.rh .ini{width:40px;height:40px;object-fit:contain}
+.rh .ini{background:var(--yellow);display:grid;place-items:center;font-family:'Fraunces',serif;font-style:italic;font-weight:900;font-size:20px}
+.rh .nm{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:19px}
+.rh .sub{font-size:12px;font-weight:700;color:var(--muted)}
+.rh .st{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;text-align:right}
+.rh .st b{color:var(--accent)}
+.fm{display:none;border-top:2px dashed var(--ink);padding:14px 14px 16px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px 16px}
+.row.open .fm{display:grid}
+.fm label{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.fm input,.fm select,.fm textarea{font:inherit;font-size:15px;color:var(--ink);text-transform:none;letter-spacing:0;font-weight:500;border:2px solid #CFC8B8;background:#FFFDF8;padding:8px;min-height:40px}
+.fm input:focus,.fm select:focus,.fm textarea:focus{outline:none;border-color:var(--accent)}
+.fm .wide{grid-column:1/-1}
+.fm textarea{min-height:80px;resize:vertical}
+.fm .sug{color:#0088BD}
+.ayuda{text-transform:none;letter-spacing:0;font-weight:500;font-size:13px;color:var(--muted);line-height:1.4}.ayuda code{background:var(--paper);padding:2px 4px;display:inline-block;margin-top:4px}
+.fm .acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fm .acts button{border:2px solid var(--ink);background:var(--paper);font:inherit;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:8px 12px;cursor:pointer}
+.fm .acts small{color:var(--muted);font-size:12px}
+.mas{display:block;margin:16px auto 60px;border:3px solid var(--ink);background:var(--yellow);font:inherit;font-weight:800;padding:12px 22px;cursor:pointer}
+input.chg,select.chg,textarea.chg{border-color:var(--accent)!important}
+</style>
+</head>
+<body>
+<header><h1 class="soft">Revisión de <em>fichas</em></h1>
+<button type="button" data-tab="m" aria-pressed="true">Medios</button><button type="button" data-tab="a" aria-pressed="false">Autores</button>
+<span class="n-ed" id="ned">0 cambios</span>
+<label class="btn">Importar<input type="file" id="imp" accept=".json" hidden></label>
+<button type="button" class="go" id="exp">Descargar cambios »</button></header>
+<div class="w">
+<p class="intro" id="intro"></p>
+<div class="tools"><input type="search" id="q" placeholder="Buscar…"><select id="flt"><option value="">Todos</option><option value="ed">Solo los que he cambiado</option><option value="ficha">Solo medios con ficha</option><option value="vacio">Sin país</option></select><span class="cnt" id="cnt"></span></div>
+<div id="list"></div>
+<button type="button" class="mas" id="mas">Ver más »</button>
+</div>
+<script>
+var MED=__MED__, AUT=__AUT__;
+var PAISES={'España':'es','Estados Unidos':'us','Reino Unido':'gb','Francia':'fr','Italia':'it','Alemania':'de','México':'mx','Argentina':'ar','Chile':'cl','Brasil':'br','China':'cn','Portugal':'pt','Bélgica':'be','Canadá':'ca','Omán':'om','Uruguay':'uy','Ciudad del Vaticano':'va','Ecuador':'ec','Colombia':'co','Perú':'pe','Venezuela':'ve','Suiza':'ch','Países Bajos':'nl','Austria':'at','Suecia':'se','Noruega':'no','Dinamarca':'dk','Finlandia':'fi','Irlanda':'ie','Polonia':'pl','Grecia':'gr','Rusia':'ru','Ucrania':'ua','Japón':'jp','Corea del Sur':'kr','India':'in','Australia':'au','Nueva Zelanda':'nz','Sudáfrica':'za','Israel':'il','Turquía':'tr','Catar':'qa','Emiratos Árabes Unidos':'ae','Hong Kong':'hk','Singapur':'sg','Cuba':'cu','Puerto Rico':'pr','República Dominicana':'do','Costa Rica':'cr','Guatemala':'gt','Bolivia':'bo','Paraguay':'py','Andorra':'ad','Luxemburgo':'lu','Hungría':'hu','República Checa':'cz','Rumanía':'ro','Serbia':'rs','Croacia':'hr','Egipto':'eg','Marruecos':'ma','Nigeria':'ng','Kenia':'ke','Taiwán':'tw','Filipinas':'ph','Indonesia':'id','Tailandia':'th','Irán':'ir','Líbano':'lb','Arabia Saudí':'sa','Pakistán':'pk','Mongolia':'mn'};
+var TIPOS=['','diario','diario digital','semanario','revista semanal','revista mensual','revista','suplemento','dominical','agencia','web','televisión','otro'];
+var OFICIOS=['','periodista','infografista','ilustrador/a','diseñador/a','fotógrafo/a','cartógrafo/a','desarrollador/a','periodista de datos','director/a de arte','editor/a gráfico/a','otro'];
+var CM=[['ficha','¿Tiene ficha?','sel',['sí','no']],['tipo','Tipo','sel',TIPOS],['pais','País','txt'],['cc','Código del país (2 letras)','txt'],['fundacion','Año de fundación','txt'],['cierre','Año de cierre','txt'],
+ ['fundador','Fundador/es','txt'],['sede','Sede','txt'],['director','Director/a actual','txt'],['director_desde','Año de su nombramiento','txt'],['propietario','Propietario (uno por línea)','area','PRISA (España)\n- Amber Capital (Reino Unido, 29,9%)\n- Telefónica (España, 9%)'],['formato','Formato','txt'],['idioma','Idioma','txt'],['web','Web','txt'],['x','Usuario de X','txt'],['bsky','Usuario de Bluesky','txt'],['ig','Usuario de Instagram','txt'],
+ ['wikipedia','Enlace a Wikipedia','txt'],['nota','Texto propio sobre el medio','area']];
+var CA=[['genero','Género','sel',['','autor','autora']],['oficio','Oficio','sel',OFICIOS],['pais','Nacionalidad (país)','txt'],['cc','Código del país (2 letras)','txt'],['texto','Descripción','area'],
+ ['web','Web o portafolio','txt'],['x','Usuario de X','txt'],['bsky','Usuario de Bluesky','txt'],['ig','Usuario de Instagram','txt'],['linkedin','Enlace a LinkedIn','txt'],['otros','Otros enlaces de interés (uno por línea)','area']];
+var K='inc-revision-fichas',ED={m:{},a:{}};try{ED=JSON.parse(localStorage.getItem(K))||ED;}catch(e){}
+var tab='m',shown=40,abierto=null;
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function fold(s){return String(s).toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g,'');}
+function guarda(){try{localStorage.setItem(K,JSON.stringify(ED));}catch(e){}var n=Object.keys(ED.m).length+Object.keys(ED.a).length;document.getElementById('ned').textContent=n+(n===1?' ficha cambiada':' fichas cambiadas');}
+function val(o,k){var e=ED[tab][o.n];if(e&&k in e)return e[k];if(k==='ficha')return o.ficha?'sí':'no';return o[k]||'';}
+function lista(){var L=tab==='m'?MED:AUT,q=fold(document.getElementById('q').value.trim()),f=document.getElementById('flt').value;
+ return L.filter(function(o){if(q&&fold(o.n).indexOf(q)<0)return false;if(f==='ed'&&!ED[tab][o.n])return false;if(f==='ficha'&&!(tab==='m'&&val(o,'ficha')==='sí'))return false;if(f==='vacio'&&val(o,'pais'))return false;return true;});}
+function campo(o,c){var v=val(o,c[0]),chg=ED[tab][o.n]&&c[0] in ED[tab][o.n],ph=tab==='a'&&c[0]==='pais'&&!v&&o.pais_s?'como su medio: '+o.pais_s:(tab==='a'&&c[0]==='cc'&&!v&&o.cc_s?o.cc_s:'');
+ var at=' data-k="'+c[0]+'" class="'+(chg?'chg':'')+'"';
+ if(c[2]==='sel')return '<label>'+c[1]+'<select'+at+'>'+c[3].map(function(x){return '<option'+(x===v?' selected':'')+'>'+esc(x)+'</option>';}).join('')+(v&&c[3].indexOf(v)<0?'<option selected>'+esc(v)+'</option>':'')+'</select></label>';
+ if(c[2]==='area')return '<label class="wide">'+c[1]+(c[3]?'<span class="ayuda">El grupo propietario con su país entre paréntesis. Debajo, empezando con un guion, quien lo controla y en qué porcentaje (con más guiones, un nivel más abajo). Ejemplo:<br><code>'+esc(c[3]).replace(/\n/g,'<br>')+'</code></span>':'')+'<textarea'+at+(c[3]?' placeholder="'+esc(c[3])+'"':'')+'>'+esc(v)+'</textarea></label>';
+ return '<label>'+c[1]+'<input'+at+' value="'+esc(v)+'" placeholder="'+esc(ph)+'"></label>';}
+function fila(o){var C=tab==='m'?CM:CA,ed=!!ED[tab][o.n];
+ var sub=tab==='m'?((val(o,'tipo')||'tipo sin poner')+' · '+(val(o,'pais')||'país sin poner')+(o.r?' · '+o.r:'')):((val(o,'genero')||'género sin poner')+' · '+(val(o,'pais')||(o.pais_s?o.pais_s+' (por su medio)':'nacionalidad sin poner'))+' · '+o.m.slice(0,3).join(', '));
+ return '<div class="row'+(ed?' ed':'')+(abierto===o.n?' open':'')+'" data-n="'+esc(o.n)+'"><div class="rh">'+(o.av?'<img src="'+esc(o.av)+'" alt="">':'<span class="ini">'+esc(o.n.charAt(0))+'</span>')+
+  '<div><div class="nm">'+esc(o.n)+'</div><div class="sub">'+esc(sub)+'</div></div><div class="st"><b>'+o.p+'</b> entradas'+(ed?'<br>cambiada':'')+'</div></div>'+
+  '<div class="fm">'+C.map(function(c){return campo(o,c);}).join('')+'<div class="acts">'+(tab==='m'&&o.qid?'<button type="button" data-wd="'+esc(o.qid)+'">Rellenar lo vacío con Wikidata</button>':'')+'<button type="button" data-des>Deshacer mis cambios</button><small>Los cambios se guardan solos en este navegador.</small></div></div></div>';}
+function pinta(){var L=lista();document.getElementById('cnt').textContent=L.length+(tab==='m'?' medios':' autores');
+ document.getElementById('list').innerHTML=L.slice(0,shown).map(fila).join('');document.getElementById('mas').hidden=L.length<=shown;
+ document.getElementById('intro').innerHTML=tab==='m'?'Todos los medios del archivo. Pulsa uno para abrir su ficha y corrige o completa lo que quieras: tipo, datos, redes y un texto propio si quieres. Con <b>Rellenar lo vacío con Wikidata</b> se completan los huecos (en azul, revísalos). Cuando acabes, pulsa <b>Descargar cambios</b> y mándame el archivo.':
+  'Los autores, de más a menos entradas. Indica género (para poner autor o autora), nacionalidad, oficio, una descripción si quieres y sus enlaces. Si no pones nacionalidad, la web usará la del país de su medio (aparece en gris). Cuando acabes, pulsa <b>Descargar cambios</b> y mándame el archivo.';}
+function cambia(n,k,v){var L=tab==='m'?MED:AUT,o=L.find(function(x){return x.n===n;}),orig=k==='ficha'?(o.ficha?'sí':'no'):(o[k]||'');
+ var e=ED[tab][n]||{};if(v===orig)delete e[k];else e[k]=v;if(Object.keys(e).length)ED[tab][n]=e;else delete ED[tab][n];guarda();}
+document.getElementById('list').addEventListener('click',function(e){var rh=e.target.closest('.rh');if(rh){var r=rh.parentNode;abierto=r.classList.toggle('open')?r.dataset.n:null;
+  [].forEach.call(document.querySelectorAll('.row.open'),function(x){if(x!==r)x.classList.remove('open');});return;}
+ var r=e.target.closest('.row');if(!r)return;
+ if(e.target.closest('[data-des]')){delete ED[tab][r.dataset.n];guarda();pinta();return;}
+ var w=e.target.closest('[data-wd]');if(w){w.textContent='Consultando…';wikidata(w.dataset.wd).then(function(o){
+   Object.keys(o).forEach(function(k){var el=r.querySelector('[data-k="'+k+'"]');if(el&&!el.value&&o[k]){el.value=o[k];el.classList.add('sug');cambia(r.dataset.n,k,o[k]);}});w.textContent='Hecho';}).catch(function(){w.textContent='No se pudo consultar';});}});
+document.getElementById('list').addEventListener('change',function(e){var el=e.target.closest('[data-k]');if(!el)return;var r=el.closest('.row');
+ cambia(r.dataset.n,el.dataset.k,el.value.trim());el.classList.toggle('chg',!!(ED[tab][r.dataset.n]&&el.dataset.k in ED[tab][r.dataset.n]));
+ if(el.dataset.k==='pais'&&PAISES[el.value.trim()]){var cc=r.querySelector('[data-k="cc"]');if(cc&&!cc.value){cc.value=PAISES[el.value.trim()];cambia(r.dataset.n,'cc',cc.value);}}
+ r.classList.toggle('ed',!!ED[tab][r.dataset.n]);});
+document.querySelectorAll('header [data-tab]').forEach(function(b){b.addEventListener('click',function(){tab=b.dataset.tab;shown=40;abierto=null;document.querySelectorAll('header [data-tab]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});pinta();});});
+document.getElementById('q').addEventListener('input',function(){shown=40;pinta();});document.getElementById('flt').addEventListener('change',function(){shown=40;pinta();});
+document.getElementById('mas').addEventListener('click',function(){shown+=60;pinta();});
+document.getElementById('exp').addEventListener('click',function(){var b=new Blob([JSON.stringify({medios:ED.m,autores:ED.a,fecha:new Date().toISOString()},null,1)],{type:'application/json'});
+ var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='fichas-inconsolata.json';a.click();});
+document.getElementById('imp').addEventListener('change',function(){var f=this.files[0];if(!f)return;f.text().then(function(t){var j=JSON.parse(t);ED={m:j.medios||{},a:j.autores||{}};guarda();pinta();});});
+// Wikidata: tipo, fundación, fundador, sede, propietario, formato, idioma, web y redes
+var WD='https://www.wikidata.org/w/api.php?format=json&origin=*&action=wbgetentities&';
+var TIPO_WD={Q11032:'diario',Q1110794:'diario',Q1002697:'diario',Q41298:'revista',Q685935:'revista',Q2305295:'revista semanal',Q1153191:'diario digital',Q1684600:'suplemento',Q192283:'agencia'};
+function wikidata(q){return fetch(WD+'ids='+q+'&props=claims|sitelinks').then(function(r){return r.json();}).then(function(j){var c=(j.entities[q]||{}).claims||{},sl=(j.entities[q]||{}).sitelinks||{};
+ var it=function(p){return (c[p]||[]).map(function(x){var v=x.mainsnak.datavalue;return v&&v.value&&v.value.id;}).filter(Boolean);};
+ var st=function(p){var v=(c[p]||[])[0];v=v&&v.mainsnak.datavalue;return v&&typeof v.value==='string'?v.value:'';};
+ var ti=function(p){var v=(c[p]||[])[0];v=v&&v.mainsnak.datavalue;return v&&v.value.time?v.value.time.slice(1,5).replace(/^0+/,''):'';};
+ var ids={tipo:it('P31'),fundador:it('P112'),sede:it('P159').slice(0,1),propietario:it('P127').slice(0,2),formato:it('P3912').slice(0,1),idioma:it('P407').slice(0,2),pais:it('P17').slice(0,1)};
+ var o={fundacion:ti('P571'),cierre:ti('P576'),web:st('P856'),x:st('P2002'),bsky:st('P12361'),ig:st('P2003'),wikipedia:sl.eswiki?'https://es.wikipedia.org/wiki/'+encodeURIComponent(sl.eswiki.title.replace(/ /g,'_')):''};
+ var todos=[].concat.apply([],Object.keys(ids).map(function(k){return ids[k];}));if(!todos.length)return o;
+ return fetch(WD+'ids='+todos.slice(0,50).join('|')+'&props=labels&languages=es|en').then(function(r){return r.json();}).then(function(l){var lab=function(i){var x=(l.entities[i]||{}).labels||{};return (x.es||x.en||{}).value||'';};
+  Object.keys(ids).forEach(function(k){var v=k==='tipo'?(ids.tipo.map(function(i){return TIPO_WD[i];}).filter(Boolean)[0]||lab(ids.tipo[0]||'')):ids[k].map(lab).filter(Boolean).join(', ');if(v)o[k]=v;});
+  if(o.pais&&PAISES[o.pais])o.cc=PAISES[o.pais];return o;});});}
+guarda();pinta();
+</script>
+</body>
+</html>

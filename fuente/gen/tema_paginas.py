@@ -114,6 +114,34 @@ FICHA_CSS = ambito(_fcss + """
 .tops small{font-family:'Archivo',sans-serif;font-style:normal;font-size:12px;font-weight:800;color:var(--yellow)}
 .nac{display:flex;align-items:center;gap:10px;margin:-4px 0 0;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
 .nac .flag{width:30px;height:22px}
+.wk dl .ancho{grid-column:1/-1}
+.prop{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.prop li{display:flex;align-items:center;gap:10px;position:relative;font-size:15px;font-weight:600}
+.prop .pnom{display:inline-flex;align-items:center;gap:8px}
+.prop .flag{width:20px;height:15px}
+.prop li.nv1{padding-left:26px}.prop li.nv2{padding-left:52px}.prop li.nv3{padding-left:78px}
+.prop .rama{position:absolute;top:-6px;width:14px;height:18px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted)}
+.prop li.nv1 .rama{left:8px}.prop li.nv2 .rama{left:34px}.prop li.nv3 .rama{left:60px}
+.prop .pct{display:inline-flex;align-items:center;gap:6px}
+.prop .pct i{display:block;height:8px;background:var(--accent);min-width:2px;max-width:80px}
+.prop .pct{width:130px}.prop .pct i{flex:none}
+.prop .pct b{font-size:12px;color:var(--accent)}
+.fmt{display:flex;align-items:flex-end;gap:14px;margin-top:8px;flex-wrap:wrap}
+.fmt svg{display:block;max-width:100%;height:auto}
+.fmt rect{fill:none;stroke:#B9B2A3;stroke-width:1.2;stroke-dasharray:3 3}
+.fmt rect.on{fill:var(--yellow);stroke:var(--ink);stroke-width:2;stroke-dasharray:none}
+.fmt text{font:800 11px Archivo,sans-serif;fill:var(--ink)}
+.fmt small{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.fmt small b{font-size:13px;color:var(--ink)}
+.fmt small i{font-style:normal}.fmt small i.on{color:var(--ink);background:var(--yellow);padding:0 3px}
+.coronas{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cor{position:relative;width:54px;height:40px;display:inline-block}
+.cor svg{position:absolute;inset:0;width:100%;height:100%}
+.cor b{position:absolute;left:0;right:0;bottom:4px;text-align:center;font-family:'Archivo',sans-serif;font-style:normal;font-size:12px;font-weight:900;color:var(--ink);letter-spacing:0}
+.cor.oro svg{fill:#E2B33C}.cor.plata svg{fill:#C9CDD2}.cor.bronce svg{fill:#C27C47}
+.cor.prov{animation:parpa 1.4s ease-in-out infinite}
+@keyframes parpa{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.cor.prov{animation:none;outline:2px dashed var(--yellow)}}
 .finfo h1.autor{font-size:clamp(44px,5.6vw,88px);line-height:.92}
 .wk-r{font-size:17px!important;line-height:1.5!important}
 .chips a.ch-av{gap:8px}.chips a.ch-av img{width:22px;height:22px;object-fit:contain}

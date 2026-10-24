@@ -1184,6 +1184,42 @@ footer{background:var(--ink);color:var(--paper)}
 .v-ficha .tops small{font-family:'Archivo',sans-serif;font-style:normal;font-size:12px;font-weight:800;color:var(--yellow)}
 .v-ficha .nac{display:flex;align-items:center;gap:10px;margin:-4px 0 0;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
 .v-ficha .nac .flag{width:30px;height:22px}
+.v-ficha .wk dl .ancho{grid-column:1/-1}
+.v-ficha .prop{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.v-ficha .prop li{display:flex;align-items:center;gap:10px;position:relative;font-size:15px;font-weight:600}
+.v-ficha .prop .pnom{display:inline-flex;align-items:center;gap:8px}
+.v-ficha .prop .flag{width:20px;height:15px}
+.v-ficha .prop li.nv1{padding-left:26px}
+.v-ficha .prop li.nv2{padding-left:52px}
+.v-ficha .prop li.nv3{padding-left:78px}
+.v-ficha .prop .rama{position:absolute;top:-6px;width:14px;height:18px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted)}
+.v-ficha .prop li.nv1 .rama{left:8px}
+.v-ficha .prop li.nv2 .rama{left:34px}
+.v-ficha .prop li.nv3 .rama{left:60px}
+.v-ficha .prop .pct{display:inline-flex;align-items:center;gap:6px}
+.v-ficha .prop .pct i{display:block;height:8px;background:var(--accent);min-width:2px;max-width:80px}
+.v-ficha .prop .pct{width:130px}
+.v-ficha .prop .pct i{flex:none}
+.v-ficha .prop .pct b{font-size:12px;color:var(--accent)}
+.v-ficha .fmt{display:flex;align-items:flex-end;gap:14px;margin-top:8px;flex-wrap:wrap}
+.v-ficha .fmt svg{display:block;max-width:100%;height:auto}
+.v-ficha .fmt rect{fill:none;stroke:#B9B2A3;stroke-width:1.2;stroke-dasharray:3 3}
+.v-ficha .fmt rect.on{fill:var(--yellow);stroke:var(--ink);stroke-width:2;stroke-dasharray:none}
+.v-ficha .fmt text{font:800 11px Archivo,sans-serif;fill:var(--ink)}
+.v-ficha .fmt small{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.v-ficha .fmt small b{font-size:13px;color:var(--ink)}
+.v-ficha .fmt small i{font-style:normal}
+.v-ficha .fmt small i.on{color:var(--ink);background:var(--yellow);padding:0 3px}
+.v-ficha .coronas{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.v-ficha .cor{position:relative;width:54px;height:40px;display:inline-block}
+.v-ficha .cor svg{position:absolute;inset:0;width:100%;height:100%}
+.v-ficha .cor b{position:absolute;left:0;right:0;bottom:4px;text-align:center;font-family:'Archivo',sans-serif;font-style:normal;font-size:12px;font-weight:900;color:var(--ink);letter-spacing:0}
+.v-ficha .cor.oro svg{fill:#E2B33C}
+.v-ficha .cor.plata svg{fill:#C9CDD2}
+.v-ficha .cor.bronce svg{fill:#C27C47}
+.v-ficha .cor.prov{animation:parpa 1.4s ease-in-out infinite}
+@keyframes parpa{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.v-ficha .cor.prov{animation:none;outline:2px dashed var(--yellow)}}
 .v-ficha .finfo h1.autor{font-size:clamp(44px,5.6vw,88px);line-height:.92}
 .v-ficha .wk-r{font-size:17px!important;line-height:1.5!important}
 .v-ficha .chips a.ch-av{gap:8px}
