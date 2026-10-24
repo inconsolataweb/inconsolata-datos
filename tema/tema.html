@@ -507,7 +507,7 @@ footer{background:var(--ink);color:var(--paper)}
 {block:IndexPage}
 {block:TagPage}<div class="tag-head"><span class="caps" style="color:var(--accent)">Etiqueta &#xbb;</span><h1 class="soft">{Tag}</h1></div>{/block:TagPage}
 {block:SearchPage}<div class="tag-head"><span class="caps" style="color:var(--accent)">B&#xfa;squeda &#xbb;</span><h1 class="soft">{SearchQuery}</h1></div>{/block:SearchPage}
-<div class="lst">{block:Posts}<a class="lc" href="{Permalink}" data-id="{PostID}" data-root="{block:RebloggedFrom}{ReblogRootURL}{/block:RebloggedFrom}" data-txt="{block:Text}{PlaintextBody}{/block:Text}{block:Photo}{PlaintextCaption}{/block:Photo}{block:Photoset}{PlaintextCaption}{/block:Photoset}" data-img="{block:Photo}{PhotoURL-500}{/block:Photo}{block:Photoset}{block:Photos}{block:Odd}{/block:Odd}{/block:Photos}{/block:Photoset}{block:Text}{block:Thumbnail}{ThumbnailURL}{/block:Thumbnail}{/block:Text}"><div class="ph"><img loading="lazy" src="" alt=""></div><span class="kicker">&#xbb; {DayOfMonth} {ShortMonth} {Year}</span><span class="tt">{block:Title}{Title}{/block:Title}</span><template class="lb-body">{block:Text}{Body}{/block:Text}</template></a>{/block:Posts}</div>
+<div class="lst">{block:Posts}<a class="lc" href="{Permalink}" data-id="{PostID}" data-root="{block:RebloggedFrom}{ReblogRootURL}{/block:RebloggedFrom}" data-txt="{block:Text}{PlaintextBody}{/block:Text}{block:Photo}{PlaintextCaption}{/block:Photo}{block:Photoset}{PlaintextCaption}{/block:Photoset}" data-img="{block:Photo}{PhotoURL-500}{/block:Photo}{block:Photoset}{block:Photos}{PhotoURL-500} {/block:Photos}{/block:Photoset}{block:Text}{block:Thumbnail}{ThumbnailURL}{/block:Thumbnail}{/block:Text}"><div class="ph"><img loading="lazy" src="" alt=""></div><span class="kicker">&#xbb; {DayOfMonth} {ShortMonth} {Year}</span><span class="tt">{block:Title}{Title}{/block:Title}</span><template class="lb-body">{block:Text}{Body}{/block:Text}</template></a>{/block:Posts}</div>
 {block:Pagination}<nav class="pag">{block:PreviousPage}<a href="{PreviousPage}">&#xab; M&#xe1;s recientes</a>{/block:PreviousPage}<span></span>{block:NextPage}<a href="{NextPage}">M&#xe1;s antiguos &#xbb;</a>{/block:NextPage}</nav>{/block:Pagination}
 {/block:IndexPage}
 </main>
@@ -932,7 +932,7 @@ function listado(meta,cat){
   if(m)k.innerHTML=(m.avw?'<img src="'+m.avw+'" alt="">':'')+'\u00bb '+esc(m.n)+' \u00b7 '+k.textContent.replace(/^\u00bb\s*/,'');
   var tt=c.querySelector('.tt'),tid=TIT[cid]; if(!tt.textContent.trim()&&tid&&mt[0]!=='m')tt.textContent=quita(tid); if(!tt.textContent.trim()){var tx=(c.dataset.txt||'').replace(/^[\s\u2a54]+/,'');var f=tx.match(/^(.{20,120}?[.!?:])(\s|$)/);tt.textContent=f?f[1]:tx.slice(0,100)+'\u2026';}
   if(mt[0]==='m'){var mm=((tid||'')+' '+(c.dataset.txt||'')).replace(/&nbsp;/g,' ').match(/semana\s+([IVXLCDM]+)/i);tt.textContent='mucho m\u00e1s \u00bb semana '+(mm?mm[1].toUpperCase():'');}
-  var ph=c.querySelector('.ph img'); if(ph&&!ph.getAttribute('src')){var u=c.dataset.img;
+  var ph=c.querySelector('.ph img'); if(ph&&!ph.getAttribute('src')){var u=(c.dataset.img||'').trim().split(/\s+/)[0];
    if(!u){var tp=c.querySelector('template.lb-body');if(tp){var ims=[].map.call(tp.content.querySelectorAll('img'),function(i){return {u:srcDe(i,600),w:+(i.getAttribute('data-orig-width')||0),h:+(i.getAttribute('data-orig-height')||0)};});
     var ok=ims.filter(function(im,k){return !esPortadilla(mt[0],k,im,'2099');});u=(ok[0]||ims[0]||{}).u;}}
    if(u)ph.src=u;else ph.remove();}
