@@ -16,6 +16,7 @@ D = lambda f: os.path.join(RAIZ, 'datos', f)
 BLOG = 'saulcastillo'
 RELEER = 40          # cuántos posts recientes se vuelven a leer siempre (ediciones)
 EXCLUIR = {'xaora', 'invitados', 'talie'}
+NO_AUTORES = {'Sao Paulo', 'Nobel de Medicina'}   # nombres que se colaron como autores y no lo son
 SERIES = ['aquí·allí', 'a fondo', 'sala de los horrores', 'teletipos', 'epílogo', 'inconsolab', 'entrevistas', 'audios', 'medios regionales', 'invitados']
 
 def nz(s):
@@ -206,7 +207,7 @@ def clasificar(p):
         't': titulo, 'b': primera_frase(texto),
         'x': nzs(titulo + ' ' + texto)[:700] + ((' ' + nzs(' '.join(i[0] for i in items))) if items else ''),
         'm': sorted(MED.index(m) for m in medios if m in MED),
-        'a': sorted(AUT.index(a) for a in autores if a in AUT),
+        'a': sorted(AUT.index(a) for a in autores if a in AUT and a not in NO_AUTORES),
         'h': sorted(TEM.index(t) for t in temas if t in TEM),
         'g': [s for s in SERIES if s in tl],
         'im': miniatura(th['url']) if th else '', 'r': round(th['w'] / th['h'], 2) if th and th.get('w') and th.get('h') else 1.3,
@@ -232,10 +233,17 @@ def main():
             existentes.pop(pid, None); continue
         if pid in existentes:
             releidos += 1
+            # lo ya revisado a mano se conserva: se suma a lo detectado ahora, nunca se pierde
+            old = existentes[pid]
+            for key in ('a', 'm', 'h', 'k'):
+                q[key] = sorted(set(q[key]) | set(old.get(key, [])), key=lambda x: (str(type(x)), x))
         else:
             nuevos += 1
         existentes[pid] = q
     posts = sorted(existentes.values(), key=lambda q: q['d'], reverse=True)
+    malos = {AUT.index(n) for n in NO_AUTORES if n in AUT}
+    for q in posts:
+        q['a'] = [i for i in q['a'] if i not in malos]
     # especiales: posts con su etiqueta
     for e in ESP:
         ks = {nz(t).replace(' ', '') for t in e['tags']}
