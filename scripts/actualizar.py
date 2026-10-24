@@ -407,6 +407,8 @@ def escribir_portada(idx, frames):
 
 def estadisticas(P):
     M, A, T = MED, AUT, TEM
+    global MEDIO_AUT     # medio principal de cada autor, para poner su avatar junto al nombre
+    MEDIO_AUT = {i: M.index(a['m'][0]) for i, a in enumerate(IDX['autores']) if a.get('m') and a['m'][0] in M}
     first = {}
     for p in sorted(P, key=lambda p: p['d']):
         for i in p['m']:
@@ -416,7 +418,7 @@ def estadisticas(P):
         for p in ps:
             cm.update(p['m']); ca.update(p['a']); ck.update(p['k']); ct.update(p['h'])
         out = {'posts': len(ps), 'n_medios': len(cm), 'n_autores': len(ca),
-               'medios': [[M[i], c, i] for i, c in cm.most_common(25)], 'autores': [[A[i], c, i] for i, c in ca.most_common(15)],
+               'medios': [[M[i], c, i] for i, c in cm.most_common(25)], 'autores': [[A[i], c, i, MEDIO_AUT.get(i)] for i, c in ca.most_common(15)],
                'tipos': dict(ck), 'temas': [[T[i], c, i] for i, c in ct.most_common(12)], 'imgs': sum(p['n'] for p in ps)}
         if year:
             out['nuevos'] = sorted([[M[i], cm[i], i] for i in cm if first[i] == year], key=lambda x: -x[1])[:16]

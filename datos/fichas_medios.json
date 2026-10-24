@@ -816,22 +816,6 @@
 "cc": "fr",
 "logo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le_Parisien_logo.svg"
 },
-"Magazine": {
-"nombre": "Magazine",
-"slug": "magazine",
-"ficha": false,
-"desaparecido": true,
-"qid": "",
-"wikipedia": "",
-"logo": "",
-"fundacion": "",
-"cierre": "",
-"pais": "",
-"web": "",
-"nota": "",
-"cc": "",
-"logo_url": ""
-},
 "The Boston Globe": {
 "nombre": "The Boston Globe",
 "slug": "the-boston-globe",
@@ -864,22 +848,6 @@
 "edicion": true,
 "cc": "es",
 "logo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/GQ_Logo.svg"
-},
-"Papel": {
-"nombre": "Papel",
-"slug": "papel",
-"ficha": false,
-"desaparecido": true,
-"qid": "",
-"wikipedia": "",
-"logo": "",
-"fundacion": "",
-"cierre": "",
-"pais": "",
-"web": "",
-"nota": "",
-"cc": "",
-"logo_url": ""
 },
 "Esquire": {
 "nombre": "Esquire",
@@ -2326,22 +2294,6 @@
 "nota": "",
 "cc": "es",
 "logo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/HuffPost.svg"
-},
-"ElMundo.es": {
-"nombre": "ElMundo.es",
-"slug": "elmundo-es",
-"ficha": false,
-"desaparecido": false,
-"qid": "Q921217",
-"wikipedia": "https://es.wikipedia.org/wiki/El_Mundo_(Espa%C3%B1a)",
-"logo": "El Mundo logo.svg",
-"fundacion": "1989",
-"cierre": "",
-"pais": "España",
-"web": "https://www.elmundo.es/",
-"nota": "",
-"cc": "es",
-"logo_url": "https://commons.wikimedia.org/wiki/Special:FilePath/El_Mundo_logo.svg"
 },
 "Panenka": {
 "nombre": "Panenka",

@@ -1,0 +1,21 @@
+name: Refrescar jsDelivr
+
+# Al subir cambios de imágenes o datos, se vacía la caché de jsDelivr de esos archivos
+# (el código del tema y los datos ya se cargan fijados a cada commit; esto es para los enlaces a @main)
+on:
+  push:
+    branches: [main]
+    paths: ['assets/**', 'datos/**']
+
+jobs:
+  purgar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      - name: Vaciar la caché de los archivos cambiados
+        run: |
+          git diff --name-only HEAD~1 HEAD -- assets datos | while read f; do
+            curl -s "https://purge.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/$f" > /dev/null || true
+          done
