@@ -824,7 +824,7 @@ function esPortadilla(s,k,im,d){if((s!=='m'&&s!=='x')||!im.w||!im.h)return false
  return (r>=4.5&&im.w>=1200&&im.w<=1400)||(s==='m'&&k===0&&r>=4.5)||(s==='m'&&k===0&&r>=2.6&&r<=2.9&&d>='2013');}
 
 // ------------------------------------------------------------------ p\u00e1gina de post
-function post(art,meta,cat){
+function post(art,meta,cat,medido){
  var id=rid(art), d=art.dataset.date, mt=meta[id]||['',[],[],[],[]];
  var s=mt[0], tipos=mt[1], meds=mt[2].map(function(i){return cat.medios[i];}), auts=mt[3].map(function(i){return cat.autores[i];}), tems=mt[4];
  var body=art.querySelector('.body'), raw=art.querySelector('.post-raw'); unwrap(body);
@@ -835,8 +835,14 @@ function post(art,meta,cat){
   if(i.closest('blockquote'))return;
   var w=+(i.getAttribute('data-orig-width')||i.closest('figure')&&i.closest('figure').getAttribute('data-orig-width')||0),
       h=+(i.getAttribute('data-orig-height')||i.closest('figure')&&i.closest('figure').getAttribute('data-orig-height')||0);
+  w=w||+(i.getAttribute('data-mw')||0);h=h||+(i.getAttribute('data-mh')||0);
   ims.push({src:srcDe(i,99999),w:w,h:h,el:i});
  });
+ // sin medidas (p. ej. en reblogueos) no se puede saber cu\u00e1l es la portadilla: se miden con una versi\u00f3n peque\u00f1ita y se vuelve a empezar
+ if(!medido&&(s==='m'||s==='x')){var falta=ims.filter(function(im){return im.el&&(!im.w||!im.h);});
+  if(falta.length){Promise.all(falta.map(function(im){return new Promise(function(res){var x=new Image(),ok=false;
+    x.onload=function(){if(x.naturalWidth){var mx=Math.max.apply(null,(im.el.getAttribute('srcset')||'').split(',').map(function(q){return parseInt(q.trim().split(/\s+/)[1])||0;}).filter(function(v){return v>0;}).concat([x.naturalWidth]));im.el.setAttribute('data-mw',mx);im.el.setAttribute('data-mh',Math.round(mx*x.naturalHeight/x.naturalWidth));}res();};
+    x.onerror=res;setTimeout(res,5000);x.src=srcDe(im.el,100);});})).then(function(){post(art,meta,cat,true);});return;}}
  ims=ims.filter(function(im,k){return !esPortadilla(s,k,im,d);});
  // t\u00edtulo: el de Tumblr, o el primer H1 del cuerpo, o la primera frase
  var h1=art.querySelector('.title h1'), t=h1.textContent.trim();
