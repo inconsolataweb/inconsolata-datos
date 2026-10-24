@@ -382,6 +382,10 @@ def escribir_portada(idx, frames):
     rec = {r[0] for r in out['rec']}
     out['man'] = [corto(q) for q in posts if q['i'] in ids and q['i'] not in rec]
     json.dump(out, open(D('portada.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
+    # archivo ligero para las fichas de medios y autores y los especiales (el índice sin el texto de búsqueda)
+    arch = {'posts': [{k: v for k, v in q.items() if k not in ('x', 'b', 'r')} for q in posts],
+            'medios': idx['medios'], 'autores': idx['autores'], 'temas': idx['temas']}
+    json.dump(arch, open(D('archivo.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     # efemérides: hasta tres posts de años distintos para cada día del año
     os.makedirs(D('efemerides'), exist_ok=True)
     por_dia = {}
