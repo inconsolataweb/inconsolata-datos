@@ -24,7 +24,7 @@
   "texto": "\\bUcrania\\b|\\bucranian\\w+|\\bKiev\\b|\\bDonbás\\b|\\bCrimea\\b"
  },
  {
-  "tema": "Israel, Gaza y Palestina",
+  "tema": "Conflicto palestino-israelí",
   "bloque": "Actualidad",
   "etiquetas": "guerra israel hamás|conflicto israel gaza",
   "texto": "\\bGaza\\b|\\bHam[aá]s\\b|\\bHezbol[aá]\\b|\\bCisjordania\\b|\\bpalestin\\w+"
