@@ -833,6 +833,7 @@ footer{background:var(--ink);color:var(--paper)}
 .v-home .xs-m{font-size:15px;line-height:1.45}
 .v-home .ts-t{display:flex;flex-direction:column;gap:14px}
 .v-home .tsheet h3.largo{font-size:clamp(30px,3vw,42px)}
+.v-home .proj h3.largo{font-size:clamp(34px,3.6vw,52px);line-height:.95}
 .v-home .mas{display:flex;justify-content:center;margin:-40px 0 110px}
 .v-home .mas .btn-ink{font-family:'Archivo',sans-serif;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:14px 22px}
 .v-home .sheet .tt em,.v-home .tsheet h3 em{color:var(--accent);font-style:inherit}
@@ -1272,7 +1273,7 @@ function vB(o){
 // La primera p\u00e1gina del blog se convierte en la portada: los posts que pone Tumblr (los m\u00e1s frescos) se completan
 // con los datos ligeros del repositorio (portada.json, efem\u00e9rides, avisos).
 var DIAS=['domingo','lunes','martes','mi\u00e9rcoles','jueves','viernes','s\u00e1bado'];
-var PROY={t:'SISMOLIVE',p:'Todos los terremotos del planeta, en directo y con datos abiertos.',u:'/post/830276402210291712/sismolive',
+var PROY={k:'Proyectos \u00bb',t:'SISMOLIVE',p:'Todos los terremotos del planeta, en directo y con datos abiertos.',u:'/post/830276402210291712/sismolive',
  im:'https://64.media.tumblr.com/347064713ce39bc8f64fb6d78fe035f4/039e04832269dcd6-b8/s1280x1920/39c0be6a2669b9cde1527ba6c603feb6e1032f73.jpg'};
 var TINTAS=['ht-c','ht-k','ht-y','ht-m'];
 function hoyISO(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
@@ -1300,7 +1301,7 @@ function deTarjeta(c,meta,cat){
  var txt=deco(c.dataset.txt||'').replace(/^[\s\u2a54]+/,'');
  if(bh&&txt.indexOf(bh.textContent.trim())===0)txt=txt.slice(bh.textContent.trim().length).replace(/^[\s\u2a54]+/,'');
  if(!t)t=primeras(txt,110);
- return {id:id,u:c.getAttribute('href'),d:d,s:s,k:mt?mt[1]:[],meds:mt?mt[2].map(function(i){return cat.medios[i];}).filter(Boolean):[],
+ return {id:id,tags:tags,u:c.getAttribute('href'),d:d,s:s,k:mt?mt[1]:[],meds:mt?mt[2].map(function(i){return cat.medios[i];}).filter(Boolean):[],
   auts:mt?mt[3].map(function(i){return cat.autores[i];}):[],ims:ims,t:t,txt:txt,body:body};
 }
 function deDato(r,cat){return {id:r[0],u:'/post/'+r[1],d:r[2],s:r[3],k:r[4],meds:r[7].map(function(n){return medioN(cat,n);}),auts:[],
@@ -1334,9 +1335,9 @@ function hoja(p,i,pos){
 
 // colocaci\u00f3n en la rejilla de 12 columnas: piezas alternas a izquierda y derecha, con giros y desniveles
 function colocar(L){var c=1,out=[],MT=[0,130,40,20,70,30,40,0,60],R=[-1.5,1,-3,.6,1.4,-2,-1,2,-.8],H=[420,300,340,380,360,320];
- L.forEach(function(p,i){var w=p.s==='d'?3:p.s==='b'||p.s==='o'?8:p.s==='x'?7:(i%3===2?6:5);
+ L.forEach(function(p,i){var w=p.tam==='grande'?8:p.tam==='mediana'?6:p.tam==='peque\u00f1a'?4:p.s==='d'?3:p.s==='b'||p.s==='o'?8:p.s==='x'?7:(i%3===2?6:5);
   if(c+w-1>12)c=1;
-  out.push({c:c+'/'+(c+w),mt:c===1&&i?MT[i%MT.length]:MT[i%MT.length],r:R[i%R.length],h:H[i%H.length]});
+  out.push({c:c+'/'+(c+w),mt:MT[i%MT.length],r:R[i%R.length],h:p.tam==='grande'?480:p.tam==='peque\u00f1a'?260:H[i%H.length]});
   c+=w+1;});
  return out;}
 
@@ -1469,15 +1470,22 @@ function portada(meta,cat){
  document.body.classList.add('es-portada');
  var home=document.getElementById('home');
  var pag=[].map.call(document.querySelectorAll('.lst .lc'),function(c){return deTarjeta(c,meta,cat);});
- Promise.all([get('portada'),get('avisos').catch(function(){return {};}),get('efemerides/'+hoyISO().slice(5,7)).catch(function(){return {};})]).then(function(r){
-  var P=r[0],A=r[1]||{},EF=r[2]||{};
+ Promise.all([get('portada'),get('avisos').catch(function(){return {};}),get('efemerides/'+hoyISO().slice(5,7)).catch(function(){return {};}),get('portada_manual').catch(function(){return {};})]).then(function(r){
+  var P=r[0],A=r[1]||{},EF=r[2]||{},M=r[3]||{};
   var vistos={},L=[];
-  pag.concat(P.rec.map(function(x){return deDato(x,cat);})).forEach(function(p){if(!vistos[p.id]){vistos[p.id]=1;L.push(p);}});
+  var oc=M.ocultos||[];
+  pag.concat(P.rec.concat(P.man||[]).map(function(x){return deDato(x,cat);})).filter(function(p){return oc.indexOf(p.id)<0;}).forEach(function(p){if(!vistos[p.id]){vistos[p.id]=1;L.push(p);}});
   L.sort(function(a,b){return (b.d||'').localeCompare(a.d||'');});
   // completa con los datos lo que falte en los posts de la p\u00e1gina (fotogramas de mucho m\u00e1s y EXTRA!, n\u00famero\u2026)
   L.forEach(function(p){
    if(p.s==='x'){p.mes=mesDe(p);if(P.x&&P.x.i===p.id){p.num=P.x.num;if(p.ims.length<3)p.ims=P.x.fr.map(function(f){return {sm:f[0],big:f[0]};});}}});
-  var top=L[0],arriba='',usados={},mm=null;
+  // elecci\u00f3n manual: etiqueta #apertura en Tumblr o el archivo portada_manual.json
+  var hoy=hoyISO(),vig=function(o){return o&&(!o.hasta||o.hasta>=hoy)&&(!o.desde||o.desde<=hoy);},obj=function(o){return typeof o==='string'?{id:o}:o;};
+  var porId=function(i){return L.find(function(p){return p.id===String(i);});};
+  var apO=obj(M.apertura),aper=pag.find(function(p){return p.tags.indexOf('apertura')>=0;})||(vig(apO)&&porId(apO.id))||null;
+  if(aper&&apO&&apO.img&&aper.id===String(apO.id))aper.ims=[{big:apO.img,sm:apO.img}];
+  var fx=(M.fijos||[]).map(obj).filter(vig).map(function(o){var p=porId(o.id);if(p){p.tam=o.tam;if(o.img)p.ims=[{big:o.img,sm:o.img}];}return p;}).filter(Boolean);
+  var top=aper?null:L[0],arriba='',usados={},mm=null;
   var mmP=L.find(function(p){return p.s==='m';});
   if(mmP){mm={u:mmP.u,d:mmP.d,t:mmP.t+' '+(mmP.txt||'').slice(0,80),fr:null,n:0};
    if(P.m&&P.m.i===mmP.id){mm.fr=P.m.fr;mm.t=P.m.t;mm.n=P.m.n;}
@@ -1488,9 +1496,12 @@ function portada(meta,cat){
   if(top&&top.s==='m'&&mm){arriba=mmSec(mm,true);mm.arriba=true;}
   else if(top&&top.s==='x'){arriba=xdaySec(top);usados[top.id]=1;}
   var resto=L.filter(function(p){return !usados[p.id];});
-  var h=resto.find(function(p){return p.s!=='d'&&p.s!=='x'&&p.ims.length;})||resto[0];
+  var h=aper||resto.find(function(p){return p.s!=='d'&&p.s!=='x'&&p.ims.length;})||resto[0];
   if(h)usados[h.id]=1;
-  var ult=L.filter(function(p){return !usados[p.id]&&p.s!=='m';}).slice(0,9);
+  fx=fx.filter(function(p){return !usados[p.id];});fx.forEach(function(p){usados[p.id]=1;});
+  var ult=fx.concat(L.filter(function(p){return !usados[p.id]&&p.s!=='m';})).slice(0,Math.max(9,fx.length));
+  var de=obj(M.destacado),dd=PROY;
+  if(vig(de)){var dp=de.id?porId(de.id):null;dd={k:de.k||(dp&&dp.s==='b'?'metablog \u00bb':'Destacado \u00bb'),t:de.t||(dp?quita(dp.t):''),p:de.p||(dp?primeras(dp.txt,150):''),u:de.u||(dp?dp.u:'#'),im:de.img||(dp&&dp.ims[0]?dp.ims[0].big:'')};}
   var pos=colocar(ult);
   // especial destacado: el del fald\u00f3n, si lo hay
   var esp=null,f=A.faldon;
@@ -1501,7 +1512,7 @@ function portada(meta,cat){
    '<section><div class="sec-head"><h2 class="serif">lo <em class="soft">\u00faltimo</em></h2><a href="/archive" class="underline">Todo el archivo \u00bb</a></div>'+
    '<div class="scatter">'+ult.map(function(p,i){return hoja(p,i,pos[i]);}).join('')+'</div><div class="mas"><a href="/page/2" class="btn-ink">M\u00e1s entradas \u00bb</a></div></section></div>'+
    (mm&&!mm.arriba?mmSec(mm,false):'')+
-   '<div class="wrap"><section class="duo"><a href="'+PROY.u+'" class="proj"><div class="ph">'+img(PROY.im,'Captura de '+PROY.t)+'</div><div class="txt"><span class="caps" style="font-size:14px;letter-spacing:3px">Proyectos \u00bb</span><h3 class="soft">'+PROY.t+'</h3><p>'+PROY.p+'</p></div></a>'+
+   '<div class="wrap"><section class="duo"><a href="'+esc(dd.u)+'" class="proj"><div class="ph">'+img(dd.im,dd.t)+'</div><div class="txt"><span class="caps" style="font-size:14px;letter-spacing:3px">'+esc(dd.k)+'</span><h3 class="soft'+(dd.t.length>14?' largo':'')+'">'+esc(dd.t)+'</h3><p>'+esc(dd.p)+'</p></div></a>'+
    hoySec(EF[hoyISO().slice(8)])+'</section>'+tm.html+mediosSec(P,cat)+'</div></div>';
   // el men\u00fa de siempre pasa a la barra superior
   var hr=document.querySelector('.page>.head .hd-right');if(hr)home.querySelector('.hd-slot').appendChild(hr);

@@ -367,6 +367,20 @@ def escribir_portada(idx, frames):
     out['med'] = {'y': y, 'posts': sum(1 for q in posts if q['d'].startswith(y)),
                   'l': [[MN[i], cy.get(i, 0), ct[i]] for i in sorted(ct, key=lambda i: (-cy.get(i, 0), -ct[i]))]}
     out['anios'] = sorted({q['d'][:4] for q in posts})[0]
+    # posts elegidos a mano en portada_manual.json, aunque ya no estén entre los recientes
+    try:
+        M = json.load(open(D('portada_manual.json')))
+    except Exception:
+        M = {}
+    ids = set()
+    for k in ('apertura', 'destacado'):
+        o = M.get(k)
+        if o:
+            ids.add(str(o if isinstance(o, str) else o.get('id', '')))
+    for o in M.get('fijos', []):
+        ids.add(str(o if isinstance(o, str) else o.get('id', '')))
+    rec = {r[0] for r in out['rec']}
+    out['man'] = [corto(q) for q in posts if q['i'] in ids and q['i'] not in rec]
     json.dump(out, open(D('portada.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     # efemérides: hasta tres posts de años distintos para cada día del año
     os.makedirs(D('efemerides'), exist_ok=True)
