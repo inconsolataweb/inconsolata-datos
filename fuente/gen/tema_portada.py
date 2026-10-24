@@ -69,6 +69,7 @@ EXTRA = """
 .sec-head h2.serif{font-weight:900;font-variation-settings:'SOFT' 100,'WONK' 1,'opsz' 144}
 .rbtn .dot{color:#fff!important}
 .side{z-index:30}
+.rbtn.new.visto svg{animation:none}
 @media (max-width:820px){.masthead{min-height:0}.topbar .hd-right nav a:not(.btn-ink){display:none}}
 """
 

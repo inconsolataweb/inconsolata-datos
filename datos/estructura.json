@@ -1,0 +1,15 @@
+{
+"_leeme": "Jerarquía de temas. 'subtemas': temas que ya no se muestran como tema; sus posts cuentan también en el tema padre (y suelen tener su especial). 'ocultos': temas que no se muestran. 'excluye': un post no lleva ese tema si ya tiene alguno de los de la lista. Los especiales (datos/especiales.json) llevan 'padre' (su tema), y si se forman con otros especiales, 'capitulos'; los capítulos llevan 'cap_de'. Todo post de un especial cuenta en el tema padre.",
+"subtemas": {
+ "Elecciones en EEUU": "Elecciones",
+ "Guerra en Ucrania": "Guerras y conflictos",
+ "Conflicto palestino-israelí": "Guerras y conflictos",
+ "Guerra en Siria": "Guerras y conflictos",
+ "Guerra en Irán": "Guerras y conflictos",
+ "COVID-19": "Salud",
+ "Cataluña y el procés": "Política española",
+ "Mundiales y Eurocopas": "Fútbol"
+},
+"ocultos": ["Necrológicas"],
+"excluye": {"Otros deportes": ["Fútbol", "Juegos Olímpicos", "Motor y ciclismo", "Tenis", "Mundiales y Eurocopas"]}
+}

@@ -49,7 +49,7 @@ with zipfile.ZipFile(out + '.zip', 'w', zipfile.ZIP_DEFLATED) as z:
         nav = ("<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href^=\"/\"]');if(!a)return;var h=a.getAttribute('href'),"
                "m=h.match(/^\\/(buscador|medios|autores|estadisticas|especiales|novedades)(#.*)?$/),p=h.match(/^\\/post\\/(\\d+)/);e.preventDefault();"
                "if(h==='/')location.href='index.html';else if(m)location.href=m[1]+'.html'+(m[2]||'');else if(p&&window.__POSTS&&__POSTS.indexOf(p[1])>=0)location.href='post-'+p[1]+'.html';"
-               "else window.open('https://inconsolata.com'+h,'_blank');},true);window.__POSTS=" + json.dumps([str(p['id']) for p in sel]) + ";</script>")
+               "else window.open('https://inconsolata.com'+h,'_blank');},true);document.addEventListener('submit',function(e){var f=e.target.closest('.srch');if(!f)return;e.preventDefault();e.stopImmediatePropagation();var v=f.querySelector('input').value.trim();location.href='buscador.html'+(v?'#q='+encodeURIComponent(v):'');},true);window.__POSTS=" + json.dumps([str(p['id']) for p in sel]) + ";</script>")
         h = h.replace('</body>', nav + '</body>', 1)
         h = fix(h).replace('function get(f){', 'function get(f){if(window.__D&&__D[f])return Promise.resolve(__D[f]);', 1).replace('</head>', '<script src="datos.js"></script></head>', 1)
         open(os.path.join(out, n), 'w').write(h); z.writestr(os.path.basename(out) + '/' + n, h)

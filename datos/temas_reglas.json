@@ -72,7 +72,7 @@
   "texto": "\\beconom[ií]as?\\b|\\becon[oó]mic[oa]s?\\b|\\bcrisis financiera\\b|\\brescate (bancario|financiero|a Grecia)\\b|\\bprima de riesgo\\b|\\bbolsas?\\b|\\bPIB\\b|\\bparo\\b|\\bpresupuestos\\b|\\binflaci[oó]n\\b|\\baranceles?\\b"
  },
  {
-  "tema": "Brexit y Europa",
+  "tema": "Europa",
   "bloque": "Actualidad",
   "etiquetas": "brexit|europa en crisis",
   "texto": "\\bBrexit\\b|\\bUni[oó]n Europea\\b|\\bBruselas\\b.{0,30}\\b(cumbre|comisi)"
@@ -144,7 +144,7 @@
   "texto": "\\bApple\\b|\\biPhone\\b|\\biPad\\b|\\bGoogle\\b|\\bFacebook\\b|\\binteligencia artificial\\b|\\bredes sociales\\b|\\bvideojuegos?\\b"
  },
  {
-  "tema": "Deportes",
+  "tema": "Otros deportes",
   "bloque": "Deportes",
   "etiquetas": "deportes|londres 2012|r[ií]o 2016|tokio 2020|par[ií]s 2024|sochi 2014|mundial 20\\d\\d|euro20\\d\\d|qatar 2022",
   "texto": "\\bdeport\\w+"

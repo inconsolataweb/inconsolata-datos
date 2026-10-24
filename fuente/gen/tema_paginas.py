@@ -31,7 +31,8 @@ _R = [
   f.addEventListener('submit', function () { var v = f.querySelector('input').value.trim(); if (v) { q.value = v; st.q = v; run(); scrollTo(0, 0); } });
 });""", """addEventListener('hashchange', function () { st = {q: '', k: [], s: [], y: [], m: [], a: [], h: [], o: 'new'}; readHash(); q.value = st.q; run(); scrollTo(0, 0); });"""),
 ]
-_R += [("var head = p.t || p.b || 'Entrada sin texto';", "var head = quita(TIT[p.i] || '') || p.t || p.b || 'Entrada sin texto';"),
+_R += [("list('f-h', 'h', cnt(base, 'h', function (p) { return p.h; })", "list('f-h', 'h', cnt(base, 'h', function (p) { return p.h.filter(function (v) { return !D.temas[v].x; }); })"),
+       ("var head = p.t || p.b || 'Entrada sin texto';", "var head = quita(TIT[p.i] || '') || p.t || p.b || 'Entrada sin texto';"),
        ("  p.hay = ' ' + p.x + ' ' +", "  p.hay = ' ' + p.x + ' ' + (TIT[p.i] ? nz(quita(TIT[p.i])) + ' ' : '') +")]
 for a, b in _R:
     assert a in _bjs, a[:60]
@@ -60,6 +61,7 @@ _ejs = _str('estadisticas.py', 'JS')
 _R = [
     ("var ST = __ST__, TN = __TN__, Y = 'all';", "var Y = 'all', Y1 = new Date().getFullYear();"),
     ("var BUS = 'inconsolata-buscador.html#';", "var BUS = '/buscador#';"),
+    ("hbars('ht', d.temas.slice(0, 12), 'h');", "hbars('ht', d.temas.filter(function (r) { var t = cat0 && cat0.temas[r[2]]; return !(t && t.x); }).slice(0, 12), 'h');"),
     ("'\">' + esc(r[0]) + '</a><div class=\"tr\">", "'\">' + avh(key, r) + esc(r[0]) + '</a><div class=\"tr\">"),
     ("function hbars(id, rows, key) {", "function avh(key, r) { var i = key === 'm' ? r[2] : key === 'a' ? r[3] : null, c = i != null && cat0 && cat0.medios[i]; return key === 'm' || key === 'a' ? (c && c.av ? '<img class=\"hav\" src=\"' + esc(c.av) + '\" alt=\"\">' : '<span class=\"hav\"></span>') : ''; }\nfunction hbars(id, rows, key) {"),
     ("for (var y = 2026; y >= 2011; y--)", "for (var y = Y1; y >= 2011; y--)"),
@@ -106,6 +108,12 @@ FICHA_CSS = ambito(_fcss + """
 .wk-r.cargando{opacity:.5}
 .card .tt{font-size:21px}
 .card .ph{height:240px}
+.tops{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 22px;min-width:min(100%,420px)}
+.tops a{display:flex;justify-content:space-between;align-items:baseline;gap:10px;color:var(--paper);font-family:'Fraunces',serif;font-style:italic;font-size:17px;padding:6px 0;border-bottom:1px solid #4A463D}
+.tops a:hover{color:var(--yellow)}
+.tops small{font-family:'Archivo',sans-serif;font-style:normal;font-size:12px;font-weight:800;color:var(--yellow)}
+.nac{display:flex;align-items:center;gap:10px;margin:-4px 0 0;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.nac .flag{width:30px;height:22px}
 .finfo h1.autor{font-size:clamp(44px,5.6vw,88px);line-height:.92}
 .wk-r{font-size:17px!important;line-height:1.5!important}
 .chips a.ch-av{gap:8px}.chips a.ch-av img{width:22px;height:22px;object-fit:contain}
@@ -122,6 +130,24 @@ ESP_CSS = ambito(_sin_pie(_str('especial.py', 'ECSS')) + """
 .idx-top p{margin:10px 0 0;font-family:'Fraunces',serif;font-style:italic;font-size:21px;max-width:640px}
 .esp-idx h2{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;border-bottom:2px solid var(--ink);padding-bottom:6px}
 .chips a svg{width:22px;height:22px;overflow:visible}
+.esp-g h2 a:hover{color:var(--accent)}
+.esp-l{display:flex;flex-direction:column;gap:8px}
+.esp-i{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.esp-a{border:2px solid var(--ink);border-radius:999px;padding:5px 14px;font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:17px;min-height:40px;display:inline-flex;align-items:center;gap:8px;background:#fff}
+.esp-a:hover{background:var(--yellow)}
+.esp-a svg{width:22px;height:22px;overflow:visible}
+.esp-a small{font-family:'Archivo',sans-serif;font-style:normal;font-size:11px;font-weight:800;color:var(--accent)}
+.esp-caps{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;font-weight:700}
+.esp-caps a{border-bottom:1px solid var(--accent)}
+.esp-caps:before{content:"capítulos »";font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.caps-nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:40px 0 0}
+.caps-nav a{background:var(--ink);color:var(--paper);padding:8px 14px;font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:17px;display:inline-flex;gap:8px;align-items:baseline}
+.caps-nav a small{font-family:'Archivo',sans-serif;font-style:normal;font-size:11px;font-weight:800;color:var(--yellow)}
+.caps-nav a:hover{background:var(--accent)}
+.cap{margin-top:30px}
+.cap-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;background:var(--yellow);padding:12px 18px;border:2px solid var(--ink)}
+.cap-h h2{margin:0;font-size:clamp(28px,3vw,40px);line-height:1}
+.cap-h span{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
 .btn-ink.todos{display:inline-flex;background:var(--ink);color:var(--paper);padding:14px 22px;font-family:'Archivo',sans-serif;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
 .btn-ink.todos:hover{color:var(--yellow)}
 """, '.v-especiales')

@@ -44,7 +44,7 @@ function initLB(list){
 (function(){
 var CDN=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'datos/';
 var LANZAMIENTO='2026-10-27';
-var TN={"info": "Infograf\u00eda", "carto": "Cartograf\u00eda", "port": "Portada", "graf": "Gr\u00e1fico", "ilus": "Ilustraci\u00f3n", "foto": "Fotograf\u00eda", "video": "V\u00eddeo", "publi": "Publicidad", "online": "Online"}, TS=["t-elecciones", "t-elecciones-en-eeuu", "t-guerras-y-conflictos", "t-guerra-en-ucrania", "t-conflicto-palestino-israeli", "t-guerra-en-siria", "t-guerra-en-iran", "t-terrorismo-y-atentados", "t-catastrofes-y-accidentes", "t-covid-19", "t-salud", "t-economia", "t-brexit-y-europa", "t-monarquia-y-realeza", "t-el-papa-y-el-vaticano", "t-cataluna-y-el-proces", "t-necrologicas", "t-historia", "t-resumenes-del-ano", "t-ciencia-y-espacio", "t-clima-y-medio-ambiente", "t-biodiversidad", "t-viajes", "t-tecnologia", "t-deportes", "t-futbol", "t-juegos-olimpicos", "t-mundiales-y-eurocopas", "t-motor-y-ciclismo", "t-tenis", "t-cine", "t-musica", "t-television-y-series", "t-libros-y-literatura", "t-arte-y-arquitectura", "t-gastronomia", "t-redisenos", "t-tipografia", "t-humor-grafico", "t-titulares", "t-industria-y-crisis-de-medios", "t-datos-y-visualizacion"], SECN={m:'mucho m\u00e1s',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic'};
+var TN={"info": "Infograf\u00eda", "carto": "Cartograf\u00eda", "port": "Portada", "graf": "Gr\u00e1fico", "ilus": "Ilustraci\u00f3n", "foto": "Fotograf\u00eda", "video": "V\u00eddeo", "publi": "Publicidad", "online": "Online"}, TS=["t-elecciones", "t-elecciones-en-eeuu", "t-guerras-y-conflictos", "t-guerra-en-ucrania", "t-conflicto-palestino-israeli", "t-guerra-en-siria", "t-guerra-en-iran", "t-terrorismo-y-atentados", "t-catastrofes-y-accidentes", "t-covid-19", "t-salud", "t-economia", "t-europa", "t-monarquia-y-realeza", "t-el-papa-y-el-vaticano", "t-cataluna-y-el-proces", "t-necrologicas", "t-historia", "t-resumenes-del-ano", "t-ciencia-y-espacio", "t-clima-y-medio-ambiente", "t-biodiversidad", "t-viajes", "t-tecnologia", "t-otros-deportes", "t-futbol", "t-juegos-olimpicos", "t-mundiales-y-eurocopas", "t-motor-y-ciclismo", "t-tenis", "t-cine", "t-musica", "t-television-y-series", "t-libros-y-literatura", "t-arte-y-arquitectura", "t-gastronomia", "t-redisenos", "t-tipografia", "t-humor-grafico", "t-titulares", "t-industria-y-crisis-de-medios", "t-datos-y-visualizacion", "t-politica-espanola"], SECN={m:'mucho m\u00e1s',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic'};
 var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function get(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'null');if(c)return Promise.resolve(c);}catch(e){}
@@ -375,19 +375,19 @@ function hoySec(ef){var y=new Date().getFullYear();
   return '<a href="/post/'+esc(r[1])+'" class="hoy-row"><span class="hoy-year">'+r[0]+'</span><span class="hoy-txt">'+esc(quita(r[2]))+(r[3][0]?'<small>\u00bb '+esc(r[3][0])+'</small>':'')+'</span><span class="hoy-thumb ph '+['ht-m','ht-c','ht-y'][i]+'" aria-hidden="true">'+img(r[4])+'</span></a>';}).join('')+'</div>';}
 
 function temasSec(P,cat,esp){
- var V=P.temas.filter(function(t){return t[2]>=8&&t[4].length;}),COL=['t-ink','t-yel','t-cya','t-pap','t-mag'];
+ var PT=P.temas.filter(function(t){return !t[5];}),V=PT.filter(function(t){return t[2]>=8&&t[4].length;}),COL=['t-ink','t-yel','t-cya','t-pap','t-mag'];
  var fijo=esp?{n:esp.t,c:esp.n,b:'Especial',u:'/especiales#'+esp.slug,im:esp.im,ic:esp.ic}:null;
  if(!fijo){var tp=V.slice().sort(function(a,b){return b[2]-a[2];})[0];fijo={n:tp[1],c:tp[2],b:tp[3],u:'/buscador#h='+tp[0],im:tp[4][0],ic:TS[tp[0]]};}
  var tile=function(t,cl,big){return '<a href="'+esc(t.u)+'" class="tema '+cl+(big?' big vit-fix':'')+'"><div class="tm-ph">'+img(t.im)+'</div>'+
   (t.ic?'<svg class="tm-ico'+(big?'':' tm-ico-s')+'" viewBox="0 0 64 64" aria-hidden="true"><use href="#'+t.ic+'" class="k"/><use href="#'+t.ic+'" class="m" x="3" y="2.5"/></svg>':'')+
   (big?'<span class="tm-k">'+esc(t.b)+'</span>':'<span class="tm-b">'+esc(t.b)+'</span>')+'<span class="tm-n soft">'+esc(t.n)+'</span><span class="tm-c">'+t.c+(t.c===1?' post':' posts')+'</span></a>';};
- var bloques={};P.temas.forEach(function(t){(bloques[t[3]]=bloques[t[3]]||[]).push(t);});
+ var bloques={};PT.forEach(function(t){(bloques[t[3]]=bloques[t[3]]||[]).push(t);});
  var dlg='<dialog class="tdl" id="tm-dlg" aria-labelledby="tdl-h"><div class="tdl-top"><h2 id="tdl-h" class="soft">Todos los <em>temas</em></h2><button type="button" class="tdl-x" data-close aria-label="Cerrar">\u00d7</button></div>'+
-  '<p class="tdl-sub">'+P.temas.length+' temas en '+(new Date().getFullYear()-(+P.anios))+' a\u00f1os de archivo. Pulsa uno para ver todas sus entradas.</p>'+
-  (P.esp.length?'<div class="tdl-b tdl-esp"><h3>Especiales <span>\u00b7 acontecimientos concretos, solo con sus posts</span></h3><div class="tdl-c">'+P.esp.slice().sort(function(a,b){return (b[4]||'').localeCompare(a[4]||'');}).map(function(e){var ti=cat.temas.findIndex(function(t){return t.n===e[2];});
+  '<p class="tdl-sub">'+PT.length+' temas en '+(new Date().getFullYear()-(+P.anios))+' a\u00f1os de archivo. Pulsa uno para ver todas sus entradas.</p>'+
+  (P.esp.length?'<div class="tdl-b tdl-esp"><h3>Especiales <span>\u00b7 acontecimientos e historias concretas, cada uno dentro de su tema</span></h3><div class="tdl-c">'+P.esp.filter(function(e){return !e[6];}).sort(function(a,b){return (b[4]||'').localeCompare(a[4]||'');}).map(function(e){var ti=cat.temas.findIndex(function(t){return t.n===e[2];});
    return '<a href="/especiales#'+esc(e[1])+'">'+(ti>=0?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[ti]+'"/></svg>':'')+esc(e[0])+'<small>'+e[3]+'</small></a>';}).join('')+'</div></div>':'')+
   Object.keys(bloques).map(function(b){return '<div class="tdl-b"><h3>'+esc(b)+'</h3><div class="tdl-c">'+bloques[b].map(function(t){return '<a href="/buscador#h='+t[0]+'"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[t[0]]+'"/></svg>'+esc(t[1])+'<small>'+t[2]+'</small></a>';}).join('')+'</div></div>';}).join('')+'</dialog>';
- return {html:'<section class="temas-sec" aria-labelledby="tm-h"><div class="sec-head tm-head"><h2 id="tm-h" class="serif"><em class="soft">temas</em></h2><button type="button" class="tm-allbtn" data-open="tm-dlg" aria-haspopup="dialog">Todos los temas <b>'+P.temas.length+'</b> \u00bb</button></div>'+
+ return {html:'<section class="temas-sec" aria-labelledby="tm-h"><div class="sec-head tm-head"><h2 id="tm-h" class="serif"><em class="soft">temas</em></h2><button type="button" class="tm-allbtn" data-open="tm-dlg" aria-haspopup="dialog">Todos los temas <b>'+PT.length+'</b> \u00bb</button></div>'+
   '<div class="vit">'+tile(fijo,'t-mag',true)+'<div class="vit-stage" id="vit"><div class="vit-slot"></div><div class="vit-slot"></div><div class="vit-slot"></div><div class="vit-slot"></div></div></div>'+dlg+'</section>',
   init:function(){
    var T=V.map(function(t){return {n:t[1],c:t[2],b:t[3],u:'/buscador#h='+t[0],ims:t[4],ic:TS[t[0]]};});
@@ -445,16 +445,17 @@ function avisos(A){var hoy=hoyISO(),vig=function(a){return (!a.desde||a.desde<=h
  addEventListener('resize',function(){var mh=document.querySelector('.v-home .masthead');if(mh)mh.style.setProperty('--mw',mh.querySelector('.mast').offsetWidth+'px');});
  // ligeros
  var Lg=(A.ligeros||[]).filter(function(a){return !a.desde||a.desde<=hoy;}).sort(function(a,b){return (b.f||'').localeCompare(a.f||'');});
- var visto=ls('inc-novedades-visto')||'',nuevos=Lg.filter(function(a){return (a.f||'')>visto;}).length;
+ // una novedad sigue marcada durante una semana desde su fecha; abrir la lista solo para la animaci\u00f3n
+ var lim=new Date(Date.now()-7*864e5).toISOString().slice(0,10),visto=ls('inc-novedades-visto')||'',nuevos=Lg.filter(function(a){return (a.f||'')>=lim;}).length;
  var b=document.getElementById('rbtn'),pn=document.getElementById('panel');if(!b)return;
  if(!Lg.length){b.closest('.reg-w').classList.add('vacio');return;}
  function lista(){pn.querySelector('ul').innerHTML=Lg.slice(0,Math.max(5,nuevos)).map(function(a,i){var ti=a.ico?cat0.temas.findIndex(function(t){return t.n===a.ico;}):-1,sy=ti>=0?TS[ti]:a.ico;
   var inn='<span class="ic'+(sy?'':' bl soft')+'">'+(sy?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+esc(sy)+'"/></svg>':'\u00bb')+'</span><span><span class="fe">'+(a.f?+a.f.slice(8)+' '+MESES[+a.f.slice(5,7)-1].slice(0,3):'')+'</span><span class="tx">'+esc(a.t)+'</span></span>';
-  return '<li class="'+(i<nuevos?'nv':'')+'">'+(a.u?'<a href="'+esc(a.u)+'">'+inn+'</a>':'<div>'+inn+'</div>')+'</li>';}).join('');}
- function marca(){b.classList.toggle('new',nuevos>0);var d=b.querySelector('.dot');d.textContent=nuevos;b.querySelector('.sr').textContent=nuevos?'Novedades de la web: '+nuevos+' sin ver':'Novedades de la web';}
+  return '<li class="'+((a.f||'')>=lim?'nv':'')+'">'+(a.u?'<a href="'+esc(a.u)+'">'+inn+'</a>':'<div>'+inn+'</div>')+'</li>';}).join('');}
+ function marca(){b.classList.toggle('new',nuevos>0);b.classList.toggle('visto',!!Lg[0]&&visto>=(Lg[0].f||''));var d=b.querySelector('.dot');d.textContent=nuevos;b.querySelector('.sr').textContent=nuevos?'Novedades de la web: '+nuevos+' sin ver':'Novedades de la web';}
  lista();marca();
- function cierra(){pn.hidden=true;b.setAttribute('aria-expanded','false');if(nuevos){nuevos=0;ls('inc-novedades-visto',Lg[0].f||hoy);lista();marca();}}
- b.addEventListener('click',function(){if(pn.hidden){pn.hidden=false;b.setAttribute('aria-expanded','true');pn.classList.remove('op');void pn.offsetWidth;pn.classList.add('op');b.classList.remove('new');}else cierra();});
+ function cierra(){pn.hidden=true;b.setAttribute('aria-expanded','false');visto=Lg[0].f||hoy;ls('inc-novedades-visto',visto);marca();}
+ b.addEventListener('click',function(){if(pn.hidden){pn.hidden=false;b.setAttribute('aria-expanded','true');pn.classList.remove('op');void pn.offsetWidth;pn.classList.add('op');}else cierra();});
  document.addEventListener('click',function(e){if(!pn.hidden&&!e.target.closest('.reg-w'))cierra();});
  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pn.hidden){cierra();b.focus();}});
 }
@@ -611,7 +612,7 @@ function resumenES(t){return cacheJ('inc-wp-'+t,function(){return fetch('https:/
 function corto(t,n){var s=(t||'').match(/[^.]+\.(\s|$)/g)||[t||''],r='';for(var i=0;i<s.length;i++){if(r&&(r+s[i]).length>n)break;r+=s[i];}r=r.trim();return r.length>n+60?r.slice(0,n).replace(/\s+\S*$/,'')+'\u2026':r;}
 var TIPO_ES={Q11032:'peri\u00f3dico',Q1110794:'diario',Q41298:'revista',Q1153191:'peri\u00f3dico digital',Q1002697:'peri\u00f3dico',Q2305295:'revista semanal',Q35127:'web',Q1047113:'revista especializada',Q685935:'revista'};
 function bandera(cc){return cc?'<img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/4x3/'+esc(cc.toLowerCase())+'.svg" alt="" width="24" height="18">':'';}
-function redes(o){var L=[];if(o.web)L.push(['Web',o.web]);if(o.x)L.push(['X','https://x.com/'+o.x.replace(/^@/,'')]);if(o.bsky)L.push(['Bluesky','https://bsky.app/profile/'+o.bsky.replace(/^@/,'')]);
+function redes(o){var L=[];(o.otros||'').split(/\n+/).forEach(function(u){u=u.trim();if(/^https?:/.test(u))L.push([u.replace(/^https?:\/\/(www\.)?/,'').split('/')[0],u]);});if(o.web)L.push(['Web',o.web]);if(o.x)L.push(['X','https://x.com/'+o.x.replace(/^@/,'')]);if(o.bsky)L.push(['Bluesky','https://bsky.app/profile/'+o.bsky.replace(/^@/,'')]);
  if(o.ig)L.push(['Instagram','https://instagram.com/'+o.ig.replace(/^@/,'')]);if(o.linkedin)L.push(['LinkedIn',o.linkedin]);return L;}
 
 function medioFicha(A,cat,FM,mi){
@@ -628,15 +629,15 @@ function medioFicha(A,cat,FM,mi){
   '<div class="wk-top">'+(c.av?'<span class="av-slot" aria-hidden="true"><img src="'+esc(c.av)+'" alt=""></span>':'')+'<p class="wk-r" id="wk-r" hidden></p></div><dl id="wk-dl"></dl></div>'+
   '<div class="flinks" id="m-links"></div></div></section>';
  function datos(o){o=o||{};var lab=function(ids){return (ids||[]).map(function(i){return (o.l||{})[i];}).filter(Boolean);};
-  var tipo=(o.tipo||[]).map(function(i){return TIPO_ES[i]||(o.l||{})[i];}).filter(Boolean)[0]||'';if(tipo)document.getElementById('m-tipo').textContent=' \u00b7 '+tipo;
-  var d=[],anio=o.anio||f.fundacion,fin=o.fin||f.cierre;
-  if(anio)d.push(['Fundaci\u00f3n',anio+(fin?' \u00b7 cierre en '+fin:'')]);var fu=lab(o.fund);if(fu.length)d.push([fu.length>1?'Fundadores':'Fundador',fu.slice(0,3).join(', ')]);
-  var se=lab(o.sede);if(se.length)d.push(['Sede',se[0]]);var pr=lab(o.prop);if(pr.length)d.push(['Propietario',pr.join(', ')]);
-  var fo=lab(o.formato);if(fo.length)d.push(['Formato',fo[0]]);var id=lab(o.idioma);if(id.length)d.push(['Idioma',id.join(', ')]);
+  var tipo=f.tipo||(o.tipo||[]).map(function(i){return TIPO_ES[i]||(o.l||{})[i];}).filter(Boolean)[0]||'';if(tipo)document.getElementById('m-tipo').textContent=' \u00b7 '+tipo;
+  var d=[],anio=f.fundacion||o.anio,fin=f.cierre||o.fin;
+  if(anio)d.push(['Fundaci\u00f3n',anio+(fin?' \u00b7 cierre en '+fin:'')]);var fu=f.fundador?[f.fundador]:lab(o.fund);if(fu.length)d.push([fu.length>1?'Fundadores':'Fundador',fu.slice(0,3).join(', ')]);
+  var se=f.sede?[f.sede]:lab(o.sede);if(se.length)d.push(['Sede',se[0]]);var pr=f.propietario?[f.propietario]:lab(o.prop);if(pr.length)d.push(['Propietario',pr.join(', ')]);
+  var fo=f.formato?[f.formato]:lab(o.formato);if(fo.length)d.push(['Formato',fo[0]]);var id=f.idioma?[f.idioma]:lab(o.idioma);if(id.length)d.push(['Idioma',id.join(', ')]);
   if(f.pais)d.push(['Pa\u00eds',f.pais]);if(o.issn)d.push(['ISSN',o.issn]);
-  var web=o.web||f.web;if(web)d.push(['Web','<a href="'+esc(web)+'" target="_blank" rel="noopener">'+esc(web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))+'</a>']);
+  var web=f.web||o.web;if(web)d.push(['Web','<a href="'+esc(web)+'" target="_blank" rel="noopener">'+esc(web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))+'</a>']);
   document.getElementById('wk-dl').innerHTML=d.map(function(x){return '<div><dt>'+x[0]+'</dt><dd>'+(x[0]==='Web'?x[1]:esc(x[1]))+'</dd></div>';}).join('');
-  var L=redes({web:web,x:o.x,bsky:o.bsky,ig:o.ig});var wp=o.es?'https://es.wikipedia.org/wiki/'+encodeURIComponent(o.es.replace(/ /g,'_')):(f.wikipedia&&/\/\/es\./.test(f.wikipedia)?f.wikipedia:'');
+  var L=redes({web:web,x:f.x||o.x,bsky:f.bsky||o.bsky,ig:f.ig||o.ig});var wp=o.es?'https://es.wikipedia.org/wiki/'+encodeURIComponent(o.es.replace(/ /g,'_')):(f.wikipedia&&/\/\/es\./.test(f.wikipedia)?f.wikipedia:'');
   if(wp)L.push(['Wikipedia',wp]);
   document.getElementById('m-links').innerHTML=L.map(function(x){return '<a href="'+esc(x[1])+'" target="_blank" rel="noopener">'+x[0]+' \u00bb</a>';}).join('')+'<a href="/buscador#m='+mi+'">En el buscador \u00bb</a>';
   if(wp){var s=document.getElementById('wk-src');s.href=wp;s.hidden=false;}
@@ -645,7 +646,7 @@ function medioFicha(A,cat,FM,mi){
   if(t)resumenES(t).then(function(j){var r=document.getElementById('wk-r');if(r&&j.x){r.textContent=corto(j.x,200);r.hidden=false;}}).catch(function(){});}
  return {html:'<div class="wrap">'+html+'</div><section class="band">'+(c.avw?'<img class="wm-av" src="'+esc(c.avw)+'" alt="" aria-hidden="true">':'')+'<div class="wrap in">'+
   '<div class="stat"><b>'+ps.length+'</b><span>entradas en inconsolata\u00bb</span></div>'+big2+
-  (auts.length?'<div class="stat"><span>Autores m\u00e1s citados</span><div class="chips">'+auts.map(function(a){return '<a href="'+fichaAutor(A.autores[a[0]].n)+'">'+esc(A.autores[a[0]].n)+'</a>';}).join('')+'</div></div>':'')+
+  (auts.length?'<div class="stat"><span>Autores m\u00e1s citados</span><ol class="tops">'+auts.map(function(a){return '<li><a href="'+fichaAutor(A.autores[a[0]].n)+'">'+esc(A.autores[a[0]].n)+'<small>'+a[1]+'</small></a></li>';}).join('')+'</ol></div>':'')+
   '<div class="stat" style="grid-column:1/-1"><span>Tipos de pieza</span>'+tiposBanda(ps,'m='+mi)+fechasBanda(ps)+'</div></div></section>'+
   '<div class="wrap">'+barrasAnios(ps)+entradas(A,ps)+'</div>',
   init:function(){activaEntradas(A,ps);datos(null);if(f.qid)wikidata(f.qid).then(datos).catch(function(){});}};}
@@ -663,14 +664,14 @@ function autorFicha(A,cat,FM,AX,ai){var a=A.autores[ai],ps=A.posts.filter(functi
   (W.length>1?'<button type="button" class="wnext" id="work-next" aria-label="Ver otra pieza al azar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h11l-3-3M20 17H9l3 3M15 4l3 3-3 3M9 20l-3-3 3-3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>otra</span></button>':'')+
   '<figcaption><span class="wn">Pieza <b id="work-n"></b> de <b>'+W.length+'</b> en el archivo</span><span class="wm" id="work-m"></span></figcaption></figure></div>':'';
  var L=redes(x);
- var html='<div class="wrap">'+crumbs([['Autores','/autores'],[a.n]])+'<section class="fhero'+(vis?'':' novis')+'">'+vis+'<div class="finfo"><span class="caps ante" style="color:var(--accent)">'+esc(x.oficio||'Periodista')+' \u00bb '+bandera(cc)+esc(pais)+(a.m&&a.m.length?' \u00b7 '+esc(a.m.slice(0,3).join(' \u00b7 ')):'')+'</span>'+
-  '<div class="name-row"><h1 class="soft autor">'+esc(a.n)+'</h1>'+(mc?'<a class="av-medio" href="'+fichaMedio(mc)+'" aria-label="Trabaja en '+esc(md)+'">'+(mc.av?'<span class="av-slot" aria-hidden="true"><img src="'+esc(mc.av)+'" alt=""></span>':'')+'<span>'+esc(md)+' \u00bb</span></a>':'')+'</div>'+
+ var html='<div class="wrap">'+crumbs([['Autores','/autores'],[a.n]])+'<section class="fhero'+(vis?'':' novis')+'">'+vis+'<div class="finfo"><span class="caps ante" style="color:var(--accent)">'+(x.genero==='autora'?'Autora':x.genero==='autor'?'Autor':'Periodista')+(a.m&&a.m.length?' \u00bb '+esc(a.m.slice(0,3).join(' \u00b7 ')):'')+'</span>'+
+  '<div class="name-row"><h1 class="soft autor">'+esc(a.n)+'</h1>'+(mc?'<a class="av-medio" href="'+fichaMedio(mc)+'" aria-label="Trabaja en '+esc(md)+'">'+(mc.av?'<span class="av-slot" aria-hidden="true"><img src="'+esc(mc.av)+'" alt=""></span>':'')+'<span>'+esc(md)+' \u00bb</span></a>':'')+'</div>'+(pais||x.oficio?'<p class="nac">'+bandera(cc)+'<span>'+esc(pais)+(pais&&x.oficio?' \u00b7 ':'')+esc(x.oficio||'')+'</span></p>':'')+
   (x.texto?'<div class="ftext">'+esc(x.texto)+'</div>':'')+
   '<div class="flinks">'+L.map(function(l){return '<a href="'+esc(l[1])+'" target="_blank" rel="noopener">'+l[0]+' \u00bb</a>';}).join('')+'<a href="/buscador#a='+ai+'">En el buscador \u00bb</a></div></div></section></div>'+
   '<section class="band"><div class="wrap in"><div class="stat"><b>'+ps.length+'</b><span>entradas en inconsolata\u00bb</span></div>'+
   '<div class="stat"><b>'+ny+'</b><span>a\u00f1os apareciendo en inconsolata\u00bb \u00b7 de '+y0+' a '+y1+'</span></div>'+
   (a.m&&a.m.length?'<div class="stat"><span>Medios</span><div class="chips">'+a.m.map(function(n){return chipMedio(cat,n);}).join('')+'</div></div>':'')+
-  (otros.length?'<div class="stat"><span>Otros autores de '+esc(md)+'</span><div class="chips">'+otros.map(function(o){return '<a href="'+fichaAutor(o.n)+'">'+esc(o.n)+'</a>';}).join('')+'</div></div>':'')+
+  (otros.length?'<div class="stat"><span>Otros autores de '+esc(md)+'</span><ol class="tops">'+otros.map(function(o){return '<li><a href="'+fichaAutor(o.n)+'">'+esc(o.n)+'<small>'+o.p+'</small></a></li>';}).join('')+'</ol></div>':'')+
   '<div class="stat" style="grid-column:1/-1"><span>Tipos de pieza</span>'+tiposBanda(ps,'a='+ai)+fechasBanda(ps)+'</div></div></section>'+
   '<div class="wrap">'+barrasAnios(ps)+entradas(A,ps)+'</div>';
  return {html:html,init:function(){activaEntradas(A,ps);if(!W.length)return;var i=Math.floor(Math.random()*W.length);
@@ -681,32 +682,48 @@ function autorFicha(A,cat,FM,AX,ai){var a=A.autores[ai],ps=A.posts.filter(functi
 // ---------- especiales
 function rangoE(a,b){var f=function(d,y){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+(y?' de '+d.slice(0,4):'');};
  return a===b?f(a,1):a.slice(0,4)===b.slice(0,4)?'del '+f(a,0)+' al '+f(b,1):'del '+f(a,1)+' al '+f(b,1);}
-function espIdx(ES,cat){var g={};ES.forEach(function(e){(g[e.tema]=g[e.tema]||[]).push(e);});
- var html=crumbs([['Especiales']])+'<div class="idx-top"><div><h1 class="soft">Los <em>especiales</em></h1><p>'+ES.length+' acontecimientos concretos, cada uno con todas sus entradas ordenadas mes a mes.</p></div></div><div class="esp-idx">'+
-  Object.keys(g).map(function(t){var ti=cat.temas.findIndex(function(x){return x.n===t;});return '<div><h2>'+esc(t||'Otros')+'</h2><div class="chips">'+g[t].sort(function(a,b){return (b.hasta||'').localeCompare(a.hasta||'');}).map(function(e){
-   return '<a href="/especiales#'+esc(e.slug)+'">'+(ti>=0?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[ti]+'"/></svg>':'')+esc(e.titulo)+'<small>'+e.posts.length+'</small></a>';}).join('')+'</div></div>';}).join('')+'</div>';
+function icoE(cat,e){var ti=cat.temas.findIndex(function(t){return t.n===e.tema;});if(ti<0)ti=cat.temas.findIndex(function(t){return t.n===e.padre;});return ti>=0?TS[ti]:'';}
+function espIdx(ES,cat){
+ var top=ES.filter(function(e){return !e.cap_de;}),by={};ES.forEach(function(e){by[e.slug]=e;});
+ var g={};top.forEach(function(e){(g[e.padre]=g[e.padre]||[]).push(e);});
+ var orden=cat.temas.map(function(t){return t.n;}).filter(function(n){return g[n];});
+ var html=crumbs([['Especiales']])+'<div class="idx-top"><div><h1 class="soft">Los <em>especiales</em></h1><p>'+top.length+' acontecimientos e historias con p\u00e1gina propia, cada uno dentro de su tema. Algunos se dividen en cap\u00edtulos.</p></div></div><div class="esp-idx">'+
+  orden.map(function(t){var ti=cat.temas.findIndex(function(x){return x.n===t;});return '<div class="esp-g"><h2><a href="/buscador#h='+ti+'">'+esc(t)+' \u00bb</a></h2><div class="esp-l">'+g[t].sort(function(a,b){return (b.hasta||'').localeCompare(a.hasta||'');}).map(function(e){var ic=icoE(cat,e);
+   return '<div class="esp-i"><a class="esp-a" href="/especiales#'+esc(e.slug)+'">'+(ic?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+ic+'"/></svg>':'')+'<span>'+esc(e.titulo)+'</span><small>'+e.posts.length+'</small></a>'+
+    ((e.capitulos||[]).length?'<span class="esp-caps">'+e.capitulos.map(function(c){return by[c];}).filter(Boolean).sort(function(a,b){return (a.desde||'').localeCompare(b.desde||'');}).map(function(c){return '<a href="/especiales#'+esc(c.slug)+'">'+esc(c.titulo)+'</a>';}).join('')+'</span>':'')+'</div>';}).join('')+'</div></div>';}).join('')+'</div>';
  return {html:'<div class="wrap">'+html+'</div>',init:function(){}};}
-function espPag(A,cat,ES,x){var byId={};A.posts.forEach(function(p){byId[p.i]=p;});
+function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p.i]=p;});ES.forEach(function(e){by[e.slug]=e;});
  var ps=x.posts.map(function(i){return byId[i];}).filter(Boolean).sort(function(a,b){return a.d.localeCompare(b.d);});
  document.title=x.titulo+' \u00b7 especial \u00b7 inconsolata\u00bb';
- var ti=cat.temas.findIndex(function(t){return t.n===x.tema;}),ic=ti>=0?TS[ti]:'';
- var gr={};ps.forEach(function(p){(gr[p.d.slice(0,7)]=gr[p.d.slice(0,7)]||[]).push(p);});
+ var pi=cat.temas.findIndex(function(t){return t.n===x.padre;}),ic=icoE(cat,x),madre=x.cap_de?by[x.cap_de]:null;
  var carta=function(p){var meds=p.m.slice(0,2).map(function(i){return A.medios[i].n;}).join(' \u00b7 '),auts=p.a.slice(0,3).map(function(i){return A.autores[i].n;});
   return '<a class="ec" href="/post/'+esc(p.u)+'"><div class="ph">'+(p.im?'<img loading="lazy" src="'+esc(p.im)+'" alt="" onerror="this.remove()">':'')+(p.s?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+
    '<span class="ico">'+p.k.slice(0,3).map(function(k){return '<span title="'+esc(TN[k])+'"><svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#i-'+k+'"/></svg></span>';}).join('')+'</span></div>'+
    '<span class="meta"><b>'+(+p.d.slice(8,10))+' '+MES3[+p.d.slice(5,7)-1]+'</b>'+(meds?' \u00b7 '+esc(meds):'')+'</span><span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};
- var tl=Object.keys(gr).map(function(k){var v=gr[k];return '<section class="mo"><h3>'+MESES[+k.slice(5,7)-1].replace(/^./,function(c){return c.toUpperCase();})+'<small>'+k.slice(0,4)+' \u00b7 '+v.length+' '+(v.length===1?'entrada':'entradas')+'</small></h3><div class="g">'+v.map(carta).join('')+'</div></section>';}).join('');
+ var meses=function(L){var gr={};L.forEach(function(p){(gr[p.d.slice(0,7)]=gr[p.d.slice(0,7)]||[]).push(p);});
+  return Object.keys(gr).map(function(k){var v=gr[k];return '<section class="mo"><h3>'+MESES[+k.slice(5,7)-1].replace(/^./,function(c){return c.toUpperCase();})+'<small>'+k.slice(0,4)+' \u00b7 '+v.length+' '+(v.length===1?'entrada':'entradas')+'</small></h3><div class="g">'+v.map(carta).join('')+'</div></section>';}).join('');};
+ var caps=(x.capitulos||[]).map(function(c){return by[c];}).filter(Boolean).sort(function(a,b){return (a.desde||'').localeCompare(b.desde||'');}),tl='';
+ if(caps.length){var usados={};
+  tl=caps.map(function(c){var L=c.posts.map(function(i){return byId[i];}).filter(Boolean).sort(function(a,b){return a.d.localeCompare(b.d);});L.forEach(function(p){usados[p.i]=1;});
+   return '<div class="cap"><div class="cap-h"><h2 class="soft"><a href="/especiales#'+esc(c.slug)+'">'+esc(c.titulo)+'</a></h2><span>'+L.length+' '+(L.length===1?'entrada':'entradas')+(c.desde?' \u00b7 '+rangoE(c.desde,c.hasta||c.desde):'')+'</span></div>'+meses(L)+'</div>';}).join('');
+  var resto=ps.filter(function(p){return !usados[p.i];});
+  if(resto.length)tl+='<div class="cap"><div class="cap-h"><h2 class="soft">Otras entradas</h2><span>'+resto.length+' '+(resto.length===1?'entrada':'entradas')+'</span></div>'+meses(resto)+'</div>';}
+ else tl=meses(ps);
  var cm=contar(ps,function(p){return p.m;}).slice(0,12),ca=contar(ps,function(p){return p.a;}).slice(0,12);
- var her=ES.filter(function(y){return y.tema===x.tema&&y!==x;});
- var html='<section class="eh"><div class="wrap in"><div><span class="kick">Especial \u00bb</span><h1 class="soft">'+esc(x.titulo)+'</h1><div class="meta"><span>'+ps.length+' '+(ps.length===1?'entrada':'entradas')+'</span>'+(x.desde?'<span>'+rangoE(x.desde,x.hasta||x.desde)+'</span>':'')+
-  (ti>=0?'<span>Dentro de: <a href="/buscador#h='+ti+'">'+esc(x.tema)+' \u00bb</a></span>':'')+'</div></div>'+(ic?'<svg class="big" viewBox="0 0 64 64" aria-hidden="true"><use href="#'+ic+'" class="k"/><use href="#'+ic+'" class="m" x="3" y="2.5"/></svg>':'')+'</div></section>'+
-  '<div class="wrap">'+(x.texto?'<div class="etext">'+esc(x.texto)+'</div>':'')+'<div class="who"><div><h2>Medios</h2><div class="chips">'+cm.map(function(c){var m=cat.medios[c[0]];return '<a href="'+(m&&m.ficha?fichaMedio(m):'/buscador#m='+c[0])+'">'+esc(A.medios[c[0]].n)+'<small>'+c[1]+'</small></a>';}).join('')+'</div></div>'+
+ var her=ES.filter(function(y){return !y.cap_de&&y.padre===x.padre&&y!==x&&y!==madre;});
+ var cr=[['Especiales','/especiales']];if(madre)cr.push([madre.titulo,'/especiales#'+madre.slug]);cr.push([x.titulo]);
+ var html='<div class="wrap">'+crumbs(cr)+'</div><section class="eh"><div class="wrap in"><div><span class="kick">'+(madre?'Cap\u00edtulo de \u00ab'+esc(madre.titulo)+'\u00bb \u00bb':'Especial \u00bb')+'</span><h1 class="soft">'+esc(x.titulo)+'</h1><div class="meta"><span>'+ps.length+' '+(ps.length===1?'entrada':'entradas')+'</span>'+(x.desde?'<span>'+rangoE(x.desde,x.hasta||x.desde)+'</span>':'')+
+  (caps.length?'<span>'+caps.length+' cap\u00edtulos</span>':'')+(pi>=0?'<span>Dentro de: <a href="/buscador#h='+pi+'">'+esc(x.padre)+' \u00bb</a></span>':'')+'</div></div>'+(ic?'<svg class="big" viewBox="0 0 64 64" aria-hidden="true"><use href="#'+ic+'" class="k"/><use href="#'+ic+'" class="m" x="3" y="2.5"/></svg>':'')+'</div></section>'+
+  '<div class="wrap">'+(x.texto?'<div class="etext">'+esc(x.texto)+'</div>':'')+
+  (caps.length?'<nav class="caps-nav" aria-label="Cap\u00edtulos"><span class="caps">Cap\u00edtulos \u00bb</span>'+caps.map(function(c){return '<a href="/especiales#'+esc(c.slug)+'">'+esc(c.titulo)+'<small>'+c.posts.length+'</small></a>';}).join('')+'</nav>':'')+
+  '<div class="who"><div><h2>Medios</h2><div class="chips">'+cm.map(function(c){var m=cat.medios[c[0]];return '<a href="'+(m&&m.ficha?fichaMedio(m):'/buscador#m='+c[0])+'">'+esc(A.medios[c[0]].n)+'<small>'+c[1]+'</small></a>';}).join('')+'</div></div>'+
   '<div><h2>Autores</h2><div class="chips">'+(ca.map(function(c){return '<a href="'+fichaAutor(A.autores[c[0]].n)+'">'+esc(A.autores[c[0]].n)+'<small>'+c[1]+'</small></a>';}).join('')||'<span style="font-size:14px;color:var(--muted)">Sin autores identificados</span>')+'</div></div></div>'+
-  '<div class="tl-bar"><h2 class="soft">La cobertura, <em>mes a mes</em></h2><button type="button" id="order" aria-pressed="false">Ver lo m\u00e1s reciente primero \u00bb</button></div><div class="tl" id="tl">'+tl+'</div>'+
-  (her.length?'<section class="others"><h2>Otros especiales de '+esc(x.tema)+'</h2><div class="chips">'+her.map(function(y){return '<a href="/especiales#'+esc(y.slug)+'">'+(ic?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+ic+'"/></svg>':'')+esc(y.titulo)+'<small>'+y.posts.length+'</small></a>';}).join('')+'</div></section>':'')+
+  '<div class="tl-bar"><h2 class="soft">La cobertura, <em>'+(caps.length?'cap\u00edtulo a cap\u00edtulo':'mes a mes')+'</em></h2><button type="button" id="order" aria-pressed="false">Ver lo m\u00e1s reciente primero \u00bb</button></div><div class="tl" id="tl">'+tl+'</div>'+
+  (her.length?'<section class="others"><h2>Otros especiales de '+esc(x.padre)+'</h2><div class="chips">'+her.map(function(y){var i2=icoE(cat,y);return '<a href="/especiales#'+esc(y.slug)+'">'+(i2?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+i2+'"/></svg>':'')+esc(y.titulo)+'<small>'+y.posts.length+'</small></a>';}).join('')+'</div></section>':'')+
   '<p style="margin:56px 0 0"><a class="btn-ink todos" href="/especiales">Todos los especiales \u00bb</a></p></div>';
  return {html:html,init:function(){document.getElementById('order').addEventListener('click',function(){var tl=document.getElementById('tl'),b=this,rev=b.getAttribute('aria-pressed')!=='true';
-  [].slice.call(tl.children).reverse().forEach(function(m){tl.appendChild(m);var g=m.querySelector('.g');[].slice.call(g.children).reverse().forEach(function(c){g.appendChild(c);});});
+  var rv=function(box,sel){[].slice.call(box.querySelectorAll(sel)).reverse().forEach(function(c){box.appendChild(c);});};
+  rv(tl,':scope>.cap');rv(tl,':scope>.mo');[].forEach.call(tl.querySelectorAll('.cap'),function(c){rv(c,':scope>.mo');});[].forEach.call(tl.querySelectorAll('.g'),function(g){rv(g,':scope>*');});
   b.setAttribute('aria-pressed',rev);b.textContent=rev?'Ver en orden cronol\u00f3gico \u00bb':'Ver lo m\u00e1s reciente primero \u00bb';});}};}
 
 // ---------- novedades
@@ -793,7 +810,7 @@ function list(id, key, c, label, icon, limit) {
 function ico(k) { return '<svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#i-' + k + '"/></svg>'; }
 function facets(base, T) {
   list('f-k', 'k', cnt(base, 'k', function (p) { return p.k; }), function (v) { return TN[v]; }, ico, 9);
-  list('f-h', 'h', cnt(base, 'h', function (p) { return p.h; }), function (v) { return D.temas[v].n; }, function (v) { return '<svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#' + TS[v] + '"/></svg>'; }, 10);
+  list('f-h', 'h', cnt(base, 'h', function (p) { return p.h.filter(function (v) { return !D.temas[v].x; }); }), function (v) { return D.temas[v].n; }, function (v) { return '<svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#' + TS[v] + '"/></svg>'; }, 10);
   list('f-m', 'm', cnt(base, 'm', function (p) { return p.m; }), function (v) { return D.medios[v].n; }, null, 10);
   list('f-a', 'a', cnt(base, 'a', function (p) { return p.a; }), function (v) { return D.autores[v].n; }, null, 10);
   var cy = cnt(base, 'y', function (p) { return [p.y]; }), mx = 1, h = '';
@@ -1006,7 +1023,7 @@ function render() {
   document.querySelectorAll('.ylbl').forEach(function (e) { e.textContent = Y === 'all' ? 'todo el archivo' : Y; });
   hbars('hm', d.medios.slice(0, 20), 'm');
   hbars('ha', d.autores.slice(0, 15), 'a');
-  hbars('ht', d.temas.slice(0, 12), 'h');
+  hbars('ht', d.temas.filter(function (r) { var t = cat0 && cat0.temas[r[2]]; return !(t && t.x); }).slice(0, 12), 'h');
   var tmx = Math.max.apply(null, Object.values(d.tipos).concat([1]));
   document.getElementById('tp').innerHTML = ['info', 'carto', 'ilus', 'port', 'foto', 'publi', 'video', 'graf', 'online'].map(function (k) {
     var v = d.tipos[k] || 0;
@@ -1092,7 +1109,8 @@ function post(art,meta,cat,medido){
  if(!t&&TIT[id])t=TIT[id];
  if(s==='m'){var mm=(t+' '+body.textContent).replace(/&nbsp;/g,' ').match(/semana\s+([IVXLCDM]+)/i);t='mucho m\u00e1s \u00bb semana '+(mm?mm[1].toUpperCase():'');}
  if(!t){var tx=body.textContent.replace(/^[\s\u2a54]+/,'').trim(),f=tx.match(/^(.{20,140}?[.!?:])(\s|$)/);t=f?f[1]:tx.slice(0,110).replace(/\s\S*$/,'\u2026');h1.classList.add('auto');}
- var tm=tems.length?'<div class="temas"><span class="caps">Temas \u00bb</span>'+tems.map(function(i){var q=cat.temas[i];return '<a href="/buscador#h='+i+'"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[i]+'"/></svg>'+esc(q.n)+'</a>';}).join('')+'</div>':'';
+ tems=tems.filter(function(i){var q=cat.temas[i];return q&&(!q.x||(q.x==='sub'&&q.e));});
+ var tm=tems.length?'<div class="temas"><span class="caps">Temas \u00bb</span>'+tems.map(function(i){var q=cat.temas[i];return '<a href="'+(q.x==='sub'?'/especiales#'+q.e:'/buscador#h='+i)+'"'+(q.x==='sub'?' class="esp"':'')+'><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[i]+'"/></svg>'+esc(q.n)+'</a>';}).join('')+'</div>':'';
  if(s==='m'||s==='x'||s==='b'||(s==='o'&&body.textContent.length>1500)){
   var o={art:art,body:body,ims:ims,d:d,id:id,cat:cat,tipos:tipos,s:s,t:t,tm:tm};
   var lbv=s==='m'?vMM(o):s==='x'?vX(o):vB(o); if(lbv.length&&window.initLB)initLB(lbv); return;

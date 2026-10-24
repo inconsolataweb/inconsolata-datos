@@ -276,17 +276,8 @@ def main():
     frames = {q['i']: q.pop('_fr') for q in posts if q.get('_fr')}
     for q in posts:
         q.pop('_tags', None); q.pop('_fr', None)
-    # recuentos y años
-    for key, cat in (('m', IDX['medios']), ('a', IDX['autores']), ('h', IDX['temas'])):
-        c = Counter(i for q in posts for i in q[key])
-        ys = {}
-        for q in posts:
-            for i in q[key]:
-                y = int(q['d'][:4]); lo, hi = ys.get(i, (y, y)); ys[i] = (min(lo, y), max(hi, y))
-        for i, it in enumerate(cat):
-            it['p'] = c.get(i, 0)
-            if 'y' in it and i in ys:
-                it['y'] = list(ys[i])
+    aplicar_estructura(posts)
+    recontar(posts)
     IDX['posts'] = posts
     json.dump(IDX, open(D('indice.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     json.dump(ESP, open(D('especiales.json'), 'w'), ensure_ascii=False, indent=0)
@@ -300,8 +291,64 @@ def main():
     print('Pendientes de revisar:', {k: len(v) for k, v in PEND.items()})
     print(f'Posts nuevos: {nuevos} · releídos: {releidos} · total: {len(posts)}')
 
+def aplicar_estructura(posts):
+    """Jerarquía (datos/estructura.json): especiales hechos de un tema o de otros especiales, posts que heredan el tema
+    padre de sus subtemas y especiales, temas ocultos y exclusiones."""
+    EST = json.load(open(D('estructura.json')))
+    TN = [t['n'] for t in IDX['temas']]
+    ix = {n: i for i, n in enumerate(TN)}
+    for t in IDX['temas']:
+        t.pop('x', None)
+    for n in EST.get('subtemas', {}):
+        if n in ix: IDX['temas'][ix[n]]['x'] = 'sub'
+    for n in EST.get('ocultos', []):
+        if n in ix: IDX['temas'][ix[n]]['x'] = 'oculto'
+    by = {e['slug']: e for e in ESP}
+    for e in ESP:                                  # especiales hechos de un tema antiguo
+        t = ix.get(e.get('de_tema'))
+        if t is not None:
+            e['posts'] = sorted(set(e['posts']) | {q['i'] for q in posts if t in q['h']})
+    for e in ESP:                                  # especiales hechos de otros (sus capítulos)
+        for c in e.get('capitulos', []):
+            if c in by:
+                e['posts'] = sorted(set(e['posts']) | set(by[c]['posts']))
+    fecha = {q['i']: q['d'] for q in posts}
+    for e in ESP:
+        fs = sorted(fecha[i] for i in e['posts'] if i in fecha)
+        if fs:
+            e['desde'], e['hasta'] = fs[0], fs[-1]
+    padre_de = {ix[k]: ix[v] for k, v in EST.get('subtemas', {}).items() if k in ix and v in ix}
+    en_esp = {}
+    for e in ESP:
+        if e.get('padre') in ix:
+            for i in e['posts']:
+                en_esp.setdefault(i, set()).add(ix[e['padre']])
+    exc = {ix[k]: {ix[x] for x in v if x in ix} for k, v in EST.get('excluye', {}).items() if k in ix}
+    for q in posts:
+        h = set(q['h'])
+        for t in list(h):
+            if t in padre_de: h.add(padre_de[t])
+        h |= en_esp.get(q['i'], set())
+        for t, otros in exc.items():
+            if t in h and h & otros: h.discard(t)
+        q['h'] = sorted(h)
+
+def recontar(posts):
+    for key, cat in (('m', IDX['medios']), ('a', IDX['autores']), ('h', IDX['temas'])):
+        c = Counter(i for q in posts for i in q[key])
+        ys = {}
+        for q in posts:
+            for i in q[key]:
+                y = int(q['d'][:4]); lo, hi = ys.get(i, (y, y)); ys[i] = (min(lo, y), max(hi, y))
+        for i, it in enumerate(cat):
+            it['p'] = c.get(i, 0)
+            if 'y' in it and i in ys:
+                it['y'] = list(ys[i])
+
 CDN = 'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/'
 def escribir_meta(idx):
+    global ESP_DE_TEMA
+    ESP_DE_TEMA = {e['de_tema']: e['slug'] for e in ESP if e.get('de_tema')}
     """Archivos ligeros para el tema: qué medio, autores, temas y tipo tiene cada post, y el catálogo de nombres."""
     meta = {q['i']: [q['s'], q['k'], q['m'], q['a'], q['h']] for q in idx['posts']}
     json.dump(meta, open(D('meta.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
@@ -320,7 +367,7 @@ def escribir_meta(idx):
                     'av': asset('avatares', m['n']), 'avw': asset('avatar_blanco', m['n']) or asset('avatares', m['n']),
                     'pais': f.get('pais', ''), 'cc': f.get('cc', '')})
     cat = {'medios': med, 'autores': [a['n'] for a in idx['autores']],
-           'temas': [{'n': t['n'], 'b': t['b']} for t in idx['temas']]}
+           'temas': [dict({'n': t['n'], 'b': t['b']}, **({'x': t['x']} if t.get('x') else {}), **({'e': ESP_DE_TEMA[t['n']]} if t['n'] in ESP_DE_TEMA else {})) for t in idx['temas']]}
     json.dump(cat, open(D('catalogo.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
 
 def escribir_portada(idx, frames):
@@ -357,9 +404,9 @@ def escribir_portada(idx, frames):
     vit = []
     for i, t in enumerate(TE):
         ims = [q['im'] for q in posts if i in q['h'] and q['im'] and q['s'] not in ('m', 'x')][:3]
-        vit.append([i, t['n'], t['p'], t.get('b', ''), ims])
+        vit.append([i, t['n'], t['p'], t.get('b', ''), ims, t.get('x', '')])
     out['temas'] = vit
-    out['esp'] = [[e['titulo'], e['slug'], e.get('tema', ''), len(e['posts']), e.get('hasta', '')] for e in ESP]
+    out['esp'] = [[e['titulo'], e['slug'], e.get('tema', ''), len(e['posts']), e.get('hasta', ''), e.get('padre', ''), e.get('cap_de', '')] for e in ESP]
     # medios: los del año en curso (y los de siempre para el desplegable)
     y = str(datetime.now(timezone.utc).year)
     cy = Counter(i for q in posts if q['d'].startswith(y) for i in q['m'])
@@ -419,7 +466,7 @@ def estadisticas(P):
             cm.update(p['m']); ca.update(p['a']); ck.update(p['k']); ct.update(p['h'])
         out = {'posts': len(ps), 'n_medios': len(cm), 'n_autores': len(ca),
                'medios': [[M[i], c, i] for i, c in cm.most_common(25)], 'autores': [[A[i], c, i, MEDIO_AUT.get(i)] for i, c in ca.most_common(15)],
-               'tipos': dict(ck), 'temas': [[T[i], c, i] for i, c in ct.most_common(12)], 'imgs': sum(p['n'] for p in ps)}
+               'tipos': dict(ck), 'temas': [[T[i], c, i] for i, c in ct.most_common(24)], 'imgs': sum(p['n'] for p in ps)}
         if year:
             out['nuevos'] = sorted([[M[i], cm[i], i] for i in cm if first[i] == year], key=lambda x: -x[1])[:16]
         return out
