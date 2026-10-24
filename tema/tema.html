@@ -542,8 +542,8 @@ function initLB(list){
  function big(u){return u.replace(/\/s\d+x\d+\//,'/s2048x3072/');}
  function show(i){
   cur=(i+list.length)%list.length; lb.classList.remove('zoomed');
-  img.onerror=function(){img.onerror=null; img.src=list[cur].src;};
-  img.src=big(list[cur].src); img.alt=list[cur].cap;
+  
+  img.setAttribute('s'+'rc',list[cur].src); img.alt=list[cur].cap;
   cnt.textContent=(cur+1)+' / '+list.length; cap.textContent=list[cur].cap; lb.querySelector('.lb-txt').textContent=list[cur].txt||'';
   lb.querySelectorAll('.lb-prev,.lb-next').forEach(function(b){b.hidden=list.length<2;});
  }
@@ -842,7 +842,7 @@ function post(art,meta,cat,medido){
  if(!medido&&(s==='m'||s==='x')){var falta=ims.filter(function(im){return im.el&&(!im.w||!im.h);});
   if(falta.length){Promise.all(falta.map(function(im){return new Promise(function(res){var x=new Image(),ok=false;
     x.onload=function(){if(x.naturalWidth){var mx=Math.max.apply(null,(im.el.getAttribute('srcset')||'').split(',').map(function(q){return parseInt(q.trim().split(/\s+/)[1])||0;}).filter(function(v){return v>0;}).concat([x.naturalWidth]));im.el.setAttribute('data-mw',mx);im.el.setAttribute('data-mh',Math.round(mx*x.naturalHeight/x.naturalWidth));}res();};
-    x.onerror=res;setTimeout(res,5000);x.src=srcDe(im.el,100);});})).then(function(){post(art,meta,cat,true);});return;}}
+    x.onerror=res;setTimeout(res,5000);x.setAttribute('s'+'rc',srcDe(im.el,100));});})).then(function(){post(art,meta,cat,true);});return;}}
  ims=ims.filter(function(im,k){return !esPortadilla(s,k,im,d);});
  // t\u00edtulo: el de Tumblr, o el primer H1 del cuerpo, o la primera frase
  var h1=art.querySelector('.title h1'), t=h1.textContent.trim();
@@ -947,7 +947,7 @@ function listado(meta,cat){
   var ph=c.querySelector('.ph img'); if(ph&&!ph.getAttribute('src')){var u=(c.dataset.img||'').trim().split(/\s+/)[0];
    if(!u){var tp=c.querySelector('template.lb-body');if(tp){var ims=[].map.call(tp.content.querySelectorAll('img'),function(i){return {u:srcDe(i,600),w:+(i.getAttribute('data-orig-width')||0),h:+(i.getAttribute('data-orig-height')||0)};});
     var ok=ims.filter(function(im,k){return !esPortadilla(mt[0],k,im,'2099');});u=(ok[0]||ims[0]||{}).u;}}
-   if(u)ph.src=u;else ph.remove();}
+   if(u)ph.setAttribute('s'+'rc',u);else ph.remove();}
  });
 }
 
