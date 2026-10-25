@@ -268,12 +268,12 @@ document.addEventListener('click',function(e){var b=e.target.closest('.share .cp
 // sugerencias de medios con ficha y autores mientras se escribe en el buscador de la cabecera
 function autocompleta(cat){
  var M=cat.medios.map(function(m,i){return {t:'m',n:m.n,k:fold(m.n),u:m.ficha?fichaMedio(m):'/buscador#m='+i,av:m.av,f:m.ficha};}).filter(function(o){return o.f;}),
-     A=cat.autores.map(function(n){return {t:'a',n:n,k:fold(n),u:fichaAutor(n)};});
+     A=cat.autores.map(function(n,i){var mi=cat.am?cat.am[i]:-1,m=mi>=0?cat.medios[mi]:null;return {t:'a',n:n,k:fold(n),u:fichaAutor(n),av:m&&m.av,md:m&&m.n};});
  function busca(q){q=fold(q.trim());if(q.length<2)return [];var ok=function(o){var i=o.k.indexOf(q);return i===0||(i>0&&/[\s(.'-]/.test(o.k[i-1]));};
   return M.filter(ok).slice(0,4).concat(A.filter(ok).slice(0,6));}
  [].forEach.call(document.querySelectorAll('.srch'),function(f){var inp=f.querySelector('input'),box=document.createElement('div'),sel=-1,L=[];
   box.className='ac';box.hidden=true;box.setAttribute('role','listbox');box.id='ac-'+inp.id;f.appendChild(box);inp.setAttribute('aria-controls',box.id);inp.setAttribute('aria-autocomplete','list');
-  function pinta(){box.innerHTML=L.map(function(o,i){return '<a href="'+o.u+'" role="option" class="'+(i===sel?'on':'')+'">'+(o.t==='m'?(o.av?'<img src="'+esc(o.av)+'" alt="">':'<span class="ini">'+esc(o.n.charAt(0))+'</span>'):'<span class="ini a">'+esc(o.n.charAt(0))+'</span>')+'<span class="nm">'+esc(o.n)+'</span><small>'+(o.t==='m'?'medio':'autor')+'</small></a>';}).join('')+
+  function pinta(){box.innerHTML=L.map(function(o,i){return '<a href="'+o.u+'" role="option" class="'+(i===sel?'on':'')+'">'+(o.av?'<img src="'+esc(o.av)+'" alt="">':'<span class="ini'+(o.t==='a'?' a':'')+'">'+esc(o.n.charAt(0))+'</span>')+'<span class="nm">'+esc(o.n)+'</span><small>'+(o.t==='m'?'medio':'autor'+(o.md?' · '+esc(o.md):''))+'</small></a>';}).join('')+
    (inp.value.trim()?'<a href="/buscador#q='+encodeURIComponent(inp.value.trim())+'" class="todo'+(sel===L.length?' on':'')+'">Buscar «'+esc(inp.value.trim())+'» en todo el archivo »</a>':'');box.hidden=!inp.value.trim();}
   inp.addEventListener('input',function(){L=busca(inp.value);sel=-1;pinta();});
   inp.addEventListener('keydown',function(e){if(box.hidden)return;var n=L.length+1;

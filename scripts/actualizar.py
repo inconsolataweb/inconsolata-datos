@@ -376,7 +376,8 @@ def escribir_meta(idx):
         med.append({'n': m['n'], 'slug': f.get('slug', ''), 'ficha': bool(f.get('ficha')), 'logo': logo,
                     'av': asset('avatares', m['n']), 'avw': asset('avatar_blanco', m['n']) or asset('avatares', m['n']),
                     'pais': f.get('pais', ''), 'cc': f.get('cc', '')})
-    cat = {'medios': med, 'autores': [a['n'] for a in idx['autores']],
+    MI = {m['n']: i for i, m in enumerate(idx['medios'])}
+    cat = {'medios': med, 'autores': [a['n'] for a in idx['autores']], 'am': [MI.get((a.get('m') or [''])[0], -1) for a in idx['autores']],
            'temas': [dict({'n': t['n'], 'b': t['b']}, **({'x': t['x']} if t.get('x') else {}), **({'e': ESP_DE_TEMA[t['n']]} if t['n'] in ESP_DE_TEMA else {})) for t in idx['temas']]}
     json.dump(cat, open(D('catalogo.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
 

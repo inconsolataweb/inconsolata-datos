@@ -545,7 +545,7 @@ function portada(meta,cat){
 // ------------------------------------------------------------------ p\u00e1ginas propias
 // /buscador, /medios(#slug), /autores(#nombre), /estadisticas(#a\u00f1o), /especiales(#slug), /novedades
 var RUTA=(location.pathname.match(/\/(buscador|medios|autores|estadisticas|especiales|novedades)(?:\.html)?\/?$/)||[])[1]||'';
-var Y1=new Date().getFullYear(),TIPOS_ORD=['info','carto','port','graf','ilus','foto','video','publi','online'];
+var Y1=new Date().getFullYear(),TIPOS_ORD=['info','carto','port','ilus','foto','video','publi','online'];
 var MES3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 function fcorta(d){return +d.slice(8,10)+' '+MES3[+d.slice(5,7)-1]+' '+d.slice(0,4);}
 function crumbs(a){return '<div class="crumbs caps"><a href="/">Portada</a>'+a.map(function(x){return '<i>\u00bb</i>'+(x[1]?'<a href="'+x[1]+'">'+esc(x[0])+'</a>':'<span>'+esc(x[0])+'</span>');}).join('')+'</div>';}
@@ -618,6 +618,19 @@ function resumenES(t){return cacheJ('inc-wp-'+t,function(){return fetch('https:/
 function corto(t,n){var s=(t||'').match(/[^.]+\.(\s|$)/g)||[t||''],r='';for(var i=0;i<s.length;i++){if(r&&(r+s[i]).length>n)break;r+=s[i];}r=r.trim();return r.length>n+60?r.slice(0,n).replace(/\s+\S*$/,'')+'\u2026':r;}
 var TIPO_ES={Q11032:'peri\u00f3dico',Q1110794:'diario',Q41298:'revista',Q1153191:'peri\u00f3dico digital',Q1002697:'peri\u00f3dico',Q2305295:'revista semanal',Q35127:'web',Q1047113:'revista especializada',Q685935:'revista'};
 function bandera(cc){return cc?'<img class="flag" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/4x3/'+esc(cc.toLowerCase())+'.svg" alt="" width="24" height="18">':'';}
+// iconos de los enlaces de las fichas
+var ICR={x:'<path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>',
+ bsky:'<path fill="currentColor" d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/>',
+ ig:'<rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="4.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="17.6" cy="6.4" r="1.4" fill="currentColor"/>',
+ li:'<rect x="2" y="2" width="20" height="20" rx="3" fill="currentColor"/><path fill="#fff" d="M6.2 9.6h2.6V18H6.2zM7.5 5.6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM10.4 9.6h2.5v1.2c.4-.7 1.3-1.4 2.6-1.4 2.7 0 3.2 1.8 3.2 4.1V18h-2.6v-4c0-1 0-2.2-1.3-2.2s-1.6 1-1.6 2.1V18h-2.6z"/>',
+ wiki:'<text x="12" y="17.5" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="currentColor">W</text>',
+ be:'<text x="12" y="17" text-anchor="middle" font-family="Archivo,Arial,sans-serif" font-size="13" font-weight="900" fill="currentColor">B\u0113</text>',
+ web:'<circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 12h19M12 2.5c3 3.2 3 15.8 0 19M12 2.5c-3 3.2-3 15.8 0 19" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+ bus:'<circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.5 15.5l5.5 5.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
+ link:'<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L11.6 6M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.6-1.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>'};
+function boton(l,u){var k=l==='X'?'x':l==='Bluesky'?'bsky':l==='Instagram'?'ig':l==='LinkedIn'||/linkedin\./.test(u)?'li':l==='Wikipedia'?'wiki':/behance\./.test(u)?'be':l==='En el buscador'?'bus':l==='Web'?'web':'link';
+ if(k==='be')l='Behance';if(k==='li')l='LinkedIn';var ext=/^https?:/.test(u);
+ return '<a href="'+esc(u)+'"'+(ext?' target="_blank" rel="noopener"':'')+' class="red"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">'+ICR[k]+'</svg>'+esc(l)+'</a>';}
 function redes(o){var L=[];(o.otros||'').split(/\n+/).forEach(function(u){u=u.trim();if(/^https?:/.test(u))L.push([u.replace(/^https?:\/\/(www\.)?/,'').split('/')[0],u]);});if(o.web)L.push(['Web',o.web]);if(o.x)L.push(['X','https://x.com/'+o.x.replace(/^@/,'')]);if(o.bsky)L.push(['Bluesky','https://bsky.app/profile/'+o.bsky.replace(/^@/,'')]);
  if(o.ig)L.push(['Instagram','https://instagram.com/'+o.ig.replace(/^@/,'')]);if(o.linkedin)L.push(['LinkedIn',o.linkedin]);return L;}
 
@@ -647,7 +660,7 @@ function formatoSVG(t){t=t||'';var k=FORMATOS.findIndex(function(f){return f[3].
 function coronas(ST,n){if(!ST||!ST.years)return '';var y1=String(new Date().getFullYear()),out=[];
  Object.keys(ST.years).sort().forEach(function(y){var L=ST.years[y].medios||[];for(var i=0;i<3&&i<L.length;i++)if(L[i][0]===n)out.push([y,i]);});
  if(!out.length)return '';var C=['oro','plata','bronce'],T=['1.\u00ba','2.\u00ba','3.\u00ba'];
- return '<div class="coronas">'+out.map(function(o){return '<span class="cor '+C[o[1]]+(o[0]===y1?' prov':'')+'" title="'+T[o[1]]+' medio m\u00e1s presente en '+o[0]+(o[0]===y1?' (provisional)':'')+'"><svg viewBox="0 0 64 44" aria-hidden="true"><path d="M4 40 L2 8 L18 22 L32 2 L46 22 L62 8 L60 40 Z"/></svg><b>'+o[0]+'</b></span>';}).join('')+'</div>';}
+ return '<div class="coronas">'+out.map(function(o){var tx=T[o[1]]+' medio m\u00e1s presente en inconsolata\u00bb en '+o[0]+(o[0]===y1?' (provisional: el a\u00f1o no ha terminado)':'');return '<span class="cor '+C[o[1]]+(o[0]===y1?' prov':'')+'" tabindex="0" aria-label="'+tx+'" data-tip="'+tx+'"><svg viewBox="0 0 64 44" aria-hidden="true"><path d="M4 40 L2 8 L18 22 L32 2 L46 22 L62 8 L60 40 Z"/></svg><b>'+o[0]+'</b></span>';}).join('')+'</div>';}
 
 function medioFicha(A,cat,FM,mi,ST){
  var m=A.medios[mi],c=cat.medios[mi]||{},f=FM[m.n]||{},ps=A.posts.filter(function(p){return p.m.indexOf(mi)>=0;});
@@ -658,9 +671,9 @@ function medioFicha(A,cat,FM,mi,ST){
  var big2=fund?'<div class="stat"><b>'+((cierre||Y1)-fund)+'</b><span>'+(cierre?'a\u00f1os public\u00e1ndose \u00b7 de '+fund+' a '+cierre:'a\u00f1os public\u00e1ndose \u00b7 desde '+fund)+'</span></div>':
   '<div class="stat"><b>'+(new Set(ps.map(function(p){return p.d.slice(0,4);})).size)+'</b><span>a\u00f1os apareciendo en inconsolata\u00bb</span></div>';
  var html=crumbs([['Medios','/medios'],[m.n]])+'<section class="fhero'+(vis?'':' novis')+'">'+vis+'<div class="finfo"><span class="caps ante" style="color:var(--accent)">Medio \u00bb '+bandera(f.cc)+esc(f.pais||'')+'<span id="m-tipo"></span>'+(f.desaparecido||cierre?' \u00b7 ya no se publica':'')+'</span>'+
-  '<h1 class="soft">'+esc(m.n)+'</h1>'+(f.nota?'<div class="ftext">'+esc(f.nota)+'</div>':'')+
+  '<h1 class="soft">'+esc(m.n)+'</h1>'+
   '<div class="wk" id="wk"><div class="wk-h"><span class="caps">Datos \u00bb</span><a class="wk-src" id="wk-src" href="'+esc(f.wikipedia||'#')+'" target="_blank" rel="noopener"'+(f.wikipedia?'':' hidden')+'>Fuente: Wikidata y Wikipedia \u00b7 CC BY-SA \u00bb</a></div>'+
-  '<div class="wk-top">'+(c.av?'<span class="av-slot" aria-hidden="true"><img src="'+esc(c.av)+'" alt=""></span>':'')+'<p class="wk-r" id="wk-r" hidden></p></div><dl id="wk-dl"></dl></div>'+
+  '<div class="wk-top">'+(c.av?'<span class="av-slot" aria-hidden="true"><img src="'+esc(c.av)+'" alt=""></span>':'')+'<p class="wk-r'+(f.nota?' propio':'')+'" id="wk-r"'+(f.nota?'':' hidden')+'>'+esc(f.nota||'')+'</p></div><dl id="wk-dl"></dl></div>'+
   '<div class="flinks" id="m-links"></div></div></section>';
  function datos(o){o=o||{};var lab=function(ids){return (ids||[]).map(function(i){return (o.l||{})[i];}).filter(Boolean);};
   var tipo=f.tipo||(o.tipo||[]).map(function(i){return TIPO_ES[i]||(o.l||{})[i];}).filter(Boolean)[0]||'';if(tipo)document.getElementById('m-tipo').textContent=' \u00b7 '+tipo;
@@ -674,11 +687,11 @@ function medioFicha(A,cat,FM,mi,ST){
   document.getElementById('wk-dl').innerHTML=d.map(function(x){return '<div'+(x[0]==='Propietario'||x[0]==='Formato'?' class="ancho"':'')+'><dt>'+x[0]+'</dt><dd>'+(x[0]==='Web'||x[2]?x[1]:esc(x[1]))+'</dd></div>';}).join('');
   var L=redes({web:web,x:f.x||o.x,bsky:f.bsky||o.bsky,ig:f.ig||o.ig});var wp=o.es?'https://es.wikipedia.org/wiki/'+encodeURIComponent(o.es.replace(/ /g,'_')):(f.wikipedia&&/\/\/es\./.test(f.wikipedia)?f.wikipedia:'');
   if(wp)L.push(['Wikipedia',wp]);
-  document.getElementById('m-links').innerHTML=L.map(function(x){return '<a href="'+esc(x[1])+'" target="_blank" rel="noopener">'+x[0]+' \u00bb</a>';}).join('')+'<a href="/buscador#m='+mi+'">En el buscador \u00bb</a>';
+  document.getElementById('m-links').innerHTML=L.map(function(x){return boton(x[0],x[1]);}).join('')+boton('En el buscador','/buscador#m='+mi);
   if(wp){var s=document.getElementById('wk-src');s.href=wp;s.hidden=false;}
   if(!d.length&&!wp)document.getElementById('wk').hidden=true;
   var t=o.es||(f.wikipedia&&/\/\/es\./.test(f.wikipedia)?decodeURIComponent(f.wikipedia.split('/wiki/')[1]||'').replace(/_/g,' '):'');
-  if(t)resumenES(t).then(function(j){var r=document.getElementById('wk-r');if(r&&j.x){r.textContent=corto(j.x,200);r.hidden=false;}}).catch(function(){});}
+  if(t&&!f.nota)resumenES(t).then(function(j){var r=document.getElementById('wk-r');if(r&&j.x){r.textContent=corto(j.x,200);r.hidden=false;}}).catch(function(){});}
  return {html:'<div class="wrap">'+html+'</div><section class="band">'+(c.avw?'<img class="wm-av" src="'+esc(c.avw)+'" alt="" aria-hidden="true">':'')+'<div class="wrap in">'+
   '<div class="stat"><b>'+ps.length+'</b><span>entradas en inconsolata\u00bb</span>'+coronas(ST,m.n)+'</div>'+big2+
   (auts.length?'<div class="stat"><span>Autores m\u00e1s citados</span><ol class="tops">'+auts.map(function(a){return '<li><a href="'+fichaAutor(A.autores[a[0]].n)+'">'+esc(A.autores[a[0]].n)+'<small>'+a[1]+'</small></a></li>';}).join('')+'</ol></div>':'')+
@@ -702,7 +715,7 @@ function autorFicha(A,cat,FM,AX,ai){var a=A.autores[ai],ps=A.posts.filter(functi
  var html='<div class="wrap">'+crumbs([['Autores','/autores'],[a.n]])+'<section class="fhero'+(vis?'':' novis')+'">'+vis+'<div class="finfo"><span class="caps ante" style="color:var(--accent)">'+(x.genero==='autora'?'Autora':x.genero==='autor'?'Autor':'Periodista')+(a.m&&a.m.length?' \u00bb '+esc(a.m.slice(0,3).join(' \u00b7 ')):'')+'</span>'+
   '<div class="name-row"><h1 class="soft autor">'+esc(a.n)+'</h1>'+(mc?'<a class="av-medio" href="'+fichaMedio(mc)+'" aria-label="Trabaja en '+esc(md)+'">'+(mc.av?'<span class="av-slot" aria-hidden="true"><img src="'+esc(mc.av)+'" alt=""></span>':'')+'<span>'+esc(md)+' \u00bb</span></a>':'')+'</div>'+(pais||x.oficio?'<p class="nac">'+bandera(cc)+'<span>'+esc(pais)+(pais&&x.oficio?' \u00b7 ':'')+esc(x.oficio||'')+'</span></p>':'')+
   (x.texto?'<div class="ftext">'+esc(x.texto)+'</div>':'')+
-  '<div class="flinks">'+L.map(function(l){return '<a href="'+esc(l[1])+'" target="_blank" rel="noopener">'+l[0]+' \u00bb</a>';}).join('')+'<a href="/buscador#a='+ai+'">En el buscador \u00bb</a></div></div></section></div>'+
+  '<div class="flinks">'+L.map(function(l){return boton(l[0],l[1]);}).join('')+boton('En el buscador','/buscador#a='+ai)+'</div></div></section></div>'+
   '<section class="band"><div class="wrap in"><div class="stat"><b>'+ps.length+'</b><span>entradas en inconsolata\u00bb</span></div>'+
   '<div class="stat"><b>'+ny+'</b><span>a\u00f1os apareciendo en inconsolata\u00bb \u00b7 de '+y0+' a '+y1+'</span></div>'+
   (a.m&&a.m.length?'<div class="stat"><span>Medios</span><div class="chips">'+a.m.map(function(n){return chipMedio(cat,n);}).join('')+'</div></div>':'')+
@@ -1259,12 +1272,12 @@ document.addEventListener('click',function(e){var b=e.target.closest('.share .cp
 // sugerencias de medios con ficha y autores mientras se escribe en el buscador de la cabecera
 function autocompleta(cat){
  var M=cat.medios.map(function(m,i){return {t:'m',n:m.n,k:fold(m.n),u:m.ficha?fichaMedio(m):'/buscador#m='+i,av:m.av,f:m.ficha};}).filter(function(o){return o.f;}),
-     A=cat.autores.map(function(n){return {t:'a',n:n,k:fold(n),u:fichaAutor(n)};});
+     A=cat.autores.map(function(n,i){var mi=cat.am?cat.am[i]:-1,m=mi>=0?cat.medios[mi]:null;return {t:'a',n:n,k:fold(n),u:fichaAutor(n),av:m&&m.av,md:m&&m.n};});
  function busca(q){q=fold(q.trim());if(q.length<2)return [];var ok=function(o){var i=o.k.indexOf(q);return i===0||(i>0&&/[\s(.'-]/.test(o.k[i-1]));};
   return M.filter(ok).slice(0,4).concat(A.filter(ok).slice(0,6));}
  [].forEach.call(document.querySelectorAll('.srch'),function(f){var inp=f.querySelector('input'),box=document.createElement('div'),sel=-1,L=[];
   box.className='ac';box.hidden=true;box.setAttribute('role','listbox');box.id='ac-'+inp.id;f.appendChild(box);inp.setAttribute('aria-controls',box.id);inp.setAttribute('aria-autocomplete','list');
-  function pinta(){box.innerHTML=L.map(function(o,i){return '<a href="'+o.u+'" role="option" class="'+(i===sel?'on':'')+'">'+(o.t==='m'?(o.av?'<img src="'+esc(o.av)+'" alt="">':'<span class="ini">'+esc(o.n.charAt(0))+'</span>'):'<span class="ini a">'+esc(o.n.charAt(0))+'</span>')+'<span class="nm">'+esc(o.n)+'</span><small>'+(o.t==='m'?'medio':'autor')+'</small></a>';}).join('')+
+  function pinta(){box.innerHTML=L.map(function(o,i){return '<a href="'+o.u+'" role="option" class="'+(i===sel?'on':'')+'">'+(o.av?'<img src="'+esc(o.av)+'" alt="">':'<span class="ini'+(o.t==='a'?' a':'')+'">'+esc(o.n.charAt(0))+'</span>')+'<span class="nm">'+esc(o.n)+'</span><small>'+(o.t==='m'?'medio':'autor'+(o.md?' \u00b7 '+esc(o.md):''))+'</small></a>';}).join('')+
    (inp.value.trim()?'<a href="/buscador#q='+encodeURIComponent(inp.value.trim())+'" class="todo'+(sel===L.length?' on':'')+'">Buscar \u00ab'+esc(inp.value.trim())+'\u00bb en todo el archivo \u00bb</a>':'');box.hidden=!inp.value.trim();}
   inp.addEventListener('input',function(){L=busca(inp.value);sel=-1;pinta();});
   inp.addEventListener('keydown',function(e){if(box.hidden)return;var n=L.length+1;

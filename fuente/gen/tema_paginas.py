@@ -134,15 +134,24 @@ FICHA_CSS = ambito(_fcss + """
 .fmt small{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
 .fmt small b{font-size:13px;color:var(--ink)}
 .fmt small i{font-style:normal}.fmt small i.on{color:var(--ink);background:var(--yellow);padding:0 3px}
-.coronas{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.cor{position:relative;width:54px;height:40px;display:inline-block}
+.coronas{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;max-width:260px}
+.cor:hover::after,.cor:focus::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:230px;background:var(--yellow);color:var(--ink);font-family:'Archivo',sans-serif;font-style:normal;font-size:12px;font-weight:700;letter-spacing:0;text-transform:none;line-height:1.35;padding:6px 9px;z-index:5;box-shadow:3px 3px 0 var(--accent);white-space:normal}
+.cor{position:relative;width:36px;height:27px;display:inline-block;cursor:help}
 .cor svg{position:absolute;inset:0;width:100%;height:100%}
-.cor b{position:absolute;left:0;right:0;bottom:4px;text-align:center;font-family:'Archivo',sans-serif;font-style:normal;font-size:12px;font-weight:900;color:var(--ink);letter-spacing:0}
+.cor b{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-family:'Archivo',sans-serif;font-style:normal;font-size:8.5px;font-weight:900;color:var(--ink);letter-spacing:0}
 .cor.oro svg{fill:#E2B33C}.cor.plata svg{fill:#C9CDD2}.cor.bronce svg{fill:#C27C47}
 .cor.prov{animation:parpa 1.4s ease-in-out infinite}
 @keyframes parpa{50%{opacity:.35}}
 @media (prefers-reduced-motion:reduce){.cor.prov{animation:none;outline:2px dashed var(--yellow)}}
 .finfo .ftext{border:0;background:transparent;padding:0;font-size:19px;line-height:1.55;max-width:820px}
+.wk{max-width:none!important}
+.wk dl{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important;gap:12px 22px!important}
+.wk dl .ancho{grid-column:span 2}
+.wk-top{align-items:flex-start}
+.wk-r.propio{font-style:normal!important;font-size:16px!important;line-height:1.5!important}
+.flinks a.red{display:inline-flex;align-items:center;gap:8px}
+.flinks a.red svg{flex-shrink:0}
+@media (max-width:700px){.wk dl .ancho{grid-column:1/-1}}
 .finfo h1.autor{font-size:clamp(44px,5.6vw,88px);line-height:.92}
 .wk-r{font-size:17px!important;line-height:1.5!important}
 .chips a.ch-av{gap:8px}.chips a.ch-av img{width:22px;height:22px;object-fit:contain}
