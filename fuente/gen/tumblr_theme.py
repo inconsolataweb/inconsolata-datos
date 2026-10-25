@@ -86,6 +86,16 @@ TCSS = """
 .prev-row .ls{display:flex;flex-wrap:wrap;gap:8px}
 .prev-row .yr{line-height:40px;color:var(--ink)}
 .temas a svg{width:20px;height:20px;overflow:visible;margin-right:6px}
+.srch{position:relative}
+.srch .ac{position:absolute;top:calc(100% + 6px);left:0;width:max(100%,320px);background:#fff;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--accent);z-index:80;text-transform:none;letter-spacing:0}
+.srch .ac a{display:flex;align-items:center;gap:10px;padding:8px 12px;min-height:44px;font-weight:600;font-size:15px;color:var(--ink)}
+.srch .ac a.on,.srch .ac a:hover{background:var(--yellow)}
+.srch .ac img,.srch .ac .ini{width:26px;height:26px;object-fit:contain;flex-shrink:0}
+.srch .ac .ini{display:grid;place-items:center;background:var(--paper);font-family:'Fraunces',serif;font-style:italic;font-weight:900}
+.srch .ac .ini.a{border-radius:50%}
+.srch .ac .nm{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:17px}
+.srch .ac small{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.srch .ac .todo{border-top:2px solid var(--ink);font-size:13px;font-weight:800}
 .temas a.esp{background:var(--ink);color:var(--paper)}.temas a.esp:hover{background:var(--accent)}
 @media (max-width:860px){.mm-it{grid-template-columns:1fr}}
 """
@@ -247,11 +257,30 @@ function listado(meta,cat){
 
 Promise.all([get('meta'),get('catalogo'),get('titulos').catch(function(){return {};})]).then(function(r){
  TIT=r[2]||{};
+ // logos y avatares fijados al mismo commit que el código (así no se quedan versiones viejas en caché)
+ if(window.INC_BASE)r[1].medios.forEach(function(m){['av','avw','logo'].forEach(function(k){if(m[k])m[k]=m[k].replace('https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/',INC_BASE);});});
+ autocompleta(r[1]);
  var art=document.querySelector('article.post'); if(RUTA)pagina(r[0],r[1]); else if(art)post(art,r[0],r[1]); else if(document.body.classList.contains('es-portada'))portada(r[0],r[1]); else listado(r[0],r[1]);
 }).catch(function(e){console.error('inconsolata»: no se pudieron cargar los datos',e);});
 document.addEventListener('click',function(e){var b=e.target.closest('.share .cp');if(!b)return;var u=b.dataset.u||location.href;
  var fin=function(){b.classList.add('done');b.setAttribute('aria-label','Enlace copiado');setTimeout(function(){b.classList.remove('done');b.setAttribute('aria-label','Copiar enlace');},1800);};
  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(fin,fin);else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(x){}t.remove();fin();}});
+// sugerencias de medios con ficha y autores mientras se escribe en el buscador de la cabecera
+function autocompleta(cat){
+ var M=cat.medios.map(function(m,i){return {t:'m',n:m.n,k:fold(m.n),u:m.ficha?fichaMedio(m):'/buscador#m='+i,av:m.av,f:m.ficha};}).filter(function(o){return o.f;}),
+     A=cat.autores.map(function(n){return {t:'a',n:n,k:fold(n),u:fichaAutor(n)};});
+ function busca(q){q=fold(q.trim());if(q.length<2)return [];var ok=function(o){var i=o.k.indexOf(q);return i===0||(i>0&&/[\s(.'-]/.test(o.k[i-1]));};
+  return M.filter(ok).slice(0,4).concat(A.filter(ok).slice(0,6));}
+ [].forEach.call(document.querySelectorAll('.srch'),function(f){var inp=f.querySelector('input'),box=document.createElement('div'),sel=-1,L=[];
+  box.className='ac';box.hidden=true;box.setAttribute('role','listbox');box.id='ac-'+inp.id;f.appendChild(box);inp.setAttribute('aria-controls',box.id);inp.setAttribute('aria-autocomplete','list');
+  function pinta(){box.innerHTML=L.map(function(o,i){return '<a href="'+o.u+'" role="option" class="'+(i===sel?'on':'')+'">'+(o.t==='m'?(o.av?'<img src="'+esc(o.av)+'" alt="">':'<span class="ini">'+esc(o.n.charAt(0))+'</span>'):'<span class="ini a">'+esc(o.n.charAt(0))+'</span>')+'<span class="nm">'+esc(o.n)+'</span><small>'+(o.t==='m'?'medio':'autor')+'</small></a>';}).join('')+
+   (inp.value.trim()?'<a href="/buscador#q='+encodeURIComponent(inp.value.trim())+'" class="todo'+(sel===L.length?' on':'')+'">Buscar «'+esc(inp.value.trim())+'» en todo el archivo »</a>':'');box.hidden=!inp.value.trim();}
+  inp.addEventListener('input',function(){L=busca(inp.value);sel=-1;pinta();});
+  inp.addEventListener('keydown',function(e){if(box.hidden)return;var n=L.length+1;
+   if(e.key==='ArrowDown'){sel=(sel+1)%n;pinta();e.preventDefault();}else if(e.key==='ArrowUp'){sel=(sel+n-1)%n;pinta();e.preventDefault();}
+   else if(e.key==='Escape'){box.hidden=true;}else if(e.key==='Enter'&&sel>=0&&sel<=L.length){e.preventDefault();e.stopImmediatePropagation();box.querySelectorAll('a')[sel].click();}});
+  document.addEventListener('click',function(e){if(!f.contains(e.target))box.hidden=true;});});
+}
 // el buscador pequeño de la cabecera lleva al buscador
 [].forEach.call(document.querySelectorAll('.srch'),function(f){f.addEventListener('submit',function(){var v=f.querySelector('input').value.trim();location.href='/buscador'+(v?'#q='+encodeURIComponent(v):'');});});
 })();

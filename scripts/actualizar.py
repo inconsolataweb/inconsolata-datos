@@ -304,9 +304,19 @@ def aplicar_estructura(posts):
     for n in EST.get('ocultos', []):
         if n in ix: IDX['temas'][ix[n]]['x'] = 'oculto'
     by = {e['slug']: e for e in ESP}
+    LIM = EST.get('limpieza', {})
     for e in ESP:                                  # especiales hechos de un tema antiguo
         t = ix.get(e.get('de_tema'))
-        if t is not None:
+        if t is None:
+            continue
+        lim = LIM.get(e['slug'])
+        if lim is not None:                        # fuera los recopilatorios sueltos y lo anterior a la fecha de inicio
+            en_caps = set().union(*[set(by[c]['posts']) for c in e.get('capitulos', []) if c in by]) if e.get('capitulos') else set()
+            for q in posts:
+                if t in q['h'] and q['i'] not in en_caps and ((lim.get('desde') and q['d'] < lim['desde']) or q['s'] in ('m', 'x')):
+                    q['h'] = [x for x in q['h'] if x != t]
+            e['posts'] = sorted({q['i'] for q in posts if t in q['h']})
+        else:
             e['posts'] = sorted(set(e['posts']) | {q['i'] for q in posts if t in q['h']})
     for e in ESP:                                  # especiales hechos de otros (sus capítulos)
         for c in e.get('capitulos', []):

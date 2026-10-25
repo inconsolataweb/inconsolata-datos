@@ -142,6 +142,7 @@ FICHA_CSS = ambito(_fcss + """
 .cor.prov{animation:parpa 1.4s ease-in-out infinite}
 @keyframes parpa{50%{opacity:.35}}
 @media (prefers-reduced-motion:reduce){.cor.prov{animation:none;outline:2px dashed var(--yellow)}}
+.finfo .ftext{border:0;background:transparent;padding:0;font-size:19px;line-height:1.55;max-width:820px}
 .finfo h1.autor{font-size:clamp(44px,5.6vw,88px);line-height:.92}
 .wk-r{font-size:17px!important;line-height:1.5!important}
 .chips a.ch-av{gap:8px}.chips a.ch-av img{width:22px;height:22px;object-fit:contain}

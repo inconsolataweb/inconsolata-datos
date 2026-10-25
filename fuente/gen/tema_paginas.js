@@ -93,12 +93,12 @@ function arbolProp(t){
   (o.pct?'<span class="pct"><i style="width:'+Math.min(100,parseFloat(o.pct.replace(',','.'))||0)+'%"></i><b>'+esc(o.pct)+'</b></span>':'')+'</li>';}).join('')+'</ul>';}
 // tamaños de página habituales (mm, ancho × alto)
 var FORMATOS=[['sábana',380,600,/s[aá]bana|broadsheet|gran formato/i],['berlinés',315,470,/berlin/i],['tabloide',280,430,/tabloid|compact/i],['revista (A4)',210,297,/revista|a4|magazine/i]];
-function formatoSVG(t){var k=FORMATOS.findIndex(function(f){return f[3].test(t||'');});if(k<0)return '';
- var S=.2,W=FORMATOS[0][1]*S+20,H=FORMATOS[0][2]*S+30,h='';
- FORMATOS.slice().reverse().forEach(function(f){var on=FORMATOS[k]===f,w=f[1]*S,hh=f[2]*S;
-  h+='<rect x="10" y="'+(H-10-hh)+'" width="'+w+'" height="'+hh+'" class="'+(on?'on':'')+'"/>';
-});
- return '<span class="fmt"><svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Formato '+esc(FORMATOS[k][0])+': '+FORMATOS[k][1]+' por '+FORMATOS[k][2]+' milímetros, comparado con otros formatos">'+h+'</svg><small><b>'+FORMATOS[k][1]+' × '+FORMATOS[k][2]+' mm</b><br>'+FORMATOS.map(function(f,i){return '<i class="'+(i===k?'on':'')+'">'+f[0]+'</i>';}).join(' · ')+'</small></span>';}
+function formatoSVG(t){t=t||'';var k=FORMATOS.findIndex(function(f){return f[3].test(t);}),m=t.match(/(\d+(?:[.,]\d+)?)\s*[x×]\s*(\d+(?:[.,]\d+)?)/i),dim=null;
+ if(m){var a=parseFloat(m[1].replace(',','.')),b=parseFloat(m[2].replace(',','.'));if(a<100&&b<100){a*=10;b*=10;}dim=[Math.round(Math.min(a,b)),Math.round(Math.max(a,b))];}
+ if(k<0&&!dim)return '';var S=.2,W=Math.max(FORMATOS[0][1],dim?dim[0]:0)*S+20,H=Math.max(FORMATOS[0][2],dim?dim[1]:0)*S+20,h='';
+ FORMATOS.slice().reverse().forEach(function(f,i){var w=f[1]*S,hh=f[2]*S;h+='<rect x="10" y="'+(H-10-hh)+'" width="'+w+'" height="'+hh+'"/>';});
+ var sel=dim||[FORMATOS[k][1],FORMATOS[k][2]];h+='<rect class="on" x="10" y="'+(H-10-sel[1]*S)+'" width="'+sel[0]*S+'" height="'+sel[1]*S+'"/>';
+ return '<span class="fmt"><svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Página de '+sel[0]+' por '+sel[1]+' milímetros comparada con otros formatos">'+h+'</svg><small><b>'+(sel[0]/10)+' × '+(sel[1]/10)+' cm'+(dim?'':' (medida habitual)')+'</b><br>'+FORMATOS.map(function(f,i){return '<i class="'+(i===k?'on':'')+'">'+f[0]+'</i>';}).join(' · ')+'</small></span>';}
 // coronas: años en que el medio fue el 1.º, 2.º o 3.º más presente
 function coronas(ST,n){if(!ST||!ST.years)return '';var y1=String(new Date().getFullYear()),out=[];
  Object.keys(ST.years).sort().forEach(function(y){var L=ST.years[y].medios||[];for(var i=0;i<3&&i<L.length;i++)if(L[i][0]===n)out.push([y,i]);});
@@ -184,7 +184,7 @@ function espIdx(ES,cat){
     ((e.capitulos||[]).length?'<span class="esp-caps">'+e.capitulos.map(function(c){return by[c];}).filter(Boolean).sort(function(a,b){return (a.desde||'').localeCompare(b.desde||'');}).map(function(c){return '<a href="/especiales#'+esc(c.slug)+'">'+esc(c.titulo)+'</a>';}).join('')+'</span>':'')+'</div>';}).join('')+'</div></div>';}).join('')+'</div>';
  return {html:'<div class="wrap">'+html+'</div>',init:function(){}};}
 function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p.i]=p;});ES.forEach(function(e){by[e.slug]=e;});
- var ps=x.posts.map(function(i){return byId[i];}).filter(Boolean).sort(function(a,b){return a.d.localeCompare(b.d);});
+ var ps=x.posts.map(function(i){return byId[i];}).filter(Boolean).sort(function(a,b){return b.d.localeCompare(a.d);});
  document.title=x.titulo+' · especial · inconsolata»';
  var pi=cat.temas.findIndex(function(t){return t.n===x.padre;}),ic=icoE(cat,x),madre=x.cap_de?by[x.cap_de]:null;
  var carta=function(p){var meds=p.m.slice(0,2).map(function(i){return A.medios[i].n;}).join(' · '),auts=p.a.slice(0,3).map(function(i){return A.autores[i].n;});
@@ -193,9 +193,9 @@ function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p
    '<span class="meta"><b>'+(+p.d.slice(8,10))+' '+MES3[+p.d.slice(5,7)-1]+'</b>'+(meds?' · '+esc(meds):'')+'</span><span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};
  var meses=function(L){var gr={};L.forEach(function(p){(gr[p.d.slice(0,7)]=gr[p.d.slice(0,7)]||[]).push(p);});
   return Object.keys(gr).map(function(k){var v=gr[k];return '<section class="mo"><h3>'+MESES[+k.slice(5,7)-1].replace(/^./,function(c){return c.toUpperCase();})+'<small>'+k.slice(0,4)+' · '+v.length+' '+(v.length===1?'entrada':'entradas')+'</small></h3><div class="g">'+v.map(carta).join('')+'</div></section>';}).join('');};
- var caps=(x.capitulos||[]).map(function(c){return by[c];}).filter(Boolean).sort(function(a,b){return (a.desde||'').localeCompare(b.desde||'');}),tl='';
+ var caps=(x.capitulos||[]).map(function(c){return by[c];}).filter(Boolean).sort(function(a,b){return (b.hasta||'').localeCompare(a.hasta||'');}),tl='';
  if(caps.length){var usados={};
-  tl=caps.map(function(c){var L=c.posts.map(function(i){return byId[i];}).filter(Boolean).sort(function(a,b){return a.d.localeCompare(b.d);});L.forEach(function(p){usados[p.i]=1;});
+  tl=caps.map(function(c){var L=c.posts.map(function(i){return byId[i];}).filter(Boolean).sort(function(a,b){return b.d.localeCompare(a.d);});L.forEach(function(p){usados[p.i]=1;});
    return '<div class="cap"><div class="cap-h"><h2 class="soft"><a href="/especiales#'+esc(c.slug)+'">'+esc(c.titulo)+'</a></h2><span>'+L.length+' '+(L.length===1?'entrada':'entradas')+(c.desde?' · '+rangoE(c.desde,c.hasta||c.desde):'')+'</span></div>'+meses(L)+'</div>';}).join('');
   var resto=ps.filter(function(p){return !usados[p.i];});
   if(resto.length)tl+='<div class="cap"><div class="cap-h"><h2 class="soft">Otras entradas</h2><span>'+resto.length+' '+(resto.length===1?'entrada':'entradas')+'</span></div>'+meses(resto)+'</div>';}
@@ -209,7 +209,7 @@ function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p
   (caps.length?'<nav class="caps-nav" aria-label="Capítulos"><span class="caps">Capítulos »</span>'+caps.map(function(c){return '<a href="/especiales#'+esc(c.slug)+'">'+esc(c.titulo)+'<small>'+c.posts.length+'</small></a>';}).join('')+'</nav>':'')+
   '<div class="who"><div><h2>Medios</h2><div class="chips">'+cm.map(function(c){var m=cat.medios[c[0]];return '<a href="'+(m&&m.ficha?fichaMedio(m):'/buscador#m='+c[0])+'">'+esc(A.medios[c[0]].n)+'<small>'+c[1]+'</small></a>';}).join('')+'</div></div>'+
   '<div><h2>Autores</h2><div class="chips">'+(ca.map(function(c){return '<a href="'+fichaAutor(A.autores[c[0]].n)+'">'+esc(A.autores[c[0]].n)+'<small>'+c[1]+'</small></a>';}).join('')||'<span style="font-size:14px;color:var(--muted)">Sin autores identificados</span>')+'</div></div></div>'+
-  '<div class="tl-bar"><h2 class="soft">La cobertura, <em>'+(caps.length?'capítulo a capítulo':'mes a mes')+'</em></h2><button type="button" id="order" aria-pressed="false">Ver lo más reciente primero »</button></div><div class="tl" id="tl">'+tl+'</div>'+
+  '<div class="tl-bar"><h2 class="soft">La cobertura, <em>'+(caps.length?'capítulo a capítulo':'mes a mes')+'</em></h2><button type="button" id="order" aria-pressed="true">Ver en orden cronológico »</button></div><div class="tl" id="tl">'+tl+'</div>'+
   (her.length?'<section class="others"><h2>Otros especiales de '+esc(x.padre)+'</h2><div class="chips">'+her.map(function(y){var i2=icoE(cat,y);return '<a href="/especiales#'+esc(y.slug)+'">'+(i2?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+i2+'"/></svg>':'')+esc(y.titulo)+'<small>'+y.posts.length+'</small></a>';}).join('')+'</div></section>':'')+
   '<p style="margin:56px 0 0"><a class="btn-ink todos" href="/especiales">Todos los especiales »</a></p></div>';
  return {html:html,init:function(){document.getElementById('order').addEventListener('click',function(){var tl=document.getElementById('tl'),b=this,rev=b.getAttribute('aria-pressed')!=='true';
