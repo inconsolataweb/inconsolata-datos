@@ -651,12 +651,12 @@ function arbolProp(t){
   (o.pct?'<span class="pct"><i style="width:'+Math.min(100,parseFloat(o.pct.replace(',','.'))||0)+'%"></i><b>'+esc(o.pct)+'</b></span>':'')+'</li>';}).join('')+'</ul>';}
 // tama\u00f1os de p\u00e1gina habituales (mm, ancho \u00d7 alto)
 var FORMATOS=[['s\u00e1bana',380,600,/s[a\u00e1]bana|broadsheet|gran formato/i],['berlin\u00e9s',315,470,/berlin/i],['tabloide',280,430,/tabloid|compact/i],['revista (A4)',210,297,/revista|a4|magazine/i]];
-function formatoSVG(t){t=t||'';var k=FORMATOS.findIndex(function(f){return f[3].test(t);}),m=t.match(/(\d+(?:[.,]\d+)?)\s*[x\u00d7]\s*(\d+(?:[.,]\d+)?)/i),dim=null;
+function formatoSVG(t,nom){t=t||'';var k=FORMATOS.findIndex(function(f){return f[3].test(t);}),m=t.match(/(\d+(?:[.,]\d+)?)\s*[x\u00d7]\s*(\d+(?:[.,]\d+)?)/i),dim=null;
  if(m){var a=parseFloat(m[1].replace(',','.')),b=parseFloat(m[2].replace(',','.'));if(a<100&&b<100){a*=10;b*=10;}dim=[Math.round(Math.min(a,b)),Math.round(Math.max(a,b))];}
  if(k<0&&!dim)return '';var S=.2,W=Math.max(FORMATOS[0][1],dim?dim[0]:0)*S+20,H=Math.max(FORMATOS[0][2],dim?dim[1]:0)*S+20,h='';
  FORMATOS.slice().reverse().forEach(function(f,i){var w=f[1]*S,hh=f[2]*S;h+='<rect x="10" y="'+(H-10-hh)+'" width="'+w+'" height="'+hh+'"/>';});
  var sel=dim||[FORMATOS[k][1],FORMATOS[k][2]];h+='<rect class="on" x="10" y="'+(H-10-sel[1]*S)+'" width="'+sel[0]*S+'" height="'+sel[1]*S+'"/>';
- return '<span class="fmt"><svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="P\u00e1gina de '+sel[0]+' por '+sel[1]+' mil\u00edmetros comparada con otros formatos">'+h+'</svg><small><b>'+(sel[0]/10)+' \u00d7 '+(sel[1]/10)+' cm'+(dim?'':' (medida habitual)')+'</b><br>'+FORMATOS.map(function(f,i){return '<i class="'+(i===k?'on':'')+'">'+f[0]+'</i>';}).join(' \u00b7 ')+'</small></span>';}
+ return '<span class="fmt"><svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="P\u00e1gina de '+sel[0]+' por '+sel[1]+' mil\u00edmetros comparada con otros formatos">'+h+'</svg><small>'+(nom?'<em>'+esc(nom)+'</em>':'')+'<b>'+(sel[0]/10)+' \u00d7 '+(sel[1]/10)+' cm'+(dim?'':' (medida habitual)')+'</b><br>'+FORMATOS.map(function(f,i){return '<i class="'+(i===k?'on':'')+'">'+f[0]+'</i>';}).join('<span class="sep"> \u00b7 </span>')+'</small></span>';}
 // coronas: a\u00f1os en que el medio fue el 1.\u00ba, 2.\u00ba o 3.\u00ba m\u00e1s presente
 function coronas(ST,n){if(!ST||!ST.years)return '';var y1=String(new Date().getFullYear()),out=[];
  Object.keys(ST.years).sort().forEach(function(y){var L=ST.years[y].medios||[];for(var i=0;i<3&&i<L.length;i++)if(L[i][0]===n)out.push([y,i]);});
@@ -681,7 +681,7 @@ function medioFicha(A,cat,FM,mi,ST){
   var d=[],anio=f.fundacion||o.anio,fin=f.cierre||o.fin;
   if(anio)d.push(['Fundaci\u00f3n',anio+(fin?' \u00b7 cierre en '+fin:'')]);var fu=f.fundador?[f.fundador]:lab(o.fund);if(fu.length)d.push([fu.length>1?'Fundadores':'Fundador',fu.slice(0,3).join(', ')]);
   var se=f.sede?[f.sede]:lab(o.sede);if(se.length)d.push(['Sede',se[0]]);var pr=f.propietario?[f.propietario]:lab(o.prop);if(pr.length)d.push(['Propietario',f.propietario?arbolProp(f.propietario):esc(pr.join(', ')),1]);if(f.director)d.push(['Direcci\u00f3n',f.director+(f.director_desde?' \u00b7 desde '+f.director_desde:'')]);
-  var fo=f.formato?[f.formato]:lab(o.formato);var fb=document.getElementById('m-fmt');if(fo.length){if(fb)fb.innerHTML='<span class="caps">Formato \u00bb</span><b>'+esc(fo[0])+'</b>'+formatoSVG(fo[0]);else d.push(['Formato',esc(fo[0])+formatoSVG(fo[0]),1]);}var id=f.idioma?[f.idioma]:lab(o.idioma);if(id.length)d.push(['Idioma',id.join(', ')]);
+  var fo=f.formato?[f.formato]:lab(o.formato);var fb=document.getElementById('m-fmt');if(fo.length){if(fb)fb.innerHTML='<span class="caps">Formato \u00bb</span>'+(formatoSVG(fo[0],fo[0])||'<b>'+esc(fo[0])+'</b>');else d.push(['Formato',esc(fo[0])+formatoSVG(fo[0]),1]);}var id=f.idioma?[f.idioma]:lab(o.idioma);if(id.length)d.push(['Idioma',id.join(', ')]);
   if(f.pais)d.push(['Pa\u00eds',f.pais]);if(o.issn)d.push(['ISSN',o.issn]);
   var web=f.web||o.web;if(web)d.push(['Web','<a href="'+esc(web)+'" target="_blank" rel="noopener">'+esc(web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))+'</a>']);
   d.sort(function(a,b){return (a[0]==='Propietario'||a[0]==='Formato')-(b[0]==='Propietario'||b[0]==='Formato');});

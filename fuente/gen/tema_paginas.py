@@ -148,13 +148,23 @@ FICHA_CSS = ambito(_fcss + """
 .wk{margin-top:22px}
 .fvis{display:flex;flex-direction:column;gap:34px}
 .fmt-box:empty{display:none}
-.fmt-box{display:flex;flex-direction:column;gap:6px;background:#fff;border:2px solid var(--ink);padding:14px 16px}
-.fmt-box>b{font-size:16px}
-.fmt-box .fmt{margin-top:4px}
+.fmt-box{display:flex;flex-direction:column;gap:10px;align-self:flex-start;width:100%;max-width:300px;border-top:2px solid var(--ink);padding:12px 0 0}
+.fmt-box>b{font-size:15px}
+.fmt-box .fmt{margin:0;flex-wrap:nowrap;align-items:flex-end;gap:16px}
+.fmt-box .fmt svg{width:84px;flex:0 0 auto}
+.fmt-box .fmt small{display:flex;flex-direction:column;gap:3px;line-height:1.25}
+.fmt-box .fmt small br{display:none}
+.fmt-box .fmt small em{font-style:normal;font-size:14px;font-weight:800;color:var(--ink);text-transform:none;letter-spacing:0;margin-bottom:4px}
+.fmt-box .fmt small b{font-size:12px;letter-spacing:1px}
+.fmt-box .fmt small i{align-self:flex-start}
+.fmt-box .fmt small .sep{display:none}
+.wk-r.propio{font-style:italic!important}
+.wk-top{margin-bottom:30px!important}
+.tipos{grid-template-columns:repeat(8,minmax(0,1fr))!important}
 .wk dl{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important;gap:12px 22px!important}
 .wk dl .ancho{grid-column:span 2}
 .wk-top{align-items:flex-start}
-.wk-r.propio{font-style:normal!important;font-size:16px!important;line-height:1.5!important}
+.wk-r.propio{font-size:16px!important;line-height:1.5!important}
 .flinks a.red{display:inline-flex;align-items:center;gap:8px}
 .flinks a.red svg{flex-shrink:0}
 @media (max-width:700px){.wk dl .ancho{grid-column:1/-1}}
