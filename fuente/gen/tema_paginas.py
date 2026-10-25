@@ -145,6 +145,12 @@ FICHA_CSS = ambito(_fcss + """
 @media (prefers-reduced-motion:reduce){.cor.prov{animation:none;outline:2px dashed var(--yellow)}}
 .finfo .ftext{border:0;background:transparent;padding:0;font-size:19px;line-height:1.55;max-width:820px}
 .wk{max-width:none!important}
+.wk{margin-top:22px}
+.fvis{display:flex;flex-direction:column;gap:34px}
+.fmt-box:empty{display:none}
+.fmt-box{display:flex;flex-direction:column;gap:6px;background:#fff;border:2px solid var(--ink);padding:14px 16px}
+.fmt-box>b{font-size:16px}
+.fmt-box .fmt{margin-top:4px}
 .wk dl{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important;gap:12px 22px!important}
 .wk dl .ancho{grid-column:span 2}
 .wk-top{align-items:flex-start}

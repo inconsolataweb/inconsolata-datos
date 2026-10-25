@@ -84,6 +84,7 @@ var ICR={x:'<path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846
  web:'<circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 12h19M12 2.5c3 3.2 3 15.8 0 19M12 2.5c-3 3.2-3 15.8 0 19" fill="none" stroke="currentColor" stroke-width="1.8"/>',
  bus:'<circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.5 15.5l5.5 5.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
  link:'<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L11.6 6M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.6-1.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>'};
+function oficioG(t,g){t=t||'';if(g!=='autor'&&g!=='autora')return t;return t.replace(/([^\s\/]+?)(o)?\/a\b/g,function(m,a,o){return g==='autora'?a+'a':a+(o||'');});}
 function boton(l,u){var k=l==='X'?'x':l==='Bluesky'?'bsky':l==='Instagram'?'ig':l==='LinkedIn'||/linkedin\./.test(u)?'li':l==='Wikipedia'?'wiki':/behance\./.test(u)?'be':l==='En el buscador'?'bus':l==='Web'?'web':'link';
  if(k==='be')l='Behance';if(k==='li')l='LinkedIn';var ext=/^https?:/.test(u);
  return '<a href="'+esc(u)+'"'+(ext?' target="_blank" rel="noopener"':'')+' class="red"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">'+ICR[k]+'</svg>'+esc(l)+'</a>';}
@@ -123,7 +124,7 @@ function medioFicha(A,cat,FM,mi,ST){
  document.title=m.n+' · inconsolata»';
  var auts=contar(ps,function(p){return p.a.filter(function(a){return (A.autores[a].m||[]).indexOf(m.n)>=0;});}).slice(0,8);
  var fund=+f.fundacion||0,cierre=+f.cierre||0;
- var vis=c.logo?'<div class="fvis"><div class="logo-big logo-wk"><img src="'+esc(c.logo)+'" alt="Logo de '+esc(m.n)+'" onerror="this.closest(\'.fhero\').classList.add(\'novis\');this.closest(\'.fvis\').remove()"></div></div>':'';
+ var tieneFmt=!!(f.formato),vis=(c.logo||tieneFmt)?'<div class="fvis">'+(c.logo?'<div class="logo-big logo-wk"><img src="'+esc(c.logo)+'" alt="Logo de '+esc(m.n)+'" onerror="var v=this.closest(\'.fvis\');this.closest(\'.logo-big\').remove();if(!v.querySelector(\'.fmt-box *\')){v.closest(\'.fhero\').classList.add(\'novis\');v.remove();}"></div>':'')+'<div class="fmt-box" id="m-fmt"></div></div>':'';
  var big2=fund?'<div class="stat"><b>'+((cierre||Y1)-fund)+'</b><span>'+(cierre?'años publicándose · de '+fund+' a '+cierre:'años publicándose · desde '+fund)+'</span></div>':
   '<div class="stat"><b>'+(new Set(ps.map(function(p){return p.d.slice(0,4);})).size)+'</b><span>años apareciendo en inconsolata»</span></div>';
  var html=crumbs([['Medios','/medios'],[m.n]])+'<section class="fhero'+(vis?'':' novis')+'">'+vis+'<div class="finfo"><span class="caps ante" style="color:var(--accent)">Medio » '+bandera(f.cc)+esc(f.pais||'')+'<span id="m-tipo"></span>'+(f.desaparecido||cierre?' · ya no se publica':'')+'</span>'+
@@ -136,7 +137,7 @@ function medioFicha(A,cat,FM,mi,ST){
   var d=[],anio=f.fundacion||o.anio,fin=f.cierre||o.fin;
   if(anio)d.push(['Fundación',anio+(fin?' · cierre en '+fin:'')]);var fu=f.fundador?[f.fundador]:lab(o.fund);if(fu.length)d.push([fu.length>1?'Fundadores':'Fundador',fu.slice(0,3).join(', ')]);
   var se=f.sede?[f.sede]:lab(o.sede);if(se.length)d.push(['Sede',se[0]]);var pr=f.propietario?[f.propietario]:lab(o.prop);if(pr.length)d.push(['Propietario',f.propietario?arbolProp(f.propietario):esc(pr.join(', ')),1]);if(f.director)d.push(['Dirección',f.director+(f.director_desde?' · desde '+f.director_desde:'')]);
-  var fo=f.formato?[f.formato]:lab(o.formato);if(fo.length)d.push(['Formato',esc(fo[0])+formatoSVG(fo[0]),1]);var id=f.idioma?[f.idioma]:lab(o.idioma);if(id.length)d.push(['Idioma',id.join(', ')]);
+  var fo=f.formato?[f.formato]:lab(o.formato);var fb=document.getElementById('m-fmt');if(fo.length){if(fb)fb.innerHTML='<span class="caps">Formato »</span><b>'+esc(fo[0])+'</b>'+formatoSVG(fo[0]);else d.push(['Formato',esc(fo[0])+formatoSVG(fo[0]),1]);}var id=f.idioma?[f.idioma]:lab(o.idioma);if(id.length)d.push(['Idioma',id.join(', ')]);
   if(f.pais)d.push(['País',f.pais]);if(o.issn)d.push(['ISSN',o.issn]);
   var web=f.web||o.web;if(web)d.push(['Web','<a href="'+esc(web)+'" target="_blank" rel="noopener">'+esc(web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))+'</a>']);
   d.sort(function(a,b){return (a[0]==='Propietario'||a[0]==='Formato')-(b[0]==='Propietario'||b[0]==='Formato');});
@@ -169,7 +170,7 @@ function autorFicha(A,cat,FM,AX,ai){var a=A.autores[ai],ps=A.posts.filter(functi
   '<figcaption><span class="wn">Pieza <b id="work-n"></b> de <b>'+W.length+'</b> en el archivo</span><span class="wm" id="work-m"></span></figcaption></figure></div>':'';
  var L=redes(x);
  var html='<div class="wrap">'+crumbs([['Autores','/autores'],[a.n]])+'<section class="fhero'+(vis?'':' novis')+'">'+vis+'<div class="finfo"><span class="caps ante" style="color:var(--accent)">'+(x.genero==='autora'?'Autora':x.genero==='autor'?'Autor':'Periodista')+(a.m&&a.m.length?' » '+esc(a.m.slice(0,3).join(' · ')):'')+'</span>'+
-  '<div class="name-row"><h1 class="soft autor">'+esc(a.n)+'</h1>'+(mc?'<a class="av-medio" href="'+fichaMedio(mc)+'" aria-label="Trabaja en '+esc(md)+'">'+(mc.av?'<span class="av-slot" aria-hidden="true"><img src="'+esc(mc.av)+'" alt=""></span>':'')+'<span>'+esc(md)+' »</span></a>':'')+'</div>'+(pais||x.oficio?'<p class="nac">'+bandera(cc)+'<span>'+esc(pais)+(pais&&x.oficio?' · ':'')+esc(x.oficio||'')+'</span></p>':'')+
+  '<div class="name-row"><h1 class="soft autor">'+esc(a.n)+'</h1>'+(mc?'<a class="av-medio" href="'+fichaMedio(mc)+'" aria-label="Trabaja en '+esc(md)+'">'+(mc.av?'<span class="av-slot" aria-hidden="true"><img src="'+esc(mc.av)+'" alt=""></span>':'')+'<span>'+esc(md)+' »</span></a>':'')+'</div>'+(pais||x.oficio?'<p class="nac">'+bandera(cc)+'<span>'+esc(pais)+(pais&&x.oficio?' · ':'')+esc(oficioG(x.oficio,x.genero))+'</span></p>':'')+
   (x.texto?'<div class="ftext">'+esc(x.texto)+'</div>':'')+
   '<div class="flinks">'+L.map(function(l){return boton(l[0],l[1]);}).join('')+boton('En el buscador','/buscador#a='+ai)+'</div></div></section></div>'+
   '<section class="band"><div class="wrap in"><div class="stat"><b>'+ps.length+'</b><span>entradas en inconsolata»</span></div>'+

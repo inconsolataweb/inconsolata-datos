@@ -1234,6 +1234,12 @@ footer{background:var(--ink);color:var(--paper)}
 @media (prefers-reduced-motion:reduce){.v-ficha .cor.prov{animation:none;outline:2px dashed var(--yellow)}}
 .v-ficha .finfo .ftext{border:0;background:transparent;padding:0;font-size:19px;line-height:1.55;max-width:820px}
 .v-ficha .wk{max-width:none!important}
+.v-ficha .wk{margin-top:22px}
+.v-ficha .fvis{display:flex;flex-direction:column;gap:34px}
+.v-ficha .fmt-box:empty{display:none}
+.v-ficha .fmt-box{display:flex;flex-direction:column;gap:6px;background:#fff;border:2px solid var(--ink);padding:14px 16px}
+.v-ficha .fmt-box>b{font-size:16px}
+.v-ficha .fmt-box .fmt{margin-top:4px}
 .v-ficha .wk dl{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important;gap:12px 22px!important}
 .v-ficha .wk dl .ancho{grid-column:span 2}
 .v-ficha .wk-top{align-items:flex-start}
