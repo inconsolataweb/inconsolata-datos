@@ -47,7 +47,7 @@ function hero(p){var im=p.ims[0];
  return '<section class="hero">'+(im?'<a href="'+esc(p.u)+'" class="hero-img"><div class="ph ht-k">'+img(im.big,(TN[p.k[0]]||'Imagen')+(p.meds[0]?' de '+p.meds[0].n:''))+'</div></a>':'')+
   '<div class="hero-card'+(im?'':' solo')+'"><span class="caps" style="letter-spacing:3px">'+ki+'</span><h1 class="soft"><a href="'+esc(p.u)+'">'+destaca(p.t)+'</a></h1>'+
   (p.txt?'<p>'+esc(primeras(p.txt.indexOf(quita(p.t))===0?p.txt.slice(quita(p.t).length):p.txt,230))+'</p>':'')+
-  '<div class="hero-meta">'+p.meds.slice(0,3).map(function(m){return '<a href="'+fichaMedio(m)+'">» '+esc(m.n)+'</a>';}).join('')+'<span>'+p.d.split('-').reverse().join('.')+'</span></div></div></section>';}
+  '<div class="hero-meta">'+p.meds.slice(0,3).map(function(m){return '<a href="'+fichaMedio(m)+'">'+(m.avw?'<img class="k-av" src="'+esc(m.avw)+'" alt="" onerror="this.remove()">':'')+'» '+esc(m.n)+'</a>';}).join('')+'<span>'+p.d.split('-').reverse().join('.')+'</span></div></div></section>';}
 
 function hoja(p,i,pos){
  var st=' style="grid-column:'+pos.c+';margin-top:'+pos.mt+'px;transform:rotate('+pos.r+'deg)"',tape='<span class="tape" aria-hidden="true"></span>';

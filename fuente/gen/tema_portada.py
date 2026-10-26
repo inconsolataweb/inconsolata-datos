@@ -70,6 +70,8 @@ EXTRA = """
 .rbtn .dot{color:#fff!important}
 .side{z-index:30}
 .tm-btns{display:flex;flex-wrap:wrap;gap:14px}
+.hero-meta .k-av{filter:none;width:1.6em;height:1.6em;vertical-align:-.45em}
+.hero-meta a{display:inline-flex;align-items:center}
 .rbtn.new.visto svg{animation:none}
 @media (max-width:820px){.masthead{min-height:0}.topbar .hd-right nav a:not(.btn-ink){display:none}}
 """

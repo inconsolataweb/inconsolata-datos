@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel de portada · inconsolata»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&family=Fraunces:ital,opsz,wght,SOFT,WONK@1,9..144,700..900,0..100,0..1&display=swap">
+<style>
+:root{--ink:#16140F;--paper:#ECE7DC;--accent:#D1006F;--yellow:#FFD400;--muted:#5E5A50;--line:#CFC8B8;--ok:#1B7A3D}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.45 Archivo,system-ui,sans-serif}
+a{color:var(--accent)}
+.soft{font-family:Fraunces,Georgia,serif;font-style:italic;font-weight:900;font-variation-settings:'SOFT' 100,'WONK' 1,'opsz' 144}
+.caps{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:28px 32px 18px;border-bottom:2px solid var(--ink)}
+header h1{margin:0;font-size:44px;line-height:1}
+header h1 span{color:var(--accent)}
+#estado{font-size:14px;color:var(--muted)}
+nav.tabs{display:flex;gap:4px;padding:0 32px;border-bottom:2px solid var(--ink);overflow-x:auto}
+nav.tabs button{font:800 13px Archivo,sans-serif;letter-spacing:1.5px;text-transform:uppercase;background:none;border:0;padding:16px 14px 12px;cursor:pointer;color:var(--muted);border-bottom:4px solid transparent;white-space:nowrap}
+nav.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-left:6px;vertical-align:2px}
+main{max-width:980px;padding:28px 32px 140px}
+section[hidden]{display:none}
+h2{font-size:34px;margin:0 0 6px;line-height:1.05}
+.ayuda{color:var(--muted);margin:0 0 22px;max-width:720px}
+.card{background:#fff;border:2px solid var(--ink);padding:18px 20px;margin-bottom:16px}
+.card.off{opacity:.55}
+.fila{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-bottom:14px}
+.fila.una{grid-template-columns:1fr}
+label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+label small{font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted);font-size:13px}
+input,select,textarea{font:16px Archivo,sans-serif;color:var(--ink);background:var(--paper);border:2px solid var(--ink);padding:9px 10px;border-radius:0;width:100%}
+textarea{min-height:64px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.chk{flex-direction:row;align-items:center;gap:10px;text-transform:none;letter-spacing:0;font-size:15px;font-weight:600}
+.chk input{width:20px;height:20px}
+.btn{font:800 13px Archivo,sans-serif;letter-spacing:1.5px;text-transform:uppercase;border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:10px 14px;cursor:pointer;min-height:44px;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn.prim{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.prim:hover{background:var(--ink);border-color:var(--ink)}
+.btn.peq{min-height:36px;padding:6px 10px;font-size:11px}
+.btn[disabled]{opacity:.4;cursor:default}
+.btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cab{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.cab b{font-size:15px}
+.vista{font-family:Fraunces,Georgia,serif;font-style:italic;font-weight:900;font-size:22px;line-height:1.1;margin-top:4px}
+.vista em{font-style:inherit;color:var(--accent)}
+.post{display:flex;gap:12px;align-items:center;border:2px dashed var(--line);padding:8px;min-height:64px}
+.post img{width:64px;height:64px;object-fit:cover;background:var(--line);flex-shrink:0}
+.post .pt{font-weight:800;font-size:15px;line-height:1.25}
+.post .pm{font-size:13px;color:var(--muted)}
+.post.vacio{color:var(--muted);font-size:14px;justify-content:center}
+.ico-sel{display:flex;gap:8px;align-items:center}
+.ico-sel svg{width:40px;height:40px;flex-shrink:0;color:var(--ink);border:2px solid var(--line);padding:4px;background:var(--paper)}
+.faldon-v{background:var(--ink);color:var(--yellow);font:800 15px Archivo,sans-serif;letter-spacing:2px;text-transform:uppercase;padding:12px 16px;white-space:nowrap;overflow:hidden;transform:rotate(-1deg);margin:6px 0 18px}
+.faldon-v i{font-style:normal;color:#fff}
+.nota{font-size:14px;background:#FFF6C2;border:2px solid var(--ink);padding:10px 14px;margin:0 0 18px}
+.barra{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--paper);padding:14px 32px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;z-index:20}
+.barra .btn{border-color:var(--paper);background:transparent;color:var(--paper)}
+.barra .btn:hover{background:var(--paper);color:var(--ink)}
+.barra .btn.prim{background:var(--accent);border-color:var(--accent);color:#fff}
+#msg{font-size:15px}
+#msg.ok{color:#9BE3B1}#msg.err{color:#FFB3C8}
+dialog{border:2px solid var(--ink);padding:0;width:min(760px,94vw);max-height:86vh;background:var(--paper);box-shadow:10px 10px 0 var(--ink)}
+dialog::backdrop{background:rgba(22,20,15,.55)}
+.dlg-h{display:flex;gap:10px;padding:14px;border-bottom:2px solid var(--ink);align-items:center;position:sticky;top:0;background:var(--paper)}
+.dlg-l{overflow:auto;max-height:62vh}
+.dlg-l button{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:8px 14px;cursor:pointer;font:inherit;color:inherit}
+.dlg-l button:hover,.dlg-l button:focus-visible{background:#fff}
+.dlg-l img{width:52px;height:52px;object-fit:cover;background:var(--line);flex-shrink:0}
+code{background:#fff;padding:1px 5px;border:1px solid var(--line)}
+ol.pasos li{margin-bottom:8px}
+@media (max-width:640px){header,main,nav.tabs{padding-left:16px;padding-right:16px}.barra{padding:12px 16px}header h1{font-size:34px}}
+</style>
+</head>
+<body>
+__SPRITE__
+<header>
+<div><div class="caps" style="color:var(--accent)">inconsolata»</div><h1 class="soft">Panel de <span>portada</span></h1></div>
+<div id="estado">Cargando los datos de la web…</div>
+</header>
+<nav class="tabs" role="tablist" aria-label="Secciones del panel">
+<button role="tab" data-t="portada" aria-selected="true">Portada</button>
+<button role="tab" data-t="faldon" aria-selected="false">Faldón</button>
+<button role="tab" data-t="avisos" aria-selected="false">Avisos</button>
+<button role="tab" data-t="novedades" aria-selected="false">Novedades</button>
+<button role="tab" data-t="conexion" aria-selected="false">Conexión</button>
+</nav>
+<main>
+<section id="t-portada"></section>
+<section id="t-faldon" hidden></section>
+<section id="t-avisos" hidden></section>
+<section id="t-novedades" hidden></section>
+<section id="t-conexion" hidden></section>
+</main>
+<div class="barra">
+<span id="msg">Sin cambios.</span>
+<div class="btns">
+<button class="btn" id="b-deshacer" disabled>Deshacer cambios</button>
+<button class="btn" id="b-copiar" disabled>Copiar a mano</button>
+<button class="btn prim" id="b-publicar" disabled>Publicar en la web</button>
+</div>
+</div>
+<dialog id="dlg">
+<div class="dlg-h"><input id="dlg-q" type="search" placeholder="Busca por título, medio o fecha (2026-10)…" aria-label="Buscar post"><button class="btn peq" id="dlg-x">Cerrar</button></div>
+<div style="padding:10px 14px;border-bottom:2px solid var(--ink)"><label>O pega el enlace del post<input id="dlg-url" placeholder="https://inconsolata.com/post/831559116447252480/…"></label></div>
+<div class="dlg-l" id="dlg-l"></div>
+</dialog>
+<dialog id="dlg-copia">
+<div class="dlg-h"><b style="flex:1">Copiar a mano</b><button class="btn peq" onclick="this.closest('dialog').close()">Cerrar</button></div>
+<div style="padding:16px" id="copia-c"></div>
+</dialog>
+<script>
+var REPO='inconsolataweb/inconsolata-datos',RAW='https://raw.githubusercontent.com/'+REPO+'/main/datos/',API='https://api.github.com/repos/'+REPO+'/contents/datos/';
+var ICONOS=__ICONOS__;
+var F={avisos:{orig:'',obj:null,sha:null},portada_manual:{orig:'',obj:null,sha:null}};
+var POSTS=[],TIT={},MED=[],ESP=[],porId={};
+function $(s,c){return (c||document).querySelector(s);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function hoy(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){return null;}}
+function token(){return ls('inc-panel-token')||'';}
+function b64d(c){return decodeURIComponent(escape(atob(c.replace(/\s/g,''))));}
+function b64e(s){return btoa(unescape(encodeURIComponent(s)));}
+function fold(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+function destaca(t){return esc(t).replace(/\*([^*]+)\*/g,'<em>$1</em>');}
+function sym(n){var s='t-'+fold(n).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');return '<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+s+'"/></svg>';}
+
+// ---------- formato de los archivos (igual que los escribe el repositorio)
+function linea(o){return '{'+Object.keys(o).map(function(k){var v=o[k];return JSON.stringify(k)+': '+(Array.isArray(v)?'['+v.map(function(x){return JSON.stringify(x);}).join(', ')+']':JSON.stringify(v));}).join(', ')+'}';}
+function limpio(o){var r={};Object.keys(o).forEach(function(k){var v=o[k];if(v===''||v==null||(Array.isArray(v)&&!v.filter(Boolean).length))return;r[k]=Array.isArray(v)?v.filter(Boolean):v;});return r;}
+function lista(a){return a.length?'[\n'+a.map(function(x){return ' '+linea(limpio(x));}).join(',\n')+'\n]':'[]';}
+function texto(n){var o=F[n].obj;
+ if(n==='avisos'){var fa=o.faldon&&o.faldon.t?linea(limpio(o.faldon)):'null';return '{\n"grandes": '+lista(o.grandes||[])+',\n"ligeros": '+lista(o.ligeros||[])+',\n"faldon": '+fa+'\n}\n';}
+ var one=function(x){if(!x)return 'null';x=limpio(x);return Object.keys(x).length?linea(x):'null';};
+ return '{\n"apertura": '+one(o.apertura)+',\n"fijos": '+lista(o.fijos||[])+',\n"ocultos": '+(o.ocultos&&o.ocultos.length?'['+o.ocultos.map(function(x){return JSON.stringify(x);}).join(', ')+']':'[]')+',\n"destacado": '+one(o.destacado)+'\n}\n';}
+function sucio(n){return F[n].obj&&texto(n)!==F[n].orig;}
+
+// ---------- carga
+function getJSON(n,conApi){
+ if(conApi&&token())return fetch(API+n+'.json?ref=main',{headers:{Authorization:'Bearer '+token(),Accept:'application/vnd.github+json'},cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('GitHub '+r.status);return r.json();}).then(function(j){return {txt:b64d(j.content),sha:j.sha};});
+ return fetch(RAW+n+'.json?'+Date.now()).then(function(r){if(!r.ok)throw new Error(n+' '+r.status);return r.text();}).then(function(t){return {txt:t,sha:null};});}
+function normal(n,o){o=o||{};if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
+ else{o.fijos=(o.fijos||[]).map(function(x){return typeof x==='string'?{id:x}:x;});o.ocultos=o.ocultos||[];if(typeof o.apertura==='string')o.apertura={id:o.apertura};if(typeof o.destacado==='string')o.destacado={id:o.destacado};}return o;}
+function cargaArchivos(){return Promise.all(['avisos','portada_manual'].map(function(n){return getJSON(n,true).then(function(r){F[n].obj=normal(n,JSON.parse(r.txt));F[n].sha=r.sha;F[n].orig=texto(n);});}));}
+function carga(){
+ Promise.all([cargaArchivos(),fetch(RAW+'archivo.json').then(function(r){return r.json();}),fetch(RAW+'titulos.json').then(function(r){return r.json();}),fetch(RAW+'especiales.json').then(function(r){return r.json();})])
+ .then(function(r){var A=r[1];TIT=r[2];MED=A.medios.map(function(m){return m.n;});ESP=r[3];
+  POSTS=A.posts.map(function(p){var t=TIT[p.i]||p.t||'';var ms=(p.m||[]).map(function(i){return MED[i];}).filter(Boolean);
+   var o={i:p.i,u:p.u,d:p.d,t:t,ms:ms,im:p.im||'',f:fold(t+' '+ms.join(' ')+' '+p.d)};porId[p.i]=o;return o;});
+  $('#estado').textContent='Datos cargados: '+POSTS.length.toLocaleString('es')+' posts.'+(token()?' Conectado a GitHub.':' Sin conectar: ve a «Conexión» para publicar con un clic.');
+  pintaTodo();})
+ .catch(function(e){$('#estado').innerHTML='<b style="color:var(--accent)">No se han podido cargar los datos</b> ('+esc(e.message)+'). Comprueba la conexión y recarga.';});}
+
+// ---------- piezas de formulario
+function campo(lb,path,o,extra){extra=extra||{};var v=o[path];if(v==null)v='';var tp=extra.tipo||'text';
+ var inp=tp==='area'?'<textarea data-k="'+path+'">'+esc(v)+'</textarea>':tp==='sel'?'<select data-k="'+path+'">'+extra.ops.map(function(x){return '<option value="'+esc(x[0])+'"'+(String(v)===String(x[0])?' selected':'')+'>'+esc(x[1])+'</option>';}).join('')+'</select>':'<input data-k="'+path+'" type="'+tp+'" value="'+esc(v)+'"'+(extra.ph?' placeholder="'+esc(extra.ph)+'"':'')+'>';
+ return '<label'+(extra.ancho?' style="grid-column:1/-1"':'')+'>'+lb+(extra.ay?' <small>'+extra.ay+'</small>':'')+inp+'</label>';}
+function icoCampo(o,k){k=k||'ico';return '<label>Icono <small>opcional, uno de los temas</small><span class="ico-sel"><select data-k="'+k+'"><option value="">— sin icono —</option>'+ICONOS.map(function(n){return '<option'+(o[k]===n?' selected':'')+'>'+esc(n)+'</option>';}).join('')+'</select>'+(o[k]?sym(o[k]):'')+'</span></label>';}
+function postBox(id,acc){var p=porId[id];
+ if(!id)return '<div class="post vacio">Ningún post elegido · <button class="btn peq" data-elige="'+acc+'">Elegir post</button></div>';
+ return '<div class="post">'+(p&&p.im?'<img src="'+esc(p.im)+'" alt="">':'')+'<div style="flex:1"><div class="pt">'+(p?destaca(p.t||'(sin título) · '+p.ms.slice(0,2).join(', ')):'Post '+esc(id))+'</div><div class="pm">'+(p?esc(p.d)+(p.ms.length?' · '+esc(p.ms.slice(0,3).join(', ')):''):'No está en el archivo')+'</div></div><button class="btn peq" data-elige="'+acc+'">Cambiar</button></div>';}
+function vigencia(o,pre){return campo('Desde','desde',o,{tipo:'date',ay:'vacío = ya'})+campo('Hasta','hasta',o,{tipo:'date',ay:'vacío = sin fin'});}
+function caducado(o){return o&&o.hasta&&o.hasta<hoy();}
+function mover(arr,i,d){var j=i+d;if(j<0||j>=arr.length)return;var x=arr[i];arr[i]=arr[j];arr[j]=x;}
+function cabLista(tit,i,n,extra){return '<div class="cab"><b>'+tit+'</b><div class="btns">'+(extra||'')+'<button class="btn peq" data-mov="-1" data-i="'+i+'"'+(i===0?' disabled':'')+' aria-label="Subir">↑</button><button class="btn peq" data-mov="1" data-i="'+i+'"'+(i===n-1?' disabled':'')+' aria-label="Bajar">↓</button><button class="btn peq" data-borra="'+i+'">Quitar</button></div></div>';}
+
+// ---------- pestañas
+var VISTAS={
+portada:function(){var M=F.portada_manual.obj,ap=M.apertura||{},de=M.destacado,dm=!de?'auto':de.id?'post':'propio';
+ return '<h2 class="soft">Portada</h2><p class="ayuda">Si no tocas nada, la portada se monta sola con lo último que publicas. Aquí puedes forzar el post de apertura, fijar posts arriba, ocultar alguno y cambiar el destacado que va junto a «tal día como hoy».</p>'+
+ '<div class="card" data-sec="apertura"><div class="cab"><b>Post de apertura</b>'+(M.apertura&&M.apertura.id?'<button class="btn peq" data-quita="apertura">Volver a automático</button>':'')+'</div>'+
+ '<p class="ayuda" style="margin-bottom:12px">El post grande de arriba. Atajo: ponerle la etiqueta <code>#apertura</code> en Tumblr hace lo mismo sin pasar por aquí.</p>'+postBox(ap.id,'apertura')+
+ (ap.id?'<div class="fila" style="margin-top:14px">'+campo('Otra imagen','img',ap,{ph:'https://…jpg',ay:'opcional'})+vigencia(ap)+'</div>':'')+'</div>'+
+ '<div class="card" data-sec="fijos"><div class="cab"><b>Posts fijos en «lo último»</b><button class="btn peq" data-elige="fijos+">Añadir post</button></div><p class="ayuda" style="margin-bottom:12px">Van los primeros, en este orden. El tamaño «automático» deja que la portada decida.</p>'+
+ (M.fijos.length?M.fijos.map(function(f,i){return '<div class="card'+(caducado(f)?' off':'')+'" data-i="'+i+'" style="background:var(--paper)">'+cabLista('Fijo '+(i+1)+(caducado(f)?' · caducado':''),i,M.fijos.length)+postBox(f.id,'fijos:'+i)+
+  '<div class="fila" style="margin-top:14px">'+campo('Tamaño','tam',f,{tipo:'sel',ops:[['','Automático'],['grande','Grande'],['mediana','Mediana'],['pequeña','Pequeña']]})+campo('Otra imagen','img',f,{ph:'https://…jpg',ay:'opcional'})+vigencia(f)+'</div></div>';}).join(''):'<p class="ayuda" style="margin:0">Ninguno.</p>')+'</div>'+
+ '<div class="card" data-sec="ocultos"><div class="cab"><b>Posts ocultos en la portada</b><button class="btn peq" data-elige="ocultos+">Ocultar un post</button></div><p class="ayuda" style="margin-bottom:12px">Siguen en el archivo y el buscador; solo desaparecen de la portada.</p>'+
+ (M.ocultos.length?M.ocultos.map(function(id,i){return '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div style="flex:1">'+postBox(id,'ocultos:'+i)+'</div><button class="btn peq" data-borra-oc="'+i+'">Volver a mostrar</button></div>';}).join(''):'<p class="ayuda" style="margin:0">Ninguno.</p>')+'</div>'+
+ '<div class="card" data-sec="destacado"><b>Destacado junto a «tal día como hoy»</b><div class="fila" style="margin-top:12px">'+
+ '<label class="chk"><input type="radio" name="dm" value="auto"'+(dm==='auto'?' checked':'')+'> Por defecto (Proyectos · SISMOLIVE)</label><label class="chk"><input type="radio" name="dm" value="post"'+(dm==='post'?' checked':'')+'> Un post de la web</label><label class="chk"><input type="radio" name="dm" value="propio"'+(dm==='propio'?' checked':'')+'> Texto y enlace propios</label></div>'+
+ (dm==='post'?postBox(de.id,'destacado')+'<div class="fila" style="margin-top:14px">'+campo('Antetítulo','k',de,{ph:'Destacado »',ay:'opcional'})+campo('Otra imagen','img',de,{ph:'https://…jpg',ay:'opcional'})+vigencia(de)+'</div>':'')+
+ (dm==='propio'?'<div class="fila">'+campo('Antetítulo','k',de,{ph:'Proyectos »'})+campo('Título','t',de)+campo('Enlace','u',de,{ph:'/post/… o https://…'})+campo('Imagen','img',de,{ph:'https://…jpg'})+campo('Texto','p',de,{tipo:'area',ancho:1})+vigencia(de)+'</div>':'')+'</div>';},
+faldon:function(){var f=F.avisos.obj.faldon,on=!!f.t;
+ return '<h2 class="soft">Faldón</h2><p class="ayuda">La cinta negra que cruza la portada bajo la cabecera. Si lo desactivas, no aparece.</p>'+
+ '<div class="card'+(on?'':' off')+'" data-sec="faldon"><label class="chk" style="margin-bottom:14px"><input type="checkbox" id="f-on"'+(on?' checked':'')+'> Mostrar el faldón</label>'+
+ (on?'<div class="faldon-v" aria-hidden="true">'+esc(f.t).replace(/\s*»\s*/g,' <i>»</i> ')+' <i>»</i> '+esc(f.t).replace(/\s*»\s*/g,' <i>»</i> ')+'</div>':'')+
+ '<div class="fila">'+campo('Texto','t',f,{ancho:1,ay:'separa las frases con »',ph:'Elecciones 29-N » encuestas, portadas y gráficos'})+
+ '<label>Enlaza a un especial <small>o escribe abajo otro enlace</small><select id="f-esp"><option value="">— ninguno —</option>'+ESP.slice().sort(function(a,b){return (b.hasta||'').localeCompare(a.hasta||'');}).map(function(e){return '<option value="'+esc(e.slug)+'"'+(f.especial===e.slug||f.u==='/especiales#'+e.slug?' selected':'')+'>'+esc(e.titulo)+'</option>';}).join('')+'</select></label>'+
+ campo('Enlace','u',f,{ph:'/especiales#… o https://…'})+icoCampo(f)+campo('Hasta','hasta',f,{tipo:'date',ay:'vacío = sin fin'})+
+ '<label class="chk" style="grid-column:1/-1"><input type="checkbox" id="f-dest"'+(f.especial?' checked':'')+(f.u&&/^\/especiales#/.test(f.u)?'':' disabled')+'> Destacar también este especial en la sección de temas de la portada</label>'+
+ (f.especial?campo('Imagen del especial','img',f,{ph:'https://…jpg',ay:'opcional; si no, la de su tema'}):'')+'</div></div>';},
+avisos:function(){var G=F.avisos.obj.grandes;
+ return '<h2 class="soft">Avisos</h2><p class="ayuda">Las «pruebas de imprenta» que aparecen junto a la cabecera de la portada. Si hay varios, se pasan con flechas. Rodea una palabra con asteriscos para ponerla en magenta: <code>Conoce la *nueva* web</code>.</p>'+
+ G.map(function(a,i){var med=a.ico?'ico':a.imgs&&a.imgs.length?'imgs':a.img?'img':'';
+  return '<div class="card'+(caducado(a)?' off':'')+'" data-i="'+i+'">'+cabLista('Aviso '+(i+1)+(caducado(a)?' · caducado':''),i,G.length)+'<div class="vista">'+destaca(a.t||'…')+'</div><div class="fila" style="margin-top:14px">'+
+  campo('Etiqueta','k',a,{ph:'Novedad, Especial, Aviso…'})+campo('Título','t',a,{ancho:1})+campo('Enlace','u',a,{ph:'/post/… o /especiales#…'})+
+  '<label>Acompañado de<select data-media><option value=""'+(med===''?' selected':'')+'>Nada</option><option value="img"'+(med==='img'?' selected':'')+'>Una imagen</option><option value="imgs"'+(med==='imgs'?' selected':'')+'>Tres imágenes</option><option value="ico"'+(med==='ico'?' selected':'')+'>Un icono</option></select></label>'+
+  (med==='img'?campo('Imagen','img',a,{ph:'https://…jpg'}):'')+(med==='imgs'?[0,1,2].map(function(k){return '<label>Imagen '+(k+1)+'<input data-k="imgs.'+k+'" value="'+esc((a.imgs||[])[k]||'')+'" placeholder="https://…jpg"></label>';}).join(''):'')+(med==='ico'?icoCampo(a):'')+
+  vigencia(a)+'</div></div>';}).join('')+'<button class="btn" data-nuevo="grandes">+ Nuevo aviso</button>';},
+novedades:function(){var L=F.avisos.obj.ligeros;
+ return '<h2 class="soft">Novedades</h2><p class="ayuda">Los avisos ligeros de la marca de registro. Una novedad lleva el número rojo durante una semana desde su fecha. Las más recientes van primero.</p>'+
+ L.map(function(a,i){return '<div class="card" data-i="'+i+'">'+cabLista('Novedad '+(i+1),i,L.length)+'<div class="fila">'+campo('Fecha','f',a,{tipo:'date'})+campo('Texto','t',a,{ancho:1})+campo('Enlace','u',a,{ay:'opcional',ph:'/medios'})+icoCampo(a)+'</div></div>';}).join('')+'<button class="btn" data-nuevo="ligeros">+ Nueva novedad</button>';},
+conexion:function(){var t=token();
+ return '<h2 class="soft">Conexión con GitHub</h2><p class="ayuda">Para que «Publicar en la web» funcione con un clic, el panel necesita una llave de GitHub con permiso para escribir solo en el repositorio de datos. Se hace una vez y se guarda únicamente en este navegador.</p>'+
+ '<div class="card">'+(t?'<p><b style="color:var(--ok)">Conectado.</b> La llave está guardada en este navegador.</p><button class="btn" id="tk-borra">Desconectar</button>':
+ '<ol class="pasos"><li>Abre <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> con la cuenta de inconsolataweb.</li><li>Nombre: <code>panel de portada</code>. Caducidad: la más larga que te deje.</li><li>En <b>Repository access</b>, elige <b>Only select repositories</b> y marca <code>inconsolata-datos</code>.</li><li>En <b>Permissions › Repository permissions</b>, pon <b>Contents</b> en <b>Read and write</b>.</li><li>Pulsa <b>Generate token</b>, copia la llave (empieza por <code>github_pat_</code>) y pégala aquí.</li></ol>'+
+ '<div class="fila"><label>Llave<input id="tk" type="password" placeholder="github_pat_…" autocomplete="off"></label></div><button class="btn prim" id="tk-ok">Guardar y comprobar</button> <span id="tk-msg"></span>')+'</div>'+
+ '<p class="ayuda">Sin conexión también puedes usar el panel: «Copiar a mano» te da el archivo listo y el enlace de GitHub donde pegarlo.</p>';}
+};
+var TAB='portada';
+function pinta(){var s=$('#t-'+TAB);var y=scrollY;s.innerHTML=F.avisos.obj||TAB==='conexion'?VISTAS[TAB]():'';scrollTo(0,y);estadoBarra();}
+function pintaTodo(){pinta();}
+function estadoBarra(){var a=sucio('avisos'),p=sucio('portada_manual'),n=a+p;
+ var O=a?JSON.parse(F.avisos.orig):null,A=F.avisos.obj,sec={faldon:a&&linea(limpio(A.faldon||{}))!==linea(limpio(O.faldon||{})),avisos:a&&lista(A.grandes)!==lista(O.grandes||[]),novedades:a&&lista(A.ligeros)!==lista(O.ligeros||[]),portada:p};
+ [].forEach.call(document.querySelectorAll('nav.tabs button'),function(b){var t=b.dataset.t,d=sec[t];b.innerHTML=b.textContent.replace(/\s+$/,'')+(d?'<span class="dot" aria-label="con cambios"></span>':'');});
+ $('#b-deshacer').disabled=!n;$('#b-copiar').disabled=!n;$('#b-publicar').disabled=!n;
+ if(!$('#msg').dataset.fijo){$('#msg').className='';$('#msg').textContent=n?'Hay cambios sin publicar en '+(a&&p?'la portada y los avisos':a?'los avisos':'la portada')+'.':'Sin cambios.';}}
+function aviso(t,cl){var m=$('#msg');m.textContent=t;m.className=cl||'';m.dataset.fijo=1;setTimeout(function(){delete m.dataset.fijo;},6000);}
+
+// ---------- edición
+function objDe(el){var sec=el.closest('[data-sec]'),card=el.closest('[data-i]'),i=card?+card.dataset.i:null,M=F.portada_manual.obj,A=F.avisos.obj;
+ if(TAB==='avisos')return A.grandes[i];if(TAB==='novedades')return A.ligeros[i];if(TAB==='faldon')return A.faldon;
+ if(sec){var s=sec.dataset.sec;if(s==='apertura')return M.apertura;if(s==='fijos')return M.fijos[i];if(s==='destacado')return M.destacado;}return null;}
+function arrDe(){var M=F.portada_manual.obj,A=F.avisos.obj;return TAB==='avisos'?A.grandes:TAB==='novedades'?A.ligeros:M.fijos;}
+document.addEventListener('input',function(e){var el=e.target,k=el.dataset.k;if(!k)return;var o=objDe(el);if(!o)return;
+ if(k.indexOf('imgs.')===0){o.imgs=o.imgs||['','',''];o.imgs[+k.slice(5)]=el.value;}else o[k]=el.value;
+ if(TAB==='faldon'&&k==='u'){var sl=(el.value.match(/^\/especiales#(.+)$/)||[])[1];$('#f-esp').value=sl&&ESP.some(function(x){return x.slug===sl;})?sl:'';if(!sl)delete o.especial;var c=$('#f-dest');if(c)c.disabled=!sl;}
+ var v=el.closest('.card')&&el.closest('.card').querySelector('.vista');if(v&&k==='t')v.innerHTML=destaca(el.value||'…');
+ if(TAB==='faldon'&&k==='t'){var fv=$('.faldon-v');if(fv){var x=esc(el.value).replace(/\s*»\s*/g,' <i>»</i> ')+' <i>»</i> ';fv.innerHTML=x+x;}}
+ if(el.tagName==='SELECT')pinta();else estadoBarra();});
+document.addEventListener('change',function(e){var el=e.target,A=F.avisos.obj,M=F.portada_manual.obj;
+ if(el.id==='f-on'){if(el.checked){A.faldon=A._faldon||{t:'Escribe aquí el texto » del faldón'};}else{A._faldon=A.faldon;A.faldon={};}pinta();}
+ if(el.id==='f-esp'){var f=A.faldon;if(el.value){f.u='/especiales#'+el.value;if(f.especial)f.especial=el.value;}else{if(/^\/especiales#/.test(f.u||''))f.u='';delete f.especial;delete f.img;}pinta();}
+ if(el.id==='f-dest'){var f2=A.faldon,sl=((f2.u||'').match(/^\/especiales#(.+)$/)||[])[1];if(el.checked&&sl)f2.especial=sl;else{delete f2.especial;delete f2.img;}pinta();}
+ if(el.dataset.media!==undefined){var o=objDe(el);delete o.img;delete o.imgs;delete o.ico;if(el.value==='imgs')o.imgs=['','',''];if(el.value==='img')o.img='';if(el.value==='ico')o.ico=ICONOS[0];pinta();}
+ if(el.name==='dm'){M.destacado=el.value==='auto'?null:el.value==='post'?{id:''}:{k:'Destacado »',t:'',p:'',u:'',img:''};pinta();}});
+document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var M=F.portada_manual.obj,A=F.avisos.obj;
+ if(b.dataset.t){TAB=b.dataset.t;[].forEach.call(document.querySelectorAll('nav.tabs button'),function(x){x.setAttribute('aria-selected',x===b);});[].forEach.call(document.querySelectorAll('main section'),function(s){s.hidden=s.id!=='t-'+TAB;});pinta();scrollTo(0,0);return;}
+ if(b.dataset.elige){elige(b.dataset.elige);return;}
+ if(b.dataset.mov){mover(arrDe(),+b.dataset.i,+b.dataset.mov);pinta();return;}
+ if(b.dataset.borra!==undefined){if(confirm('¿Quitar este elemento?')){arrDe().splice(+b.dataset.borra,1);pinta();}return;}
+ if(b.dataset.borraOc!==undefined){M.ocultos.splice(+b.dataset.borraOc,1);pinta();return;}
+ if(b.dataset.quita==='apertura'){M.apertura=null;pinta();return;}
+ if(b.dataset.nuevo==='grandes'){A.grandes.unshift({k:'Novedad',t:'',u:'',desde:hoy()});pinta();return;}
+ if(b.dataset.nuevo==='ligeros'){A.ligeros.unshift({f:hoy(),t:''});pinta();return;}
+ if(b.id==='tk-ok'){var v=$('#tk').value.trim();if(!v)return;$('#tk-msg').textContent='Comprobando…';
+  fetch('https://api.github.com/repos/'+REPO,{headers:{Authorization:'Bearer '+v}}).then(function(r){return r.json().then(function(j){return [r.ok,j];});}).then(function(x){
+   if(x[0]&&x[1].permissions&&x[1].permissions.push){ls('inc-panel-token',v);aviso('Conectado a GitHub.','ok');cargaArchivos().then(function(){pinta();});$('#estado').textContent='Conectado a GitHub.';}
+   else $('#tk-msg').textContent='Esa llave no tiene permiso de escritura en inconsolata-datos.';}).catch(function(){$('#tk-msg').textContent='No se pudo comprobar. Revisa la conexión.';});return;}
+ if(b.id==='tk-borra'){ls('inc-panel-token',null);pinta();return;}
+ if(b.id==='b-deshacer'){if(!confirm('¿Descartar todos los cambios sin publicar?'))return;['avisos','portada_manual'].forEach(function(n){F[n].obj=normal(n,JSON.parse(F[n].orig));});pinta();return;}
+ if(b.id==='b-copiar'){copia();return;}
+ if(b.id==='b-publicar'){publica();return;}});
+
+// ---------- elegir post
+var destino=null;
+function elige(d){destino=d;var dl=$('#dlg');$('#dlg-q').value='';$('#dlg-url').value='';listaPosts('');dl.showModal();$('#dlg-q').focus();}
+function listaPosts(q){var f=fold(q).split(/\s+/).filter(Boolean),r=[];for(var i=0;i<POSTS.length&&r.length<60;i++){var p=POSTS[i];if(f.every(function(w){return p.f.indexOf(w)>=0;}))r.push(p);}
+ $('#dlg-l').innerHTML=r.map(function(p){return '<button data-id="'+p.i+'">'+(p.im?'<img src="'+esc(p.im)+'" alt="" loading="lazy">':'<span style="width:52px"></span>')+'<span><b>'+destaca(p.t||'(sin título)')+'</b><br><small>'+esc(p.d)+(p.ms.length?' · '+esc(p.ms.slice(0,3).join(', ')):'')+'</small></span></button>';}).join('')||'<p style="padding:14px">Nada encontrado.</p>';}
+$('#dlg-q').addEventListener('input',function(){listaPosts(this.value);});
+$('#dlg-x').addEventListener('click',function(){$('#dlg').close();});
+$('#dlg-url').addEventListener('input',function(){var m=this.value.match(/post\/(\d{6,})/)||this.value.match(/^\s*(\d{12,})\s*$/);if(m)pon(m[1]);});
+$('#dlg-l').addEventListener('click',function(e){var b=e.target.closest('button[data-id]');if(b)pon(b.dataset.id);});
+function pon(id){var M=F.portada_manual.obj,d=destino;
+ if(d==='apertura')M.apertura=Object.assign(M.apertura||{},{id:id});
+ else if(d==='destacado')M.destacado=Object.assign(M.destacado||{},{id:id});
+ else if(d==='fijos+')M.fijos.push({id:id});
+ else if(d==='ocultos+'){if(M.ocultos.indexOf(id)<0)M.ocultos.push(id);}
+ else if(d.indexOf('fijos:')===0)M.fijos[+d.slice(6)].id=id;
+ else if(d.indexOf('ocultos:')===0)M.ocultos[+d.slice(8)]=id;
+ $('#dlg').close();pinta();}
+
+// ---------- publicar
+function cambiados(){return ['avisos','portada_manual'].filter(sucio);}
+function publica(){var tk=token();if(!tk){aviso('Primero conecta el panel con GitHub (pestaña «Conexión») o usa «Copiar a mano».','err');return;}
+ var ns=cambiados();$('#b-publicar').disabled=true;aviso('Publicando…');
+ ns.reduce(function(pr,n){return pr.then(function(){
+  return fetch(API+n+'.json?ref=main',{headers:{Authorization:'Bearer '+tk},cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+   if(j.sha!==F[n].sha&&F[n].sha&&b64d(j.content)!==F[n].orig)throw new Error('Alguien ha cambiado '+n+'.json mientras editabas. Recarga el panel y repite el cambio.');
+   var txt=texto(n);return fetch(API+n+'.json',{method:'PUT',headers:{Authorization:'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({message:'Panel de portada: '+(n==='avisos'?'avisos y faldón':'portada'),content:b64e(txt),sha:j.sha,branch:'main'})})
+    .then(function(r){return r.json().then(function(x){if(!r.ok)throw new Error(x.message||('GitHub '+r.status));F[n].sha=x.content.sha;F[n].orig=txt;});});});});},Promise.resolve())
+ .then(function(){aviso('Publicado. La web lo mostrará en unos minutos.','ok');estadoBarra();})
+ .catch(function(e){aviso('No se ha podido publicar: '+e.message,'err');estadoBarra();});}
+function copia(){var ns=cambiados();$('#copia-c').innerHTML=ns.map(function(n){return '<p><b>'+n+'.json</b> · 1) Copia el texto. 2) Abre <a href="https://github.com/'+REPO+'/edit/main/datos/'+n+'.json" target="_blank" rel="noopener">el archivo en GitHub</a>, borra todo, pega y pulsa «Commit changes».</p><textarea readonly style="min-height:180px;font:13px monospace" onfocus="this.select()">'+esc(texto(n))+'</textarea><p><button class="btn peq" data-cp="'+n+'">Copiar</button></p>';}).join('');$('#dlg-copia').showModal();}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-cp]');if(!b)return;navigator.clipboard.writeText(texto(b.dataset.cp)).then(function(){b.textContent='Copiado';});});
+addEventListener('beforeunload',function(e){if(cambiados().length){e.preventDefault();e.returnValue='';}});
+carga();
+</script>
+</body>
+</html>

@@ -12,7 +12,7 @@ function destaca(t){
  return ws.map(function(w,i){if(i!==best)return esc(w);var m=w.match(/^([«"“(¿¡]*)(.*?)([»"”.,:;!?)]*)$/);return esc(m[1])+'<em>'+esc(m[2])+'</em>'+esc(m[3]);}).join('');
 }
 function quita(t){return String(t||'').replace(/\*/g,'');}
-function rango(d){var b=new Date(d+'T12:00:00'),a=new Date(b.getTime()-6*864e5);
+function rango(d){var b=new Date(d+'T12:00:00');b=new Date(b.getTime()-b.getDay()*864e5);var a=new Date(b.getTime()-6*864e5); // la semana acaba el domingo anterior o igual a la fecha
  return a.getMonth()===b.getMonth()?a.getDate()+'–'+b.getDate()+' '+MES3[b.getMonth()]+' '+b.getFullYear():a.getDate()+' '+MES3[a.getMonth()]+'–'+b.getDate()+' '+MES3[b.getMonth()]+' '+b.getFullYear();}
 function anioDe(mes,d){var i=MESES.indexOf(String(mes).toLowerCase());var y=+d.slice(0,4);return (i>=0&&i+1>+d.slice(5,7))?y-1:y;}
 function tipoDe(t,def){t=t.toLowerCase();

@@ -18,16 +18,27 @@ OUT = sys.argv[1]
 APOYA = 'https://buymeacoffee.com/saulcastillo'
 
 NAV = (f'<nav aria-label="Secciones"><a href="/sobre-mi">Sobre mí</a><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a>'
-       f'<a href="/archive">Archivo</a>{SEARCH}<a href="{APOYA}" class="btn-ink">Apóyanos »</a></nav>')
+       f'<div class="dd"><button type="button" class="dd-b" aria-expanded="false" aria-haspopup="true">Archivo <i aria-hidden="true">▾</i></button><div class="dd-m" hidden><a href="/archive">Ver el archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a></div></div>{SEARCH}<a href="{APOYA}" class="btn-ink">Apóyanos »</a></nav>')
 HEAD = (f'<header class="head"><a href="/" class="brand soft" aria-label="inconsolata», ir a la portada">inc<span>»</span></a>'
         f'<div class="hd-right">{NAV}<div class="hd-row2">{SOCIAL}</div></div></header>'
         '<div class="mini-head" id="mini-head"><div class="mh-in">'
         '<a class="mh-brand soft" href="/" aria-label="inconsolata», ir a la portada">inc<span>»</span></a>'
-        '<nav class="mh-nav" aria-label="Secciones"><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a><a href="/archive">Archivo</a></nav>'
+        '<nav class="mh-nav" aria-label="Secciones"><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a><div class="dd"><button type="button" class="dd-b" aria-expanded="false" aria-haspopup="true">Archivo <i aria-hidden="true">▾</i></button><div class="dd-m" hidden><a href="/archive">Ver el archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a></div></div></nav>'
         + SEARCH.replace('q-top', 'q-mini') + f'<a class="mh-apoya" href="{APOYA}">Apóyanos »</a></div>'
         '<div class="mh-prog" aria-hidden="true"><span id="mh-bar"></span></div></div>')
 
 TCSS = """
+.dd{position:relative;display:inline-flex}
+.dd-b{font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;display:inline-flex;gap:5px;align-items:center}
+.dd-b i{font-style:normal;font-size:.8em;transition:transform .15s}
+.dd-b[aria-expanded=true] i{transform:rotate(180deg)}
+.dd-m{position:absolute;top:calc(100% + 10px);right:0;z-index:60;display:flex;flex-direction:column;min-width:200px;background:var(--paper);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
+.dd-m[hidden]{display:none}
+.dd-m a{padding:11px 16px;white-space:nowrap;border-bottom:1px solid #CFC8B8}
+.dd-m a:last-child{border-bottom:0}
+.dd-m a:hover,.dd-m a:focus-visible{background:var(--ink);color:var(--paper)}
+@media (max-width:820px){.topbar .hd-right nav .dd{display:none}}
+
 .post-raw{display:none}
 .title h1.auto{font-size:clamp(34px,4.2vw,64px);line-height:1.02;letter-spacing:-.015em}
 .title h1 em{color:var(--accent)}
@@ -326,6 +337,10 @@ _H = os.path.dirname(os.path.abspath(__file__))
 _CAT = next(p for p in (os.path.join(_H, '..', '..', 'datos', 'catalogo.json'), '/home/claude/inconsolata-datos/datos/catalogo.json') if os.path.exists(p))
 _TEM = [t['n'] for t in json.load(open(_CAT))['temas']]
 JS_FINAL = JS.replace('__VJS__', VJS.replace('ESPIRAL', json.dumps(ESPIRAL_COLOR))).replace('__TN__', json.dumps({k: v[0] for k, v in TIPOS.items()}, ensure_ascii=False)).replace('__TS__', json.dumps([tslug(n) for n in _TEM])).replace('__PJS__', PJS).replace('__PAGJS__', PAG_JS)
+JS_FINAL += r"""
+document.addEventListener('click',function(e){var b=e.target.closest('.dd-b');document.querySelectorAll('.dd').forEach(function(d){var bt=d.querySelector('.dd-b'),m=d.querySelector('.dd-m'),ab=b&&d.contains(b)?bt.getAttribute('aria-expanded')!=='true':false;bt.setAttribute('aria-expanded',ab?'true':'false');m.hidden=!ab;});});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.dd-b[aria-expanded=true]').forEach(function(b){b.click();b.focus();});});
+"""
 page = f"""<!DOCTYPE html>
 <html lang="es">
 <head>

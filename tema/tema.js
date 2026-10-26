@@ -66,7 +66,7 @@ function destaca(t){
  return ws.map(function(w,i){if(i!==best)return esc(w);var m=w.match(/^([\u00ab"\u201c(\u00bf\u00a1]*)(.*?)([\u00bb"\u201d.,:;!?)]*)$/);return esc(m[1])+'<em>'+esc(m[2])+'</em>'+esc(m[3]);}).join('');
 }
 function quita(t){return String(t||'').replace(/\*/g,'');}
-function rango(d){var b=new Date(d+'T12:00:00'),a=new Date(b.getTime()-6*864e5);
+function rango(d){var b=new Date(d+'T12:00:00');b=new Date(b.getTime()-b.getDay()*864e5);var a=new Date(b.getTime()-6*864e5); // la semana acaba el domingo anterior o igual a la fecha
  return a.getMonth()===b.getMonth()?a.getDate()+'\u2013'+b.getDate()+' '+MES3[b.getMonth()]+' '+b.getFullYear():a.getDate()+' '+MES3[a.getMonth()]+'\u2013'+b.getDate()+' '+MES3[b.getMonth()]+' '+b.getFullYear();}
 function anioDe(mes,d){var i=MESES.indexOf(String(mes).toLowerCase());var y=+d.slice(0,4);return (i>=0&&i+1>+d.slice(5,7))?y-1:y;}
 function tipoDe(t,def){t=t.toLowerCase();
@@ -325,7 +325,7 @@ function hero(p){var im=p.ims[0];
  return '<section class="hero">'+(im?'<a href="'+esc(p.u)+'" class="hero-img"><div class="ph ht-k">'+img(im.big,(TN[p.k[0]]||'Imagen')+(p.meds[0]?' de '+p.meds[0].n:''))+'</div></a>':'')+
   '<div class="hero-card'+(im?'':' solo')+'"><span class="caps" style="letter-spacing:3px">'+ki+'</span><h1 class="soft"><a href="'+esc(p.u)+'">'+destaca(p.t)+'</a></h1>'+
   (p.txt?'<p>'+esc(primeras(p.txt.indexOf(quita(p.t))===0?p.txt.slice(quita(p.t).length):p.txt,230))+'</p>':'')+
-  '<div class="hero-meta">'+p.meds.slice(0,3).map(function(m){return '<a href="'+fichaMedio(m)+'">\u00bb '+esc(m.n)+'</a>';}).join('')+'<span>'+p.d.split('-').reverse().join('.')+'</span></div></div></section>';}
+  '<div class="hero-meta">'+p.meds.slice(0,3).map(function(m){return '<a href="'+fichaMedio(m)+'">'+(m.avw?'<img class="k-av" src="'+esc(m.avw)+'" alt="" onerror="this.remove()">':'')+'\u00bb '+esc(m.n)+'</a>';}).join('')+'<span>'+p.d.split('-').reverse().join('.')+'</span></div></div></section>';}
 
 function hoja(p,i,pos){
  var st=' style="grid-column:'+pos.c+';margin-top:'+pos.mt+'px;transform:rotate('+pos.r+'deg)"',tape='<span class="tape" aria-hidden="true"></span>';
@@ -1296,6 +1296,9 @@ function autocompleta(cat){
 // el buscador peque\u00f1o de la cabecera lleva al buscador
 [].forEach.call(document.querySelectorAll('.srch'),function(f){f.addEventListener('submit',function(){var v=f.querySelector('input').value.trim();location.href='/buscador'+(v?'#q='+encodeURIComponent(v):'');});});
 })();
+
+document.addEventListener('click',function(e){var b=e.target.closest('.dd-b');document.querySelectorAll('.dd').forEach(function(d){var bt=d.querySelector('.dd-b'),m=d.querySelector('.dd-m'),ab=b&&d.contains(b)?bt.getAttribute('aria-expanded')!=='true':false;bt.setAttribute('aria-expanded',ab?'true':'false');m.hidden=!ab;});});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.dd-b[aria-expanded=true]').forEach(function(b){b.click();b.focus();});});
 
 window.initLB=window.initLB||(typeof initLB!=="undefined"?initLB:null);
 }if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",arranca);else arranca();})();
