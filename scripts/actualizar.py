@@ -479,6 +479,7 @@ def estadisticas(P):
                'medios': [[M[i], c, i] for i, c in cm.most_common(25)], 'autores': [[A[i], c, i, MEDIO_AUT.get(i)] for i, c in ca.most_common(15)],
                'tipos': dict(ck), 'temas': [[T[i], c, i] for i, c in ct.most_common(24)], 'imgs': sum(p['n'] for p in ps)}
         if year:
+            out['meses'] = [sum(1 for p in ps if p['d'][5:7] == '%02d' % m) for m in range(1, 13)]
             out['nuevos'] = sorted([[M[i], cm[i], i] for i in cm if first[i] == year], key=lambda x: -x[1])[:16]
         return out
     y1 = datetime.now(timezone.utc).year

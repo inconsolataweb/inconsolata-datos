@@ -352,7 +352,7 @@ page = f"""<!DOCTYPE html>
 </main>
 <footer>
 <div class="cmyk-bar" aria-hidden="true"><span style="background:#00A0DC"></span><span style="background:#66C6EA"></span><span style="background:#E5007E"></span><span style="background:#EF66B2"></span><span style="background:#FFD400"></span><span style="background:#FFE566"></span><span style="background:#16140F"></span><span style="background:#7A766C"></span></div>
-<div class="wrap foot"><span class="soft" style="font-size:56px;line-height:1">inc<span style="color:#EF66B2">»</span></span><span>© inconsolata» 2011–<span id="y-now">{{CurrentYear}}</span> · un blog de Saúl Castillo</span><span style="display:flex;gap:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px"><a href="https://x.com/inconsolata">X</a><a href="{{RSS}}">RSS</a><a href="{APOYA}" style="color:var(--yellow)">Apóyanos »</a></span></div>
+<div class="wrap foot"><span class="soft" style="font-size:56px;line-height:1">inc<span style="color:#D1006F">»</span></span><span>© inconsolata» 2011–<span id="y-now">{{CurrentYear}}</span> · un blog de Saúl Castillo</span><span style="display:flex;gap:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px"><a href="https://x.com/inconsolata">X</a><a href="{{RSS}}">RSS</a><a href="{APOYA}" style="color:var(--yellow)">Apóyanos »</a></span></div>
 </footer>
 </div>
 {LB_HTML}

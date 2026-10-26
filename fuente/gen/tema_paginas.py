@@ -56,7 +56,7 @@ BUS_HTML = ('<section class="hero"><div class="wrap"><h1 class="soft">Quince añ
             '<button type="button" class="loadmore" id="more">Cargar más »</button></section></div>')
 
 # ---------------- estadísticas
-EST_CSS = ambito(_sin_pie(_str('estadisticas.py', 'SCSS')) + '.hb a{display:flex;align-items:center;gap:8px}.hb .hav{width:22px;height:22px;object-fit:contain;flex-shrink:0}', '.v-estadisticas')
+EST_CSS = ambito(_sin_pie(_str('estadisticas.py', 'SCSS')) + '''.vbars .mb{flex:1;position:relative;background:var(--accent);border-radius:4px 4px 0 0;min-width:0}.vbars .mb .v{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:13px;font-weight:800;padding-bottom:4px;white-space:nowrap}#vb-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}.vb-back{margin-left:auto;align-self:center;font:800 12px Archivo,sans-serif;letter-spacing:1.5px;text-transform:uppercase;border:2px solid var(--ink);background:none;padding:6px 10px;cursor:pointer;color:var(--ink)}.vb-back:hover{background:var(--ink);color:var(--paper)}''' + '.hb a{display:flex;align-items:center;gap:8px}.hb .hav{width:22px;height:22px;object-fit:contain;flex-shrink:0}', '.v-estadisticas')
 _ejs = _str('estadisticas.py', 'JS')
 _R = [
     ("var ST = __ST__, TN = __TN__, Y = 'all';", "var Y = 'all', Y1 = new Date().getFullYear();"),
@@ -64,6 +64,7 @@ _R = [
     ("hbars('ht', d.temas.slice(0, 12), 'h');", "hbars('ht', d.temas.filter(function (r) { var t = cat0 && cat0.temas[r[2]]; return !(t && t.x); }).slice(0, 12), 'h');"),
     ("'\">' + esc(r[0]) + '</a><div class=\"tr\">", "'\">' + avh(key, r) + esc(r[0]) + '</a><div class=\"tr\">"),
     ("function hbars(id, rows, key) {", "function avh(key, r) { var i = key === 'm' ? r[2] : key === 'a' ? r[3] : null, c = i != null && cat0 && cat0.medios[i]; return key === 'm' || key === 'a' ? (c && c.av ? '<img class=\"hav\" src=\"' + esc(c.av) + '\" alt=\"\">' : '<span class=\"hav\"></span>') : ''; }\nfunction hbars(id, rows, key) {"),
+    ("  var h = '', ax = '', mx = Math.max.apply(null, Object.values(T.per_year));", "  var h = '', ax = '', mx = Math.max.apply(null, Object.values(T.per_year)), MS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];\n  var vh = document.getElementById('vb-h');\n  if (Y !== 'all' && d.meses) {\n    var mm = Math.max.apply(null, d.meses.concat([1]));\n    d.meses.forEach(function (v, i) { h += '<span class=\"mb\" data-tip=\"' + MS[i] + ' de ' + Y + ': ' + fmt(v) + ' entradas\" style=\"height:' + (v / mm * 100) + '%\"><span class=\"v\">' + v + '</span></span>'; ax += '<span>' + MS[i].slice(0, 3) + '</span>'; });\n    vh.innerHTML = 'Entradas <em>por mes</em><small>' + Y + '</small><button type=\"button\" class=\"vb-back\" data-y=\"all\">« Todos los años</button>';\n    document.getElementById('vb').innerHTML = h; document.getElementById('vax').innerHTML = ax; T = { per_year: {} };\n  } else vh.innerHTML = 'Entradas <em>por año</em><small>pulsa una barra</small>';"),
     ("for (var y = 2026; y >= 2011; y--)", "for (var y = Y1; y >= 2011; y--)"),
     ("'en 15 años de archivo' : 'en ' + Y + (Y === 2026 ? ' (hasta hoy)' : '')", "'en ' + (Y1 - 2011) + ' años de archivo' : 'en ' + Y + (Y === Y1 ? ' (hasta hoy)' : '')"),
 ]
@@ -74,7 +75,7 @@ EST_JS = _ejs
 EST_HTML = ('<section class="wrap hero"><div class="crumbs caps" style="padding:0 0 14px"><a href="/">Portada</a><i>»</i><a href="/medios">Medios</a><i>»</i><span>Estadísticas</span></div>'
             '<h1 class="soft">Los <em>números</em> del archivo</h1><p>Qué medios, autores y temas han pasado por inconsolata» cada año desde 2011. Pulsa un año para ver solo ese año.</p></section>'
             '<nav class="ybar" aria-label="Elegir año"><div class="wrap in" id="ybar"></div></nav><section class="kpis" aria-live="polite"><div class="wrap in" id="kpis"></div></section>'
-            '<div class="wrap"><section class="blk"><h2 class="soft">Entradas <em>por año</em><small>pulsa una barra</small></h2><div class="vbars" id="vb"></div><div class="vax" id="vax"></div></section>'
+            '<div class="wrap"><section class="blk"><h2 class="soft" id="vb-h">Entradas <em>por año</em><small>pulsa una barra</small></h2><div class="vbars" id="vb"></div><div class="vax" id="vax"></div></section>'
             '<div class="cols"><section class="blk"><h2 class="soft">Medios <em>más presentes</em><small class="ylbl"></small></h2><div class="hb" id="hm"></div>'
             '<p class="note">Número de entradas en las que aparece el medio. Un «mucho más» o un EXTRA! cuenta una vez por cada medio que incluye.</p></section>'
             '<section class="blk"><h2 class="soft">Autores <em>más citados</em><small class="ylbl"></small></h2><div class="hb" id="ha"></div></section></div>'
@@ -148,7 +149,7 @@ FICHA_CSS = ambito(_fcss + """
 .wk{margin-top:22px}
 .fvis{display:flex;flex-direction:column;gap:34px}
 .fmt-box:empty{display:none}
-.fmt-box{display:flex;flex-direction:column;gap:10px;align-self:flex-start;width:100%;max-width:300px;border-top:2px solid var(--ink);padding:12px 0 0}
+.fmt-box{display:flex;flex-direction:column;gap:10px;align-self:flex-start;width:100%;max-width:300px;padding:0}
 .fmt-box>b{font-size:15px}
 .fmt-box .fmt{margin:0;flex-wrap:nowrap;align-items:flex-end;gap:16px}
 .fmt-box .fmt svg{width:84px;flex:0 0 auto}
@@ -159,6 +160,7 @@ FICHA_CSS = ambito(_fcss + """
 .fmt-box .fmt small i{align-self:flex-start}
 .fmt-box .fmt small .sep{display:none}
 .wk-r.propio{font-style:italic!important}
+.wk dd small.dd{font-size:.78em;font-weight:700;color:var(--muted);margin-left:4px}
 .wk-top{margin-bottom:30px!important}
 .tipos{grid-template-columns:repeat(8,minmax(0,1fr))!important}
 .wk dl{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))!important;gap:12px 22px!important}
