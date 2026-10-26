@@ -36,6 +36,6 @@ jobs:
       - name: Refrescar la caché de jsDelivr
         run: |
           m=$(date -u +%m); n=$(date -u -d "+1 day" +%m)
-          for f in indice estadisticas especiales meta catalogo titulos portada portada_manual avisos archivo efemerides/$m efemerides/$n; do
+          for f in indice estadisticas especiales meta catalogo titulos portada portada_manual avisos archivo cronologia efemerides/$m efemerides/$n; do
             curl -s "https://purge.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/datos/$f.json" > /dev/null || true
           done

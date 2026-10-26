@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------ páginas propias
-// /buscador, /medios(#slug), /autores(#nombre), /estadisticas(#año), /especiales(#slug), /novedades
-var RUTA=(location.pathname.match(/\/(buscador|medios|autores|estadisticas|especiales|novedades)(?:\.html)?\/?$/)||[])[1]||'';
+// /buscador, /medios(#slug), /autores(#nombre), /estadisticas(#año), /especiales(#slug), /novedades, /cronologia(#año)
+var RUTA=(location.pathname.match(/\/(buscador|medios|autores|estadisticas|especiales|novedades|cronologia)(?:\.html)?\/?$/)||[])[1]||'';
 var Y1=new Date().getFullYear(),TIPOS_ORD=['info','carto','port','ilus','foto','video','publi','online'];
 var MES3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 function fcorta(d){return +d.slice(8,10)+' '+MES3[+d.slice(5,7)-1]+' '+d.slice(0,4);}
@@ -240,6 +240,81 @@ function novPag(A,cat){var L=((A&&A.ligeros)||[]).slice().sort(function(a,b){ret
  if(L[0])ls('inc-novedades-visto',L[0].f||'');
  return {html:html,init:function(){}};}
 
+// ---------- cronología: una tira horizontal con 15 años de la web
+function cronoPag(A,cat,ES,CR){
+ document.title='Cronología · inconsolata»';
+ var byId={},by={};A.posts.forEach(function(p){byId[p.i]=p;});ES.forEach(function(e){by[e.slug]=e;});
+ var DIA=2.6,PAD=420,FIN=200,t0=new Date(A.posts.reduce(function(m,p){return p.d<m?p.d:m;},'9999').slice(0,4)+'-01-01T12:00:00').getTime(),hoy=new Date().toISOString().slice(0,10);
+ var X=function(d){return PAD+Math.round((new Date(d+'T12:00:00').getTime()-t0)/864e5*DIA);},W=X(hoy)+FIN;
+ var fd=function(d){return (+d.slice(8,10))+' '+MES3[+d.slice(5,7)-1]+' '+d.slice(0,4);};
+ var KIT={noticia:'Noticia',pieza:'Pieza',web:'La web',cobertura:'Cobertura'};
+ // hitos puntuales
+ var pts=[],barras=[],hilos=[];
+ (CR.hitos||[]).forEach(function(h){
+  if(h.esp){var e=by[h.esp];if(!e)return;
+   // el tramo vivo del especial: del 10 % al 90 % de sus entradas (los aniversarios sueltos no alargan la barra)
+   var ds=e.posts.map(function(i){return byId[i]&&byId[i].d;}).filter(Boolean).sort(),q=function(f){return ds[Math.min(ds.length-1,Math.floor(f*(ds.length-1)))];};
+   var a=h.desde||(ds.length>4?q(.1):e.desde),b=h.hasta||(ds.length>4?q(.9):e.hasta)||a,dias=(new Date(b)-new Date(a))/864e5;
+   (dias>300&&ds.length>=20?hilos:barras).push({e:e,a:a,b:b,t:h.t||e.titulo,n:e.posts.length,ic:icoE(cat,e),u:'/especiales#'+e.slug});return;}
+  var p=h.id?byId[h.id]:null,d=h.d||(p&&p.d);if(!d)return;
+  pts.push({tipo:h.tipo||'pieza',d:d,t:h.t||(p?tituloP(p):''),u:h.u||(p?'/post/'+p.u:'#'),im:h.img||(p&&p.im)||'',nota:h.nota||'',m:p?p.m.slice(0,2).map(function(i){return A.medios[i].n;}).join(' · '):''});});
+ pts.sort(function(a,b){return a.d.localeCompare(b.d);});
+ // carriles: cada pieza en el primero que esté libre
+ function carriles(L,ancho,max){var fin=[];L.forEach(function(o){var x=o.x,w=ancho(o),k=-1;for(var i=0;i<fin.length;i++)if(fin[i]<=x){k=i;break;}
+   if(k<0){if(fin.length<max){k=fin.length;fin.push(0);}else{k=0;for(var j=1;j<fin.length;j++)if(fin[j]<fin[k])k=j;}}o.lane=k;o.xc=Math.max(x,fin[k]);fin[k]=o.xc+w;});return Math.max(1,fin.length);}
+ pts.forEach(function(o){o.x=X(o.d);});var CW=170,LH=168,nl=carriles(pts,function(){return CW+16;},3);
+ var SP=nl*LH+40;
+ barras.sort(function(a,b){return a.a.localeCompare(b.a);});barras.forEach(function(o){o.x=X(o.a);o.w=Math.min(Math.max(X(o.b)-o.x,14),Math.round(180*DIA));o.lw=Math.max(o.w,o.t.length*7.4+58);});
+ var nb=carriles(barras,function(o){return o.lw+12;},4);
+ hilos.sort(function(a,b){return a.a.localeCompare(b.a);});hilos.forEach(function(o){o.x=X(o.a);o.w=X(o.b)-o.x;});
+ var nh=carriles(hilos,function(o){return Math.max(o.w,o.t.length*8.5+70)+24;},7);
+ var yB=SP+70,yH=yB+nb*36+40,H=yH+nh*26+24;
+ // actividad semanal
+ var sem={},mx=1;A.posts.forEach(function(p){var k=Math.floor((X(p.d)-PAD)/(7*DIA));sem[k]=(sem[k]||0)+1;if(sem[k]>mx)mx=sem[k];});
+ var act=Object.keys(sem).map(function(k){var v=sem[k];return '<i style="left:'+(PAD+k*7*DIA)+'px;height:'+Math.round(v/mx*34)+'px"></i>';}).join('');
+ var y0=+A.posts.reduce(function(m,p){return p.d<m?p.d:m;},'9999').slice(0,4),anios=[];for(var y=y0;y<=+hoy.slice(0,4);y++)anios.push(y);
+ var marcas=anios.map(function(y){var x=X(y+'-01-01');return '<div class="cr-y" style="left:'+x+'px" id="cr-'+y+'"><span class="big soft" aria-hidden="true">'+y+'</span><b>'+y+'</b></div>'+
+   MES3.map(function(m,i){if(!i)return '';var xm=X(y+'-'+String(i+1).padStart(2,'0')+'-01');return xm<W-FIN?'<span class="cr-m" style="left:'+xm+'px">'+m+'</span>':'';}).join('');}).join('');
+ var cartas=pts.map(function(o,i){var top=o.lane*LH+20,alto=SP-top-118;
+  var dx=o.x-o.xc;
+  return '<div class="cr-p t-'+o.tipo+'" style="left:'+(o.xc-10)+'px;top:'+top+'px"><a class="cr-c" href="'+esc(o.u)+'">'+(o.im?'<span class="ph"><img loading="lazy" src="'+esc(o.im)+'" alt="" onerror="this.parentNode.remove()"></span>':'')+
+   '<span class="k">'+KIT[o.tipo]+' »</span><span class="f">'+fd(o.d)+'</span><span class="tt">'+destaca(o.t)+'</span>'+(o.nota?'<span class="nt">'+esc(o.nota)+'</span>':'')+'</a>'+
+   (dx<-2?'<i class="ld" style="top:'+(SP-top-30)+'px;height:30px;left:'+(10+dx)+'px"></i>':'<i class="ld" style="height:'+(SP-top)+'px"></i>')+(dx<-2?'<i class="ld-h" style="left:'+(10+dx)+'px;width:'+(-dx)+'px;top:'+(SP-top-30)+'px"></i><i class="ld-v" style="top:40px;height:'+(SP-top-70)+'px"></i>':'')+'</div>';}).join('');
+ var bs=barras.map(function(o){return '<a class="cr-b" href="'+esc(o.u)+'" style="left:'+o.x+'px;top:'+(yB+o.lane*36)+'px" title="'+esc(o.t)+' · '+o.n+' entradas · '+fd(o.a)+(o.b!==o.a?' – '+fd(o.b):'')+'"><i style="width:'+o.w+'px"></i>'+
+   (o.ic?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+o.ic+'"/></svg>':'')+'<span>'+esc(o.t)+'</span></a>';}).join('');
+ var hs=hilos.map(function(o){return '<a class="cr-h" href="'+esc(o.u)+'" style="left:'+o.x+'px;top:'+(yH+o.lane*26)+'px;width:'+o.w+'px" title="'+esc(o.t)+' · '+o.n+' entradas · '+fd(o.a)+' – '+fd(o.b)+'"><span>'+(o.ic?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+o.ic+'"/></svg>':'')+esc(o.t)+' <small>'+o.n+'</small></span></a>';}).join('');
+ // minimapa
+ var mm=anios.map(function(y){return '<button type="button" data-y="'+y+'" style="left:'+((X(y+'-01-01')-PAD)/(W-PAD-FIN)*100)+'%">'+String(y).slice(2)+'</button>';}).join('')+
+  pts.map(function(o){return '<i class="t-'+o.tipo+'" style="left:'+((o.x-PAD)/(W-PAD-FIN)*100)+'%"></i>';}).join('');
+ var cuenta=function(t){return t==='cobertura'?barras.length+hilos.length:pts.filter(function(o){return o.tipo===t;}).length;};
+ var html='<div class="wrap">'+crumbs([['Archivo','/archive'],['Cronología']])+'<div class="cr-top"><h1 class="soft">Crono<em>logía</em></h1><p>'+(+hoy.slice(0,4)-y0)+' años de diseño de noticias en una tira: las grandes coberturas, las noticias que llenaron portadas y las piezas que no hemos olvidado.</p></div>'+
+  '<div class="cr-ctl"><div class="cr-f" role="group" aria-label="Mostrar">'+['noticia','pieza','cobertura','web'].map(function(t){return '<button type="button" class="t-'+t+'" data-f="'+t+'" aria-pressed="true"><i></i>'+(t==='cobertura'?'Coberturas':t==='web'?'La web':KIT[t]+'s')+' <small>'+cuenta(t)+'</small></button>';}).join('')+'</div>'+
+  '<div class="cr-nav"><button type="button" data-ir="ini">« Inicio</button><button type="button" data-ir="hoy">Hoy »</button></div></div></div>'+
+  '<div class="cr-sc" id="cr-sc" tabindex="0" aria-label="Línea del tiempo; desplázate en horizontal"><div class="cr-in" style="width:'+W+'px;height:'+H+'px;--sp:'+SP+'px">'+
+  '<div class="cr-intro" style="height:'+SP+'px"><span class="caps">Octubre de '+y0+'</span><p class="soft">Aquí empieza inconsolata».</p><span class="caps">Arrastra hacia la izquierda »</span></div>'+
+  marcas+'<div class="cr-sp" style="top:'+SP+'px"></div><div class="cr-act" style="top:'+(SP+3)+'px">'+act+'</div>'+
+  '<span class="cr-lab" style="top:'+(yB-24)+'px">Coberturas especiales »</span>'+bs+(hilos.length?'<span class="cr-lab" style="top:'+(yH-24)+'px">Grandes historias »</span>'+hs:'')+cartas+
+  '<div class="cr-hoy" style="left:'+X(hoy)+'px;height:'+SP+'px"><span>Hoy</span></div></div></div>'+
+  '<div class="wrap"><div class="cr-mm" id="cr-mm">'+mm+'<span class="vw" id="cr-vw"></span></div><p class="cr-nota">Arrastra la tira, usa la barra de abajo o pulsa un año. Las coberturas enlazan a su especial; el resto, al post.</p></div>';
+ return {html:html,init:function(){
+  var sc=document.getElementById('cr-sc'),vw=document.getElementById('cr-vw'),mmEl=document.getElementById('cr-mm'),box=sc.closest('.v-pag'),R=W-PAD-FIN;
+  function pinta(){var b=Math.min(1,sc.clientWidth/R),a=Math.min(Math.max(0,(sc.scrollLeft-PAD)/R),1-b);vw.style.left=a*100+'%';vw.style.width=b*100+'%';}
+  function ir(x,suave){sc.scrollTo({left:Math.max(0,x),behavior:suave?'smooth':'auto'});}
+  sc.addEventListener('scroll',pinta);addEventListener('resize',pinta);
+  sc.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){sc.scrollLeft+=320;e.preventDefault();}if(e.key==='ArrowLeft'){sc.scrollLeft-=320;e.preventDefault();}});
+  var arr=null,mov=0;sc.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'||e.button)return;arr={x:e.clientX,s:sc.scrollLeft};mov=0;});
+  addEventListener('pointermove',function(e){if(!arr)return;var d=e.clientX-arr.x;if(Math.abs(d)>4){mov=1;sc.classList.add('arr');}sc.scrollLeft=arr.s-d;});
+  addEventListener('pointerup',function(){arr=null;setTimeout(function(){sc.classList.remove('arr');},0);});
+  sc.addEventListener('click',function(e){if(mov&&e.target.closest('a')){e.preventDefault();mov=0;}},true);
+  sc.addEventListener('dragstart',function(e){e.preventDefault();});
+  function aMM(e){var r=mmEl.getBoundingClientRect(),f=(e.clientX-r.left)/r.width;ir(PAD+f*R-sc.clientWidth/2,false);}
+  var mmArr=false;mmEl.addEventListener('pointerdown',function(e){if(e.target.closest('button'))return;mmArr=true;aMM(e);});addEventListener('pointermove',function(e){if(mmArr)aMM(e);});addEventListener('pointerup',function(){mmArr=false;});
+  box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+   if(b.dataset.y){ir(X(b.dataset.y+'-01-01')-40,true);try{history.replaceState(null,'','#'+b.dataset.y);}catch(x){}}
+   if(b.dataset.ir)ir(b.dataset.ir==='ini'?0:sc.scrollWidth,true);
+   if(b.dataset.f){var on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);sc.classList.toggle('sin-'+b.dataset.f,!on);}});
+  var y=+location.hash.slice(1);if(y>=y0)ir(X(y+'-01-01')-40,false);pinta();}};}
+
 // ---------- montaje
 function fichaN(n){var c=(cat0&&cat0.medios||[]).find(function(m){return m.n===n;});return c&&c.ficha?fichaMedio(c):'/buscador#q='+encodeURIComponent(n);}
 function buscadorPag(D){
@@ -257,6 +332,7 @@ function pagina(meta,cat){
  var falla=function(e){console.error('inconsolata»: página',e);box.innerHTML='<div class="wrap"><p style="padding:60px 0">No se han podido cargar los datos. Prueba a recargar la página.</p></div>';};
  if(RUTA==='buscador'){document.title='Buscador · inconsolata»';get('indice').then(function(D){box.innerHTML=__BUS_HTML__;buscadorPag(D);}).catch(falla);return;}
  if(RUTA==='estadisticas'){document.title='Estadísticas · inconsolata»';get('estadisticas').then(function(ST){box.innerHTML=__EST_HTML__;estadisticasPag(ST);}).catch(falla);return;}
+ if(RUTA==='cronologia'){Promise.all([get('archivo'),get('especiales'),get('cronologia')]).then(function(r){pon(cronoPag(r[0],cat,r[1],r[2]));}).catch(falla);return;}
  if(RUTA==='novedades'){document.title='Novedades · inconsolata»';get('avisos').then(function(A){pon(novPag(A,cat));}).catch(falla);return;}
  if(RUTA==='especiales'){Promise.all([get('archivo'),get('especiales')]).then(function(r){
    function ve(){var s=hash(),x=r[1].find(function(e){return e.slug===s;});pon(x?espPag(r[0],cat,r[1],x):espIdx(r[1],cat));if(!x)document.title='Especiales · inconsolata»';scrollTo(0,0);}

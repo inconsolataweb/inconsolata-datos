@@ -42,12 +42,12 @@ for i, p in enumerate(sel):
     if i < len(sel) - 1: ctx.update({'block:NextPost': True, 'NextPost': 'post-%s.html' % sel[i+1]['id']})
     files['post-%s.html' % p['id']] = render(tpl, ctx)
 if os.environ.get('PAGINAS'):
-    for r in ('buscador', 'medios', 'autores', 'estadisticas', 'especiales', 'novedades'):
+    for r in ('buscador', 'medios', 'autores', 'estadisticas', 'especiales', 'novedades', 'cronologia'):
         files[r + '.html'] = render(tpl, {**base, 'block:PermalinkPage': True, 'block:Posts': [post_ctx(sel[0])]})
 with zipfile.ZipFile(out + '.zip', 'w', zipfile.ZIP_DEFLATED) as z:
     for n, h in files.items():
         nav = ("<script>document.addEventListener('click',function(e){var a=e.target.closest('a[href^=\"/\"]');if(!a)return;var h=a.getAttribute('href'),"
-               "m=h.match(/^\\/(buscador|medios|autores|estadisticas|especiales|novedades)(#.*)?$/),p=h.match(/^\\/post\\/(\\d+)/);e.preventDefault();"
+               "m=h.match(/^\\/(buscador|medios|autores|estadisticas|especiales|novedades|cronologia)(#.*)?$/),p=h.match(/^\\/post\\/(\\d+)/);e.preventDefault();"
                "if(h==='/')location.href='index.html';else if(m)location.href=m[1]+'.html'+(m[2]||'');else if(p&&window.__POSTS&&__POSTS.indexOf(p[1])>=0)location.href='post-'+p[1]+'.html';"
                "else window.open('https://inconsolata.com'+h,'_blank');},true);document.addEventListener('submit',function(e){var f=e.target.closest('.srch');if(!f)return;e.preventDefault();e.stopImmediatePropagation();var v=f.querySelector('input').value.trim();location.href='buscador.html'+(v?'#q='+encodeURIComponent(v):'');},true);window.__POSTS=" + json.dumps([str(p['id']) for p in sel]) + ";</script>")
         h = h.replace('</body>', nav + '</body>', 1)
@@ -63,7 +63,7 @@ with zipfile.ZipFile(out + '.zip', 'w', zipfile.ZIP_DEFLATED) as z:
     if os.environ.get('PDATOS'):
         D['portada'] = json.load(open(os.environ['PDATOS']))
     if os.environ.get('PAGINAS'):
-        for k in ('indice', 'archivo', 'estadisticas', 'fichas_medios', 'especiales', 'autores_fichas'):
+        for k in ('indice', 'archivo', 'estadisticas', 'fichas_medios', 'especiales', 'autores_fichas', 'cronologia'):
             D[k] = json.load(open('/home/claude/inconsolata-datos/datos/%s.json' % k))
     if os.environ.get('FICHAS_EXTRA'):
         for k, v in json.load(open(os.environ['FICHAS_EXTRA'])).items(): D['fichas_medios'].setdefault(k, {}).update(v)

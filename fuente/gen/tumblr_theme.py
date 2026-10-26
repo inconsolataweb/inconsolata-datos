@@ -356,7 +356,7 @@ page = f"""<!DOCTYPE html>
 <style>{CSS}{HEAD_CSS}{MINI_CSS}{TEMAS_CSS}{LEGACY_CSS}{LB_CSS}{TCSS}{VCSS}{PCSS}{PAG_CSS}</style>
 </head>
 <body>
-{{block:IndexPage}}<script>if(/(^[/]$|[/]index[.]html$)/.test(location.pathname))document.body.classList.add('es-portada');</script>{{/block:IndexPage}}<script>if(/[/](buscador|medios|autores|estadisticas|especiales|novedades)([.]html)?[/]?$/.test(location.pathname))document.body.classList.add('es-pagina');</script>
+{{block:IndexPage}}<script>if(/(^[/]$|[/]index[.]html$)/.test(location.pathname))document.body.classList.add('es-portada');</script>{{/block:IndexPage}}<script>if(/[/](buscador|medios|autores|estadisticas|especiales|novedades|cronologia)([.]html)?[/]?$/.test(location.pathname))document.body.classList.add('es-pagina');</script>
 {symbols()}{tema_symbols()}
 <div class="page">
 {HEAD}
