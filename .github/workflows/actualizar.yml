@@ -2,7 +2,7 @@ name: Actualizar datos
 
 on:
   schedule:
-    - cron: "17 3 * * *"   # cada noche, 5:17 en Madrid (verano) / 4:17 (invierno)
+    - cron: "17 4-23 * * *"   # cada hora, de 5:17 a 0:17 en Madrid (invierno; una hora más en verano)
   workflow_dispatch:         # botón «Run workflow» para lanzarlo a mano
 
 permissions:
