@@ -20,7 +20,7 @@ function entradas(A,ps){var ks=contar(ps,function(p){return p.k;}).slice(0,6);
   ks.map(function(k){return '<button type="button" aria-pressed="false" data-f="'+k[0]+'">'+esc(TN[k[0]])+' · '+k[1]+'</button>';}).join('')+'</div><div class="grid" id="e-grid"></div><button type="button" class="more-btn" id="e-more">Cargar más »</button></section>';}
 function activaEntradas(A,ps){var f='',n=0,g=document.getElementById('e-grid'),mb=document.getElementById('e-more');
  function lista(){return f?ps.filter(function(p){return p.k.indexOf(f)>=0;}):ps;}
- function mas(){var L=lista();g.insertAdjacentHTML('beforeend',L.slice(n,n+24).map(function(p,i){return cartaP(A,p,i);}).join(''));n+=24;mb.hidden=n>=L.length;}
+ function mas(){var L=lista();var k=document.documentElement.classList.contains('lite')?6:24;g.insertAdjacentHTML('beforeend',L.slice(n,n+k).map(function(p,i){return cartaP(A,p,i);}).join(''));n+=k;mb.hidden=n>=L.length;}
  function reset(){g.innerHTML='';n=0;mas();}
  document.querySelector('.entries .fbar').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
   [].forEach.call(this.querySelectorAll('button'),function(x){x.setAttribute('aria-pressed',String(x===b));});f=b.dataset.f;reset();});

@@ -70,6 +70,17 @@ EXTRA = """
 .rbtn .dot{color:#fff!important}
 .side{z-index:30}
 .tm-btns{display:flex;flex-wrap:wrap;gap:14px}
+.lite-lista{display:flex;flex-direction:column;border-top:2px solid var(--ink)}
+.lf{display:grid;grid-template-columns:92px minmax(0,1fr);gap:14px;align-items:start;padding:14px 0;border-bottom:1px solid #CFC8B8;color:var(--ink)}
+.lf-ph{width:92px;height:92px;background:#DCD5C6;overflow:hidden;border:2px solid var(--ink)}
+.lf-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.lf-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
+.lf-s{font-family:'Archivo',sans-serif;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}
+.lf-k{font-family:'Archivo',sans-serif;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.lf-k .k-av{width:1.3em;height:1.3em}
+.lf-t{font-family:'Fraunces',serif;font-weight:700;font-size:19px;line-height:1.15}
+.lf-t em{color:var(--accent);font-style:inherit}
+.s-m .lf-ph{border-color:var(--yellow)}.s-x .lf-ph{border-color:var(--accent)}
 .hero-meta .k-av{filter:none;width:1.6em;height:1.6em;vertical-align:-.45em}
 .hero-meta a{display:inline-flex;align-items:center}
 .hero-meta{align-items:center}

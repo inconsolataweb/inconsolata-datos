@@ -19,6 +19,14 @@ APOYA = 'https://buymeacoffee.com/saulcastillo'
 
 NAV = (f'<nav aria-label="Secciones"><a href="/sobre-mi">Sobre mí</a><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a>'
        f'<div class="dd"><button type="button" class="dd-b" aria-expanded="false" aria-haspopup="true">Archivo <i aria-hidden="true">▾</i></button><div class="dd-m" hidden><a href="/archive">Ver el archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a></div></div>{SEARCH}<a href="{APOYA}" class="btn-ink">Apóyanos »</a></nav>')
+LITE = (f'<div class="lite-bar"><a class="lb-brand soft" href="/" aria-label="inconsolata», ir a la portada">inc<span>»</span></a><div class="lb-acc">'
+        '<a class="lb-nov" href="/novedades" aria-label="Novedades de la web"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 3v34M3 20h34" stroke="currentColor" stroke-width="2.4"/></svg><b class="lb-n" id="lb-n" hidden></b></a>'
+        '<button type="button" class="lb-btn" data-lite="buscar" aria-label="Buscar"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>'
+        '<button type="button" class="lb-menu" data-lite="menu" aria-expanded="false" aria-controls="lite-menu"><span class="lb-h" aria-hidden="true"><i></i><i></i><i></i></span>Menú</button></div></div>'
+        '<div class="lite-menu" id="lite-menu" hidden>' + SEARCH.replace('q-top', 'q-lite') +
+        '<nav class="lm-nav" aria-label="Secciones"><a href="/">Portada</a><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a><a href="/autores">Autores</a><a href="/especiales">Especiales</a>'
+        '<a href="/archive">Archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a><a href="/novedades">Novedades</a><a href="/sobre-mi">Sobre mí</a></nav>'
+        f'<a class="lm-apoya" href="{APOYA}">Apóyanos »</a>{SOCIAL}<button type="button" class="lm-ver" data-version="completa">Ver la versión completa de la web</button></div>')
 HEAD = (f'<header class="head"><a href="/" class="brand soft" aria-label="inconsolata», ir a la portada">inc<span>»</span></a>'
         f'<div class="hd-right">{NAV}<div class="hd-row2">{SOCIAL}</div></div></header>'
         '<div class="mini-head" id="mini-head"><div class="mh-in">'
@@ -28,6 +36,54 @@ HEAD = (f'<header class="head"><a href="/" class="brand soft" aria-label="incons
         '<div class="mh-prog" aria-hidden="true"><span id="mh-bar"></span></div></div>')
 
 TCSS = """
+.lite-bar,.lite-menu{display:none}
+.ver-sw,.lm-ver{background:none;border:0;padding:6px 0;font:700 13px 'Archivo',sans-serif;letter-spacing:.5px;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;opacity:.8}
+html.lite .page>.head,html.lite .mini-head,html.lite .v-home .topbar{display:none!important}
+html.lite .lite-bar{display:flex;position:sticky;top:0;z-index:70;align-items:center;justify-content:space-between;gap:10px;padding:8px 16px;background:var(--paper);border-bottom:2px solid var(--ink)}
+.lb-brand{font-size:34px;line-height:1;color:var(--ink);padding-bottom:4px}.lb-brand span{color:var(--accent)}
+.lb-acc{display:flex;align-items:center;gap:4px}
+.lb-btn,.lb-nov{min-width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;background:none;border:0;color:var(--ink);position:relative;cursor:pointer;padding:0}
+.lb-nov svg{width:26px;height:26px;color:var(--accent)}
+.lb-n{position:absolute;top:3px;right:1px;background:var(--accent);color:#fff;font:800 11px/18px 'Archivo',sans-serif;min-width:18px;height:18px;border-radius:9px;text-align:center;padding:0 4px}
+.lb-menu{display:inline-flex;align-items:center;gap:8px;height:40px;margin-left:4px;padding:0 12px;border:2px solid var(--ink);background:var(--ink);color:var(--paper);font:800 12px 'Archivo',sans-serif;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer}
+.lb-menu[aria-expanded=true]{background:var(--accent);border-color:var(--accent)}
+.lb-h{display:flex;flex-direction:column;gap:3px}.lb-h i{display:block;width:15px;height:2px;background:currentColor}
+html.lite .lite-menu:not([hidden]){display:flex;flex-direction:column;gap:22px;position:fixed;left:0;right:0;bottom:0;top:62px;z-index:69;background:var(--paper);padding:18px 16px 40px;overflow-y:auto}
+.lite-menu .srch{width:100%;min-height:48px}.lite-menu .srch input{width:100%;font-size:17px}
+.lite-menu .srch .ac{width:100%}
+.lm-nav{display:flex;flex-direction:column}
+.lm-nav a{font-family:'Fraunces',serif;font-style:italic;font-weight:900;font-variation-settings:'SOFT' 100,'WONK' 1,'opsz' 144;font-size:32px;line-height:1.1;padding:9px 0;border-bottom:1px solid #CFC8B8;color:var(--ink)}
+.lm-nav a:active,.lm-nav a:hover{color:var(--accent)}
+.lm-apoya{align-self:flex-start;background:var(--ink);color:var(--yellow);font:800 14px 'Archivo',sans-serif;letter-spacing:1.5px;text-transform:uppercase;padding:14px 20px}
+.lite-menu .soc{display:flex;gap:10px}
+html.lite body.lm-abierto{overflow:hidden}
+html.lite .v-home .masthead{min-height:0;padding-top:8px}
+html.lite .v-home .mast{font-size:31vw}
+html.lite .v-home .side{display:none}
+html.lite .v-home .prueba{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;max-width:100%;margin:4px 0 26px}
+html.lite .v-home .faldon{margin-top:0}
+html.lite .v-home .scatter{display:none}
+html.lite .v-home .mas{margin:18px 0 60px}
+html.lite .v-home .sec-head h2{font-size:44px}
+html.lite .v-home .vit{display:flex;flex-direction:column;gap:14px}
+html.lite .v-home .vit-stage{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+html.lite .v-home .medios .cinta{display:none}
+html.lite .v-home .logos{grid-template-columns:repeat(3,minmax(0,1fr))}
+html.lite .v-ficha .grid{display:flex!important;flex-direction:column;gap:0!important}
+html.lite .v-ficha .grid .card{display:grid!important;grid-template-columns:84px minmax(0,1fr);grid-template-rows:auto auto 1fr;column-gap:12px;row-gap:4px;padding:12px 0!important;margin:0!important;border:0!important;border-bottom:1px solid #CFC8B8!important;box-shadow:none!important;transform:none!important;background:none!important}
+html.lite .v-ficha .grid .card .ph{grid-row:1/4;width:84px!important;height:84px!important;aspect-ratio:auto!important;margin:0!important;border:2px solid var(--ink)}
+html.lite .v-ficha .grid .card .ph img{width:100%;height:100%;object-fit:cover}
+html.lite .v-ficha .grid .card .tape,html.lite .v-ficha .grid .card .ico,html.lite .v-ficha .grid .card .by{display:none!important}
+html.lite .v-ficha .grid .card .tt{font-size:17px!important;line-height:1.15}
+html.lite .wk-top .av-slot{display:none!important}
+html.lite .v-home .mm-num{font-size:15vw;white-space:nowrap;overflow:hidden}
+html.lite .v-home .film{transform:none}
+html.lite .v-home .frames{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px}
+html.lite .v-home .frames .frame{flex:0 0 42%;scroll-snap-align:start}
+html.lite .v-home .proj h3{font-size:38px!important;overflow-wrap:anywhere}
+html.lite .legacy{font-size:13px}
+
+
 mark.subr{background:none;color:inherit;padding:.06em .24em;margin:0 -.08em;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath d='M6 9C34 3 70 8 104 4s68 1 90 5c4 7 3 16 1 24-30 3-62 0-98 4S26 38 4 34C1 27 2 16 6 9z' fill='white'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:100% 96%;background-position:0 55%;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 
 .dd{position:relative;display:inline-flex}
@@ -340,6 +396,18 @@ _CAT = next(p for p in (os.path.join(_H, '..', '..', 'datos', 'catalogo.json'), 
 _TEM = [t['n'] for t in json.load(open(_CAT))['temas']]
 JS_FINAL = JS.replace('__VJS__', VJS.replace('ESPIRAL', json.dumps(ESPIRAL_COLOR))).replace('__TN__', json.dumps({k: v[0] for k, v in TIPOS.items()}, ensure_ascii=False)).replace('__TS__', json.dumps([tslug(n) for n in _TEM])).replace('__PJS__', PJS).replace('__PAGJS__', PAG_JS)
 JS_FINAL += r"""
+(function(){var h=document.documentElement,v=null;try{v=localStorage.getItem('inc-version');}catch(e){}
+ if(v==='completa')h.classList.remove('lite');else if(v==='lite')h.classList.add('lite');
+ var sw=document.querySelector('.ver-sw');if(sw)sw.hidden=h.classList.contains('lite')||innerWidth>900;
+ var m=document.getElementById('lite-menu'),bm=document.querySelector('[data-lite=menu]');
+ function abre(o){if(!m)return;m.hidden=!o;if(bm)bm.setAttribute('aria-expanded',o?'true':'false');document.body.classList.toggle('lm-abierto',o);}
+ document.addEventListener('click',function(e){var b=e.target.closest('[data-lite],[data-version]');
+  if(!b){if(m&&!m.hidden&&e.target.closest('#lite-menu a'))abre(false);return;}
+  if(b.dataset.version){try{localStorage.setItem('inc-version',b.dataset.version);}catch(x){}location.reload();return;}
+  if(b.dataset.lite==='menu')abre(m.hidden);
+  if(b.dataset.lite==='buscar'){abre(true);var q=document.getElementById('q-lite');if(q)q.focus();}});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&m&&!m.hidden){abre(false);if(bm)bm.focus();}});})();
+
 document.addEventListener('click',function(e){var b=e.target.closest('.dd-b');document.querySelectorAll('.dd').forEach(function(d){var bt=d.querySelector('.dd-b'),m=d.querySelector('.dd-m'),ab=b&&d.contains(b)?bt.getAttribute('aria-expanded')!=='true':false;bt.setAttribute('aria-expanded',ab?'true':'false');m.hidden=!ab;});});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.dd-b[aria-expanded=true]').forEach(function(b){b.click();b.focus();});});
 """
@@ -360,8 +428,9 @@ page = f"""<!DOCTYPE html>
 <body>
 {{block:IndexPage}}<script>if(/(^[/]$|[/]index[.]html$)/.test(location.pathname))document.body.classList.add('es-portada');</script>{{/block:IndexPage}}<script>if(/[/](buscador|medios|autores|estadisticas|especiales|novedades|cronologia)([.]html)?[/]?$/.test(location.pathname))document.body.classList.add('es-pagina');</script>
 {symbols()}{tema_symbols()}
+<script>if(matchMedia('(max-width:760px)').matches)document.documentElement.classList.add('lite')</script>
 <div class="page">
-{HEAD}
+{LITE}{HEAD}
 <div id="home"></div>
 <main class="wrap">
 {PERMALINK}
@@ -369,7 +438,7 @@ page = f"""<!DOCTYPE html>
 </main>
 <footer>
 <div class="cmyk-bar" aria-hidden="true"><span style="background:#00A0DC"></span><span style="background:#66C6EA"></span><span style="background:#E5007E"></span><span style="background:#EF66B2"></span><span style="background:#FFD400"></span><span style="background:#FFE566"></span><span style="background:#16140F"></span><span style="background:#7A766C"></span></div>
-<div class="wrap foot"><span class="soft" style="font-size:56px;line-height:1">inc<span style="color:#D1006F">»</span></span><span>© inconsolata» 2011–<span id="y-now">{{CurrentYear}}</span> · un blog de Saúl Castillo</span><span style="display:flex;gap:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px"><a href="https://x.com/inconsolata">X</a><a href="{{RSS}}">RSS</a><a href="{APOYA}" style="color:var(--yellow)">Apóyanos »</a></span></div>
+<div class="wrap foot"><span class="soft" style="font-size:56px;line-height:1">inc<span style="color:#D1006F">»</span></span><span>© inconsolata» 2011–<span id="y-now">{{CurrentYear}}</span> · un blog de Saúl Castillo<br><button type="button" class="ver-sw" data-version="lite" hidden>Ver la versión lite</button></span><span style="display:flex;gap:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px"><a href="https://x.com/inconsolata">X</a><a href="{{RSS}}">RSS</a><a href="{APOYA}" style="color:var(--yellow)">Apóyanos »</a></span></div>
 </footer>
 </div>
 {LB_HTML}

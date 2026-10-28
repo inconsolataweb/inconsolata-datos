@@ -49,6 +49,9 @@ function hero(p){var im=p.ims[0];
   (p.txt?'<p>'+esc(primeras(p.txt.indexOf(quita(p.t))===0?p.txt.slice(quita(p.t).length):p.txt,230))+'</p>':'')+
   '<div class="hero-meta">'+p.meds.slice(0,3).map(function(m){return '<a href="'+fichaMedio(m)+'">'+(m.avw?'<img class="k-av" src="'+esc(m.avw)+'" alt="" onerror="this.remove()">':'')+'» '+esc(m.n)+'</a>';}).join('')+'<span>'+p.d.split('-').reverse().join('.')+'</span></div></div></section>';}
 
+// versión lite: «lo último» como lista sencilla (miniatura, medio y título)
+function liteFila(p){var im=p.ims[0],t=p.s==='m'?'mucho más » '+quita(p.t).replace(/^mucho m[aá]s\s*[»·]?\s*/i,''):p.s==='x'?(p.mes?'EXTRA! · lo mejor de '+p.mes:quita(p.t)):p.t;
+ return '<a class="lf'+(p.s?' s-'+p.s:'')+'" href="'+esc(p.u)+'"><span class="lf-ph">'+(im?img(im.sm):'')+'</span><span class="lf-tx">'+(p.s&&SECN[p.s]?'<span class="lf-s">'+SECN[p.s]+' »</span>':'')+kicker(p,'lf-k')+'<span class="lf-t">'+(p.s==='m'||p.s==='x'?esc(t):destaca(t))+'</span></span></a>';}
 function hoja(p,i,pos){
  var st=' style="grid-column:'+pos.c+';margin-top:'+pos.mt+'px;transform:rotate('+pos.r+'deg)"',tape='<span class="tape" aria-hidden="true"></span>';
  var a='<a href="'+esc(p.u)+'" ';
@@ -184,6 +187,7 @@ function avisos(A){var hoy=hoyISO(),vig=function(a){return (!a.desde||a.desde<=h
  // una novedad sigue marcada durante una semana desde su fecha; abrir la lista solo para la animación
  var lim=new Date(Date.now()-7*864e5).toISOString().slice(0,10),visto=ls('inc-novedades-visto')||'',nuevos=Lg.filter(function(a){return (a.f||'')>=lim;}).length;
  var b=document.getElementById('rbtn'),pn=document.getElementById('panel');if(!b)return;
+ var lbn=document.getElementById('lb-n');if(lbn&&nuevos){lbn.textContent=nuevos;lbn.hidden=false;}
  if(!Lg.length){b.closest('.reg-w').classList.add('vacio');return;}
  function lista(){pn.querySelector('ul').innerHTML=Lg.slice(0,Math.max(5,nuevos)).map(function(a,i){var ti=a.ico?cat0.temas.findIndex(function(t){return t.n===a.ico;}):-1,sy=ti>=0?TS[ti]:a.ico;
   var inn='<span class="ic'+(sy?'':' bl soft')+'">'+(sy?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+esc(sy)+'"/></svg>':'»')+'</span><span><span class="fe">'+(a.f?+a.f.slice(8)+' '+MESES[+a.f.slice(5,7)-1].slice(0,3):'')+'</span><span class="tx">'+esc(a.t)+'</span></span>';
@@ -258,7 +262,7 @@ function portada(meta,cat){
   var tm=temasSec(P,cat,esp);
   home.innerHTML='<div class="v-home">'+cabecera()+faldon(f,cat)+arriba+'<div class="wrap">'+(h?hero(h):'')+
    '<section><div class="sec-head"><h2 class="serif">lo <em class="soft">último</em></h2><a href="/archive" class="underline">Todo el archivo »</a></div>'+
-   '<div class="scatter">'+ult.map(function(p,i){return hoja(p,i,pos[i]);}).join('')+'</div><div class="mas"><a href="/page/2" class="btn-ink">Más entradas »</a></div></section></div>'+
+   (document.documentElement.classList.contains('lite')?'<div class="lite-lista">'+ult.map(liteFila).join('')+'</div>':'<div class="scatter">'+ult.map(function(p,i){return hoja(p,i,pos[i]);}).join('')+'</div>')+'<div class="mas"><a href="/page/2" class="btn-ink">Más entradas »</a></div></section></div>'+
    (mm&&!mm.arriba?mmSec(mm,false):'')+
    '<div class="wrap"><section class="duo"><a href="'+esc(dd.u)+'" class="proj"><div class="ph">'+img(dd.im,dd.t)+'</div><div class="txt"><span class="caps" style="font-size:14px;letter-spacing:3px">'+esc(dd.k)+'</span><h3 class="soft'+(dd.t.length>14?' largo':'')+'">'+esc(dd.t)+'</h3><p>'+esc(dd.p)+'</p></div></a>'+
    hoySec(EF[hoyISO().slice(8)])+'</section>'+tm.html+mediosSec(P,cat)+'</div></div>';
