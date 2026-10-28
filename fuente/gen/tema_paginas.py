@@ -296,6 +296,13 @@ CRONO_CSS = ambito("""
 .cr-mm button:hover{color:var(--accent)}
 .cr-mm .vw{position:absolute;top:-2px;bottom:-2px;border:3px solid var(--accent);background:rgba(209,0,111,.08);pointer-events:none}
 .cr-nota{font-size:14px;color:var(--muted);margin:0 0 70px}
+.cr-pronto{position:relative;overflow:hidden}
+.cr-pronto .cr-sc{filter:blur(3px) grayscale(.35);opacity:.55;pointer-events:none;overflow:hidden;max-height:640px}
+.cr-velo{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 16px;background:radial-gradient(closest-side,rgba(236,231,220,.92),rgba(236,231,220,.55) 70%,transparent)}
+.cr-velo .caps{font-size:14px;letter-spacing:3px;color:var(--accent);font-weight:800}
+.cr-velo p{margin:0;font-size:clamp(32px,4.6vw,64px);line-height:.98;max-width:820px}
+.cr-velo .btn-ink{display:inline-flex;background:var(--ink);color:var(--paper);padding:14px 22px;font-family:'Archivo',sans-serif;font-size:14px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.cr-velo .btn-ink:hover{color:var(--yellow)}
 @media (max-width:600px){.cr-top h1{font-size:64px}.cr-intro{width:280px}.cr-intro p{font-size:36px}}
 """, '.v-cronologia')
 

@@ -177,6 +177,7 @@ def clasificar(p):
     cuerpo = (p.get('body') or '') + (p.get('caption') or '')
     titulo_raw = (p.get('title') or '').strip()
     texto = txt(cuerpo.replace('[[MORE]]', ' '))
+    texto = re.sub(r'<([^<>\s][^<>]{0,118})>', r'\1', texto)   # <palabras> subrayadas a mano
     if titulo_raw and texto.startswith(titulo_raw):
         texto = texto[len(titulo_raw):].strip()
     fecha = p['date'][:10]
@@ -220,6 +221,13 @@ def clasificar(p):
     textos = [i[0] for i in items] if sec in ('muchomas', 'extra') else [titulo_raw + ' ' + texto]
     temas = {r['tema'] for r in REGLAS if (r['tg'] and any(r['tg'].match(t) for t in tl)) or any(r['kw'].search(x) for x in textos)}
     tipos = [c for c, rx in TIPO_TAG if any(re.search(rx, t) for t in tl)]
+    # tipo indicado a mano en cada pieza de mucho más y EXTRA!: «Tipo: cartografía»
+    for w in re.findall(r'\bTipo\s*:\s*([A-Za-zÀ-ÿ ]+)', txt(cuerpo)):
+        w = w.strip().lower()
+        for c, rx in TIPO_TAG:
+            if re.search(rx.replace('$', ''), w) and c not in tipos:
+                tipos.append(c)
+                break
     th = next((im for im in ims if not im['cover']), ims[0] if ims else None)
     post = {
         'i': str(p['id']), 'u': p['post_url'].split('/post/', 1)[-1], 'd': fecha, 's': SEC[sec], 'k': tipos,

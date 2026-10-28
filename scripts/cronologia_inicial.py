@@ -78,5 +78,5 @@ hitos.sort(key=lambda h: h.get('d') or fecha.get(h.get('id')) or efecha.get(h.ge
 
 def linea(o):
     return '{' + ', '.join(json.dumps(k, ensure_ascii=False) + ': ' + json.dumps(v, ensure_ascii=False) for k, v in o.items()) + '}'
-open(os.path.join(D, 'cronologia.json'), 'w').write('{\n"hitos": [\n' + ',\n'.join(' ' + linea(h) for h in hitos) + '\n]\n}\n')
+open(os.path.join(D, 'cronologia.json'), 'w').write('{\n"visible": false,\n"hitos": [\n' + ',\n'.join(' ' + linea(h) for h in hitos) + '\n]\n}\n')
 print(Counter(h.get('tipo', 'cobertura') for h in hitos))

@@ -138,7 +138,7 @@ function limpio(o){var r={};Object.keys(o).forEach(function(k){var v=o[k];if(v==
 function lista(a){return a.length?'[\n'+a.map(function(x){return ' '+linea(limpio(x));}).join(',\n')+'\n]':'[]';}
 function texto(n){var o=F[n].obj;
  if(n==='titulos')return JSON.stringify(o);
- if(n==='cronologia')return '{\n"hitos": '+lista(o.hitos||[])+'\n}\n';
+ if(n==='cronologia')return '{\n"visible": '+(o.visible?'true':'false')+',\n"hitos": '+lista(o.hitos||[])+'\n}\n';
  if(n==='avisos'){var fa=o.faldon&&o.faldon.t?linea(limpio(o.faldon)):'null';return '{\n"grandes": '+lista(o.grandes||[])+',\n"ligeros": '+lista(o.ligeros||[])+',\n"faldon": '+fa+'\n}\n';}
  var one=function(x){if(!x)return 'null';x=limpio(x);return Object.keys(x).length?linea(x):'null';};
  return '{\n"apertura": '+one(o.apertura)+',\n"fijos": '+lista(o.fijos||[])+',\n"ocultos": '+(o.ocultos&&o.ocultos.length?'['+o.ocultos.map(function(x){return JSON.stringify(x);}).join(', ')+']':'[]')+',\n"destacado": '+one(o.destacado)+'\n}\n';}
@@ -148,7 +148,7 @@ function sucio(n){return F[n].obj&&texto(n)!==F[n].orig;}
 function getJSON(n,conApi){
  if(conApi&&token())return fetch(API+n+'.json?ref=main',{headers:{Authorization:'Bearer '+token(),Accept:'application/vnd.github+json'},cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('GitHub '+r.status);return r.json();}).then(function(j){return {txt:b64d(j.content),sha:j.sha};});
  return fetch(RAW+n+'.json?'+Date.now()).then(function(r){if(!r.ok)throw new Error(n+' '+r.status);return r.text();}).then(function(t){return {txt:t,sha:null};});}
-function normal(n,o){o=o||{};if(n==='titulos')return o;if(n==='cronologia'){o.hitos=o.hitos||[];return o;}if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
+function normal(n,o){o=o||{};if(n==='titulos')return o;if(n==='cronologia'){o.hitos=o.hitos||[];o.visible=!!o.visible;return o;}if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
  else{o.fijos=(o.fijos||[]).map(function(x){return typeof x==='string'?{id:x}:x;});o.ocultos=o.ocultos||[];if(typeof o.apertura==='string')o.apertura={id:o.apertura};if(typeof o.destacado==='string')o.destacado={id:o.destacado};}return o;}
 function cargaArchivos(){return Promise.all(Object.keys(F).map(function(n){return getJSON(n,true).then(function(r){F[n].obj=normal(n,JSON.parse(r.txt));F[n].sha=r.sha;F[n].orig=texto(n);});}));}
 function carga(){
@@ -226,7 +226,7 @@ cronologia:function(){var H=F.cronologia.obj.hitos,TIPOS=[['noticia','Noticia'],
   var e=h.esp&&ESP.find(function(x){return x.slug===h.esp;}),p=h.id&&porId[h.id];return fold((h.t||'')+' '+(e?e.titulo:'')+' '+(p?p.t+' '+p.ms.join(' '):'')+' '+o.d).indexOf(q)>=0;});
  var libres=ESP.filter(function(e){return !H.some(function(h){return h.esp===e.slug;});});
  return '<h2 class="soft">Cronología</h2><p class="ayuda">Los hitos de la línea del tiempo. Las <b>coberturas</b> son especiales y se dibujan como barras; si duran más de diez meses y tienen muchas entradas, como «grandes historias». Las <b>noticias</b>, <b>piezas</b> y hitos de <b>la web</b> son fichas sobre la línea.</p>'+
- '<div class="card"><div class="btns" style="margin-bottom:14px"><button class="btn" data-elige="crono+">+ Un post</button><label style="flex-direction:row;align-items:center;gap:8px">+ Un especial <select id="cr-esp"><option value="">elige…</option>'+libres.map(function(e){return '<option value="'+esc(e.slug)+'">'+esc(e.titulo)+'</option>';}).join('')+'</select></label><button class="btn" data-nuevo="crono-propio">+ Hito propio</button></div>'+
+ '<div class="card"><label class="chk"><input type="checkbox" id="cr-vis"'+(F.cronologia.obj.visible?' checked':'')+'> Cronología publicada <small style="margin-left:6px">'+(F.cronologia.obj.visible?'(visible para todos)':'(ahora se ve un adelanto con «Próximamente»)')+'</small></label></div><div class="card"><div class="btns" style="margin-bottom:14px"><button class="btn" data-elige="crono+">+ Un post</button><label style="flex-direction:row;align-items:center;gap:8px">+ Un especial <select id="cr-esp"><option value="">elige…</option>'+libres.map(function(e){return '<option value="'+esc(e.slug)+'">'+esc(e.titulo)+'</option>';}).join('')+'</select></label><button class="btn" data-nuevo="crono-propio">+ Hito propio</button></div>'+
  '<div class="fila" style="margin:0"><label>Buscar<input id="cr-q" value="'+esc(CQ)+'" placeholder="título, medio o año"></label><label>Tipo<select id="cr-t"><option value="">Todos ('+H.length+')</option>'+[['noticia','Noticias'],['pieza','Piezas'],['web','La web'],['cobertura','Coberturas']].map(function(t){return '<option value="'+t[0]+'"'+(tf===t[0]?' selected':'')+'>'+t[1]+'</option>';}).join('')+'</select></label></div></div>'+
  vis.map(function(o){var h=o.h,i=o.i,p=h.id&&porId[h.id],e=h.esp&&ESP.find(function(x){return x.slug===h.esp;});
   var tit=h.t||(e?e.titulo:p?p.t:'(sin título)'),img=h.img||(p&&p.im)||'';
@@ -275,6 +275,7 @@ document.addEventListener('change',function(e){var el=e.target,A=F.avisos.obj,M=
  if(el.id==='ti-f'){TF=el.value;TN=40;pinta();return;}
  if(el.id==='cr-esp'&&el.value){F.cronologia.obj.hitos.push({esp:el.value});CQ='';CT='';pinta();return;}
  if(el.id==='cr-t'){CT=el.value;pinta();return;}
+ if(el.id==='cr-vis'){F.cronologia.obj.visible=el.checked;pinta();return;}
  if(el.id==='f-on'){if(el.checked){A.faldon=A._faldon||{t:'Escribe aquí el texto » del faldón'};}else{A._faldon=A.faldon;A.faldon={};}pinta();}
  if(el.id==='f-esp'){var f=A.faldon;if(el.value){f.u='/especiales#'+el.value;if(f.especial)f.especial=el.value;}else{if(/^\/especiales#/.test(f.u||''))f.u='';delete f.especial;delete f.img;}pinta();}
  if(el.id==='f-dest'){var f2=A.faldon,sl=((f2.u||'').match(/^\/especiales#(.+)$/)||[])[1];if(el.checked&&sl)f2.especial=sl;else{delete f2.especial;delete f2.img;}pinta();}

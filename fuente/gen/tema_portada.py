@@ -72,6 +72,10 @@ EXTRA = """
 .tm-btns{display:flex;flex-wrap:wrap;gap:14px}
 .hero-meta .k-av{filter:none;width:1.6em;height:1.6em;vertical-align:-.45em}
 .hero-meta a{display:inline-flex;align-items:center}
+.hero-meta{align-items:center}
+.hero-meta span{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;line-height:1.6em}
+.masthead.choca .prueba{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;max-width:460px;margin:10px 0 34px}
+.masthead.choca{flex-wrap:wrap}
 .rbtn.new.visto svg{animation:none}
 @media (max-width:820px){.masthead{min-height:0}.topbar .hd-right nav a:not(.btn-ink){display:none}}
 """

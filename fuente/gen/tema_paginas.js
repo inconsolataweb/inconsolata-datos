@@ -296,6 +296,12 @@ function cronoPag(A,cat,ES,CR){
   '<span class="cr-lab" style="top:'+(yB-24)+'px">Coberturas especiales »</span>'+bs+(hilos.length?'<span class="cr-lab" style="top:'+(yH-24)+'px">Grandes historias »</span>'+hs:'')+cartas+
   '<div class="cr-hoy" style="left:'+X(hoy)+'px;height:'+SP+'px"><span>Hoy</span></div></div></div>'+
   '<div class="wrap"><div class="cr-mm" id="cr-mm">'+mm+'<span class="vw" id="cr-vw"></span></div><p class="cr-nota">Arrastra la tira, usa la barra de abajo o pulsa un año. Las coberturas enlazan a su especial; el resto, al post.</p></div>';
+ // mientras no se publique (cronologia.json «visible»: true), solo un adelanto borroso con «Próximamente»
+ if(!CR.visible){var i0=html.indexOf('<div class="cr-sc"'),i1=html.indexOf('<div class="wrap"><div class="cr-mm"');
+  var tira=html.slice(i0,i1).replace('id="cr-sc" tabindex="0"','id="cr-sc" tabindex="-1" inert');
+  var pre='<div class="wrap">'+crumbs([['Archivo','/archive'],['Cronología']])+'<div class="cr-top"><h1 class="soft">Crono<em>logía</em></h1><p>'+(+hoy.slice(0,4)-y0)+' años de diseño de noticias en una sola tira: las grandes coberturas, las noticias que llenaron portadas y las piezas que no hemos olvidado.</p></div></div>';
+  return {html:pre+'<div class="cr-pronto">'+tira+'<div class="cr-velo"><span class="caps">Próximamente »</span><p class="soft">Estamos terminando de colocar quince años de historia.</p><a class="btn-ink" href="/archive">Mientras, el archivo »</a></div></div><div class="wrap"><p class="cr-nota" style="margin-top:18px">La cronología se abrirá muy pronto.</p></div>',
+   init:function(){var sc=document.getElementById('cr-sc');if(sc)sc.scrollLeft=X('2014-06-01')-80;}};}
  return {html:html,init:function(){
   var sc=document.getElementById('cr-sc'),vw=document.getElementById('cr-vw'),mmEl=document.getElementById('cr-mm'),box=sc.closest('.v-pag'),R=W-PAD-FIN;
   function pinta(){var b=Math.min(1,sc.clientWidth/R),a=Math.min(Math.max(0,(sc.scrollLeft-PAD)/R),1-b);vw.style.left=a*100+'%';vw.style.width=b*100+'%';}
