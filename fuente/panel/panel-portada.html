@@ -86,6 +86,7 @@ ol.pasos li{margin-bottom:8px}
 <button role="tab" data-t="faldon" aria-selected="false">Faldón</button>
 <button role="tab" data-t="avisos" aria-selected="false">Avisos</button>
 <button role="tab" data-t="novedades" aria-selected="false">Novedades</button>
+<button role="tab" data-t="titulos" aria-selected="false">Títulos</button>
 <button role="tab" data-t="cronologia" aria-selected="false">Cronología</button>
 <button role="tab" data-t="conexion" aria-selected="false">Conexión</button>
 </nav>
@@ -94,6 +95,7 @@ ol.pasos li{margin-bottom:8px}
 <section id="t-faldon" hidden></section>
 <section id="t-avisos" hidden></section>
 <section id="t-novedades" hidden></section>
+<section id="t-titulos" hidden></section>
 <section id="t-cronologia" hidden></section>
 <section id="t-conexion" hidden></section>
 </main>
@@ -117,7 +119,7 @@ ol.pasos li{margin-bottom:8px}
 <script>
 var REPO='inconsolataweb/inconsolata-datos',RAW='https://raw.githubusercontent.com/'+REPO+'/main/datos/',API='https://api.github.com/repos/'+REPO+'/contents/datos/';
 var ICONOS=["Elecciones", "Elecciones en EEUU", "Guerras y conflictos", "Guerra en Ucrania", "Conflicto palestino-israelí", "Guerra en Siria", "Guerra en Irán", "Terrorismo y atentados", "Catástrofes y accidentes", "COVID-19", "Salud", "Economía", "Europa", "Política española", "Monarquía y realeza", "El Papa y el Vaticano", "Cataluña y el procés", "Necrológicas", "Historia", "Resúmenes del año", "Ciencia y espacio", "Clima y medio ambiente", "Biodiversidad", "Viajes", "Tecnología", "Otros deportes", "Fútbol", "Juegos Olímpicos", "Mundiales y Eurocopas", "Motor y ciclismo", "Tenis", "Cine", "Música", "Televisión y series", "Libros y literatura", "Arte y arquitectura", "Gastronomía", "Rediseños", "Tipografía", "Humor gráfico", "Titulares", "Industria y crisis de medios", "Datos y visualización"];
-var F={avisos:{orig:'',obj:null,sha:null},portada_manual:{orig:'',obj:null,sha:null},cronologia:{orig:'',obj:null,sha:null}};
+var F={avisos:{orig:'',obj:null,sha:null},portada_manual:{orig:'',obj:null,sha:null},cronologia:{orig:'',obj:null,sha:null},titulos:{orig:'',obj:null,sha:null}};
 var POSTS=[],TIT={},MED=[],ESP=[],porId={};
 function $(s,c){return (c||document).querySelector(s);}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
@@ -135,6 +137,7 @@ function linea(o){return '{'+Object.keys(o).map(function(k){var v=o[k];return JS
 function limpio(o){var r={};Object.keys(o).forEach(function(k){var v=o[k];if(v===''||v==null||(Array.isArray(v)&&!v.filter(Boolean).length))return;r[k]=Array.isArray(v)?v.filter(Boolean):v;});return r;}
 function lista(a){return a.length?'[\n'+a.map(function(x){return ' '+linea(limpio(x));}).join(',\n')+'\n]':'[]';}
 function texto(n){var o=F[n].obj;
+ if(n==='titulos')return JSON.stringify(o);
  if(n==='cronologia')return '{\n"hitos": '+lista(o.hitos||[])+'\n}\n';
  if(n==='avisos'){var fa=o.faldon&&o.faldon.t?linea(limpio(o.faldon)):'null';return '{\n"grandes": '+lista(o.grandes||[])+',\n"ligeros": '+lista(o.ligeros||[])+',\n"faldon": '+fa+'\n}\n';}
  var one=function(x){if(!x)return 'null';x=limpio(x);return Object.keys(x).length?linea(x):'null';};
@@ -145,14 +148,14 @@ function sucio(n){return F[n].obj&&texto(n)!==F[n].orig;}
 function getJSON(n,conApi){
  if(conApi&&token())return fetch(API+n+'.json?ref=main',{headers:{Authorization:'Bearer '+token(),Accept:'application/vnd.github+json'},cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('GitHub '+r.status);return r.json();}).then(function(j){return {txt:b64d(j.content),sha:j.sha};});
  return fetch(RAW+n+'.json?'+Date.now()).then(function(r){if(!r.ok)throw new Error(n+' '+r.status);return r.text();}).then(function(t){return {txt:t,sha:null};});}
-function normal(n,o){o=o||{};if(n==='cronologia'){o.hitos=o.hitos||[];return o;}if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
+function normal(n,o){o=o||{};if(n==='titulos')return o;if(n==='cronologia'){o.hitos=o.hitos||[];return o;}if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
  else{o.fijos=(o.fijos||[]).map(function(x){return typeof x==='string'?{id:x}:x;});o.ocultos=o.ocultos||[];if(typeof o.apertura==='string')o.apertura={id:o.apertura};if(typeof o.destacado==='string')o.destacado={id:o.destacado};}return o;}
 function cargaArchivos(){return Promise.all(Object.keys(F).map(function(n){return getJSON(n,true).then(function(r){F[n].obj=normal(n,JSON.parse(r.txt));F[n].sha=r.sha;F[n].orig=texto(n);});}));}
 function carga(){
- Promise.all([cargaArchivos(),fetch(RAW+'archivo.json').then(function(r){return r.json();}),fetch(RAW+'titulos.json').then(function(r){return r.json();}),fetch(RAW+'especiales.json').then(function(r){return r.json();})])
- .then(function(r){var A=r[1];TIT=r[2];MED=A.medios.map(function(m){return m.n;});ESP=r[3];
-  POSTS=A.posts.map(function(p){var t=TIT[p.i]||p.t||'';var ms=(p.m||[]).map(function(i){return MED[i];}).filter(Boolean);
-   var o={i:p.i,u:p.u,d:p.d,t:t,ms:ms,im:p.im||'',f:fold(t+' '+ms.join(' ')+' '+p.d)};porId[p.i]=o;return o;});
+ Promise.all([cargaArchivos(),fetch(RAW+'archivo.json').then(function(r){return r.json();}),Promise.resolve(null),fetch(RAW+'especiales.json').then(function(r){return r.json();})])
+ .then(function(r){var A=r[1];TIT=F.titulos.obj;MED=A.medios.map(function(m){return m.n;});ESP=r[3];
+  POSTS=A.posts.map(function(p){var t=TIT[p.i]||p.t||'';var tt=p.t||'';var ms=(p.m||[]).map(function(i){return MED[i];}).filter(Boolean);
+   var o={i:p.i,u:p.u,d:p.d,t:t,tt:tt,ms:ms,im:p.im||'',f:fold(t+' '+ms.join(' ')+' '+p.d)};porId[p.i]=o;return o;});
   $('#estado').textContent='Datos cargados: '+POSTS.length.toLocaleString('es')+' posts.'+(token()?' Conectado a GitHub.':' Sin conectar: ve a «Conexión» para publicar con un clic.');
   pintaTodo();})
  .catch(function(e){$('#estado').innerHTML='<b style="color:var(--accent)">No se han podido cargar los datos</b> ('+esc(e.message)+'). Comprueba la conexión y recarga.';});}
@@ -206,6 +209,15 @@ avisos:function(){var G=F.avisos.obj.grandes;
 novedades:function(){var L=F.avisos.obj.ligeros;
  return '<h2 class="soft">Novedades</h2><p class="ayuda">Los avisos ligeros de la marca de registro. Una novedad lleva el número rojo durante una semana desde su fecha. Las más recientes van primero.</p>'+
  L.map(function(a,i){return '<div class="card" data-i="'+i+'">'+cabLista('Novedad '+(i+1),i,L.length)+'<div class="fila">'+campo('Fecha','f',a,{tipo:'date'})+campo('Texto','t',a,{ancho:1})+campo('Enlace','u',a,{ay:'opcional',ph:'/medios'})+icoCampo(a)+'</div></div>';}).join('')+'<button class="btn" data-nuevo="ligeros">+ Nueva novedad</button>';},
+titulos:function(){var T=F.titulos.obj,q=fold(TQ),L=POSTS.filter(function(p){if(TF==='sin'&&T[p.i])return false;if(TF==='con'&&!T[p.i])return false;if(!q)return true;return fold((T[p.i]||'')+' '+p.tt+' '+p.ms.join(' ')+' '+p.d).indexOf(q)>=0;});
+ var vis=L.slice(0,TN);
+ return '<h2 class="soft">Títulos</h2><p class="ayuda">El título que muestra la web en la portada, en el post y en el buscador. Rodea con asteriscos lo que va en magenta: <code>El vuelco electoral en *Brasil*, en gráficos</code>. También puedes escribirlo como <code>&lt;Brasil&gt;</code> y se convierte solo. Si dejas un título vacío, la web usa el de Tumblr o la primera frase.</p>'+
+ '<div class="card"><div class="fila" style="margin:0"><label>Buscar<input id="ti-q" value="'+esc(TQ)+'" placeholder="título, medio o fecha (2026-10)"></label><label>Mostrar<select id="ti-f"><option value="">Todos</option><option value="sin"'+(TF==='sin'?' selected':'')+'>Sin título propio</option><option value="con"'+(TF==='con'?' selected':'')+'>Con título propio</option></select></label></div></div>'+
+ vis.map(function(p){var v=T[p.i]||'';return '<div class="card" data-ti="'+p.i+'" style="padding:12px 14px"><div style="display:flex;gap:12px;align-items:flex-start">'+(p.im?'<img src="'+esc(p.im)+'" alt="" loading="lazy" style="width:64px;height:64px;object-fit:cover;flex-shrink:0;background:var(--line)">':'<span style="width:64px;height:64px;flex-shrink:0;background:var(--line)"></span>')+
+  '<div style="flex:1;min-width:0"><div class="pm" style="font-size:13px;color:var(--muted)">'+esc(p.d)+(p.ms.length?' · '+esc(p.ms.slice(0,3).join(', ')):'')+' · <a href="https://inconsolata.com/post/'+esc(p.u)+'" target="_blank" rel="noopener">ver post</a></div>'+
+  '<div class="vista" style="font-size:21px;margin:2px 0 8px">'+(v?destaca(v):'<span style="color:var(--muted)">'+esc(p.tt||'(primera frase del post)')+'</span>')+'</div>'+
+  '<input data-tit="'+p.i+'" value="'+esc(v)+'" placeholder="'+esc(p.tt||'Escribe el título')+'" aria-label="Título del post del '+esc(p.d)+'"></div></div></div>';}).join('')+
+ (L.length>TN?'<button class="btn" id="ti-mas">Ver más ('+(L.length-TN)+')</button>':'')+(L.length?'':'<p class="ayuda">Nada con ese filtro.</p>');},
 cronologia:function(){var H=F.cronologia.obj.hitos,TIPOS=[['noticia','Noticia'],['pieza','Pieza'],['web','La web']];
  var fe=function(h){if(h.d)return h.d;if(h.id&&porId[h.id])return porId[h.id].d;var e=h.esp&&ESP.find(function(x){return x.slug===h.esp;});return e?e.desde:'';};
  var orden=H.map(function(h,i){return {h:h,i:i,d:fe(h)};}).sort(function(a,b){return b.d.localeCompare(a.d);});
@@ -228,15 +240,15 @@ cronologia:function(){var H=F.cronologia.obj.hitos,TIPOS=[['noticia','Noticia'],
 conexion:function(){var t=token();
  return '<h2 class="soft">Conexión con GitHub</h2><p class="ayuda">Para que «Publicar en la web» funcione con un clic, el panel necesita una llave de GitHub con permiso para escribir solo en el repositorio de datos. Se hace una vez y se guarda únicamente en este navegador.</p>'+
  '<div class="card">'+(t?'<p><b style="color:var(--ok)">Conectado.</b> La llave está guardada en este navegador.</p><button class="btn" id="tk-borra">Desconectar</button>':
- '<ol class="pasos"><li>Abre <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> con la cuenta de inconsolataweb.</li><li>Nombre: <code>panel de portada</code>. Caducidad: la más larga que te deje.</li><li>En <b>Repository access</b>, elige <b>Only select repositories</b> y marca <code>inconsolata-datos</code>.</li><li>En <b>Permissions › Repository permissions</b>, pon <b>Contents</b> en <b>Read and write</b>.</li><li>Pulsa <b>Generate token</b>, copia la llave (empieza por <code>github_pat_</code>) y pégala aquí.</li></ol>'+
+ '<ol class="pasos"><li>Abre <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> con la cuenta de inconsolataweb.</li><li>Nombre: <code>panel de portada</code>. Caducidad: la más larga que te deje.</li><li>En <b>Repository access</b>, elige <b>Only select repositories</b> y marca <code>inconsolata-datos</code>.</li><li>En <b>Permissions › Repository permissions</b>, pon <b>Contents</b> en <b>Read and write</b> y <b>Actions</b> también en <b>Read and write</b> (sirve para que los títulos lleguen a la portada al momento).</li><li>Pulsa <b>Generate token</b>, copia la llave (empieza por <code>github_pat_</code>) y pégala aquí.</li></ol>'+
  '<div class="fila"><label>Llave<input id="tk" type="password" placeholder="github_pat_…" autocomplete="off"></label></div><button class="btn prim" id="tk-ok">Guardar y comprobar</button> <span id="tk-msg"></span>')+'</div>'+
  '<p class="ayuda">Sin conexión también puedes usar el panel: «Copiar a mano» te da el archivo listo y el enlace de GitHub donde pegarlo.</p>';}
 };
-var TAB='portada',CQ='',CT='';
+var TAB='portada',CQ='',CT='',TQ='',TF='',TN=40;
 function pinta(){var s=$('#t-'+TAB);var y=scrollY;s.innerHTML=F.avisos.obj||TAB==='conexion'?VISTAS[TAB]():'';scrollTo(0,y);estadoBarra();}
 function pintaTodo(){pinta();}
 function estadoBarra(){var a=sucio('avisos'),p=sucio('portada_manual'),n=a+p;
- var n2=cambiados().length;var O=a?JSON.parse(F.avisos.orig):null,A=F.avisos.obj,sec={faldon:a&&linea(limpio(A.faldon||{}))!==linea(limpio(O.faldon||{})),avisos:a&&lista(A.grandes)!==lista(O.grandes||[]),novedades:a&&lista(A.ligeros)!==lista(O.ligeros||[]),portada:p,cronologia:sucio('cronologia')};
+ var n2=cambiados().length;var O=a?JSON.parse(F.avisos.orig):null,A=F.avisos.obj,sec={faldon:a&&linea(limpio(A.faldon||{}))!==linea(limpio(O.faldon||{})),avisos:a&&lista(A.grandes)!==lista(O.grandes||[]),novedades:a&&lista(A.ligeros)!==lista(O.ligeros||[]),portada:p,cronologia:sucio('cronologia'),titulos:sucio('titulos')};
  [].forEach.call(document.querySelectorAll('nav.tabs button'),function(b){var t=b.dataset.t,d=sec[t];b.innerHTML=b.textContent.replace(/\s+$/,'')+(d?'<span class="dot" aria-label="con cambios"></span>':'');});
  n=n2;$('#b-deshacer').disabled=!n;$('#b-copiar').disabled=!n;$('#b-publicar').disabled=!n;
  if(!$('#msg').dataset.fijo){$('#msg').className='';$('#msg').textContent=n?'Hay cambios sin publicar en: '+cambiados().map(function(x){return NOMBRE[x];}).join(', ')+'.':'Sin cambios.';}}
@@ -248,7 +260,11 @@ function objDe(el){var sec=el.closest('[data-sec]'),card=el.closest('[data-i]'),
  if(TAB==='avisos')return A.grandes[i];if(TAB==='novedades')return A.ligeros[i];if(TAB==='faldon')return A.faldon;
  if(sec){var s=sec.dataset.sec;if(s==='apertura')return M.apertura;if(s==='fijos')return M.fijos[i];if(s==='destacado')return M.destacado;}return null;}
 function arrDe(){var M=F.portada_manual.obj,A=F.avisos.obj;if(TAB==='cronologia')return F.cronologia.obj.hitos;return TAB==='avisos'?A.grandes:TAB==='novedades'?A.ligeros:M.fijos;}
-document.addEventListener('input',function(e){if(e.target.id==='cr-q'){CQ=e.target.value;var pos=e.target.selectionStart;pinta();var q=$('#cr-q');q.focus();q.setSelectionRange(pos,pos);return;}
+document.addEventListener('input',function(e){var ti=e.target.dataset.tit;if(ti){var v=e.target.value.replace(/<([^<>]+)>/g,'*$1*');if(v!==e.target.value){var ps=e.target.selectionStart;e.target.value=v;e.target.setSelectionRange(ps,ps);}
+  var T=F.titulos.obj,o={};if(v.trim()){if(T[ti]===undefined){o[ti]=v.trim();Object.keys(T).forEach(function(k){o[k]=T[k];});F.titulos.obj=o;TIT=o;}else T[ti]=v.trim();}else{delete T[ti];}
+  if(porId[ti])porId[ti].t=(F.titulos.obj[ti]||porId[ti].tt);var vb=e.target.parentNode.querySelector('.vista');vb.innerHTML=v.trim()?destaca(v):'<span style="color:var(--muted)">'+esc(porId[ti]?porId[ti].tt||'(primera frase del post)':'')+'</span>';estadoBarra();return;}
+ if(e.target.id==='ti-q'){TQ=e.target.value;TN=40;var pos2=e.target.selectionStart;pinta();var q2=$('#ti-q');q2.focus();q2.setSelectionRange(pos2,pos2);return;}
+ if(e.target.id==='cr-q'){CQ=e.target.value;var pos=e.target.selectionStart;pinta();var q=$('#cr-q');q.focus();q.setSelectionRange(pos,pos);return;}
  var el=e.target,k=el.dataset.k;if(!k)return;var o=objDe(el);if(!o)return;
  if(k.indexOf('imgs.')===0){o.imgs=o.imgs||['','',''];o.imgs[+k.slice(5)]=el.value;}else o[k]=el.value;
  if(TAB==='faldon'&&k==='u'){var sl=(el.value.match(/^\/especiales#(.+)$/)||[])[1];$('#f-esp').value=sl&&ESP.some(function(x){return x.slug===sl;})?sl:'';if(!sl)delete o.especial;var c=$('#f-dest');if(c)c.disabled=!sl;}
@@ -256,6 +272,7 @@ document.addEventListener('input',function(e){if(e.target.id==='cr-q'){CQ=e.targ
  if(TAB==='faldon'&&k==='t'){var fv=$('.faldon-v');if(fv){var x=esc(el.value).replace(/\s*»\s*/g,' <i>»</i> ')+' <i>»</i> ';fv.innerHTML=x+x;}}
  if(el.tagName==='SELECT')pinta();else estadoBarra();});
 document.addEventListener('change',function(e){var el=e.target,A=F.avisos.obj,M=F.portada_manual.obj;
+ if(el.id==='ti-f'){TF=el.value;TN=40;pinta();return;}
  if(el.id==='cr-esp'&&el.value){F.cronologia.obj.hitos.push({esp:el.value});CQ='';CT='';pinta();return;}
  if(el.id==='cr-t'){CT=el.value;pinta();return;}
  if(el.id==='f-on'){if(el.checked){A.faldon=A._faldon||{t:'Escribe aquí el texto » del faldón'};}else{A._faldon=A.faldon;A.faldon={};}pinta();}
@@ -265,6 +282,7 @@ document.addEventListener('change',function(e){var el=e.target,A=F.avisos.obj,M=
  if(el.name==='dm'){M.destacado=el.value==='auto'?null:el.value==='post'?{id:''}:{k:'Destacado »',t:'',p:'',u:'',img:''};pinta();}});
 document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var M=F.portada_manual.obj,A=F.avisos.obj;
  if(b.dataset.t){TAB=b.dataset.t;[].forEach.call(document.querySelectorAll('nav.tabs button'),function(x){x.setAttribute('aria-selected',x===b);});[].forEach.call(document.querySelectorAll('main section'),function(s){s.hidden=s.id!=='t-'+TAB;});pinta();scrollTo(0,0);return;}
+ if(b.id==='ti-mas'){TN+=40;pinta();return;}
  if(b.dataset.elige){elige(b.dataset.elige);return;}
  if(b.dataset.mov){mover(arrDe(),+b.dataset.i,+b.dataset.mov);pinta();return;}
  if(b.dataset.borra!==undefined){if(confirm('¿Quitar este elemento?')){arrDe().splice(+b.dataset.borra,1);pinta();}return;}
@@ -278,7 +296,7 @@ document.addEventListener('click',function(e){var b=e.target.closest('button');i
    if(x[0]&&x[1].permissions&&x[1].permissions.push){ls('inc-panel-token',v);aviso('Conectado a GitHub.','ok');cargaArchivos().then(function(){pinta();});$('#estado').textContent='Conectado a GitHub.';}
    else $('#tk-msg').textContent='Esa llave no tiene permiso de escritura en inconsolata-datos.';}).catch(function(){$('#tk-msg').textContent='No se pudo comprobar. Revisa la conexión.';});return;}
  if(b.id==='tk-borra'){ls('inc-panel-token',null);pinta();return;}
- if(b.id==='b-deshacer'){if(!confirm('¿Descartar todos los cambios sin publicar?'))return;Object.keys(F).forEach(function(n){F[n].obj=normal(n,JSON.parse(F[n].orig));});pinta();return;}
+ if(b.id==='b-deshacer'){if(!confirm('¿Descartar todos los cambios sin publicar?'))return;Object.keys(F).forEach(function(n){F[n].obj=normal(n,JSON.parse(F[n].orig));});TIT=F.titulos.obj;POSTS.forEach(function(p){p.t=TIT[p.i]||p.tt;});pinta();return;}
  if(b.id==='b-copiar'){copia();return;}
  if(b.id==='b-publicar'){publica();return;}});
 
@@ -303,7 +321,7 @@ function pon(id){var M=F.portada_manual.obj,d=destino;
  $('#dlg').close();pinta();}
 
 // ---------- publicar
-var NOMBRE={avisos:'avisos y faldón',portada_manual:'portada',cronologia:'cronología'};
+var NOMBRE={avisos:'avisos y faldón',portada_manual:'portada',cronologia:'cronología',titulos:'títulos'};
 function cambiados(){return Object.keys(F).filter(sucio);}
 function publica(){var tk=token();if(!tk){aviso('Primero conecta el panel con GitHub (pestaña «Conexión») o usa «Copiar a mano».','err');return;}
  var ns=cambiados();$('#b-publicar').disabled=true;aviso('Publicando…');
@@ -312,7 +330,11 @@ function publica(){var tk=token();if(!tk){aviso('Primero conecta el panel con Gi
    if(j.sha!==F[n].sha&&F[n].sha&&b64d(j.content)!==F[n].orig)throw new Error('Alguien ha cambiado '+n+'.json mientras editabas. Recarga el panel y repite el cambio.');
    var txt=texto(n);return fetch(API+n+'.json',{method:'PUT',headers:{Authorization:'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({message:'Panel de portada: '+NOMBRE[n],content:b64e(txt),sha:j.sha,branch:'main'})})
     .then(function(r){return r.json().then(function(x){if(!r.ok)throw new Error(x.message||('GitHub '+r.status));F[n].sha=x.content.sha;F[n].orig=txt;});});});});},Promise.resolve())
- .then(function(){aviso('Publicado. La web lo mostrará en unos minutos.','ok');estadoBarra();})
+ .then(function(){if(ns.indexOf('titulos')<0){aviso('Publicado. La web lo mostrará en unos minutos.','ok');estadoBarra();return;}
+  // los títulos también se copian en los datos de la portada: se lanza la actualización para no esperar a la hora
+  return fetch('https://api.github.com/repos/'+REPO+'/actions/workflows/actualizar.yml/dispatches',{method:'POST',headers:{Authorization:'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({ref:'main'})})
+   .then(function(r){aviso(r.ok?'Publicado. Los posts lo mostrarán en unos minutos y la portada en cuanto acabe la actualización (2 o 3 minutos).':'Publicado. Los posts lo mostrarán en unos minutos; la portada, en la próxima actualización de cada hora.','ok');estadoBarra();})
+   .catch(function(){aviso('Publicado. La portada lo mostrará en la próxima actualización de cada hora.','ok');estadoBarra();});})
  .catch(function(e){aviso('No se ha podido publicar: '+e.message,'err');estadoBarra();});}
 function copia(){var ns=cambiados();$('#copia-c').innerHTML=ns.map(function(n){return '<p><b>'+n+'.json</b> · 1) Copia el texto. 2) Abre <a href="https://github.com/'+REPO+'/edit/main/datos/'+n+'.json" target="_blank" rel="noopener">el archivo en GitHub</a>, borra todo, pega y pulsa «Commit changes».</p><textarea readonly style="min-height:180px;font:13px monospace" onfocus="this.select()">'+esc(texto(n))+'</textarea><p><button class="btn peq" data-cp="'+n+'">Copiar</button></p>';}).join('');$('#dlg-copia').showModal();}
 document.addEventListener('click',function(e){var b=e.target.closest('[data-cp]');if(!b)return;navigator.clipboard.writeText(texto(b.dataset.cp)).then(function(){b.textContent='Copiado';});});
