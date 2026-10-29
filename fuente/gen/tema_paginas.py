@@ -72,7 +72,7 @@ for a, b in _R:
     assert a in _ejs, a[:60]
     _ejs = _ejs.replace(a, b)
 EST_JS = _ejs
-EST_HTML = ('<section class="wrap hero"><div class="crumbs caps" style="padding:0 0 14px"><a href="/">Portada</a><i>»</i><a href="/medios">Medios</a><i>»</i><span>Estadísticas</span></div>'
+EST_HTML = ('<section class="wrap hero"><div class="crumbs caps" style="padding:0 0 14px"><a href="/">inconsolata</a><i>»</i><a href="/medios">Medios</a><i>»</i><span>Estadísticas</span></div>'
             '<h1 class="soft">Los <em>números</em> del archivo</h1><p>Qué medios, autores y temas han pasado por inconsolata» cada año desde 2011. Pulsa un año para ver solo ese año.</p></section>'
             '<nav class="ybar" aria-label="Elegir año"><div class="wrap in" id="ybar"></div></nav><section class="kpis" aria-live="polite"><div class="wrap in" id="kpis"></div></section>'
             '<div class="wrap"><section class="blk"><h2 class="soft" id="vb-h">Entradas <em>por año</em><small>pulsa una barra</small></h2><div class="vbars" id="vb"></div><div class="vax" id="vax"></div></section>'
