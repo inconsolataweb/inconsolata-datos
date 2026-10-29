@@ -185,6 +185,17 @@ footer{background:var(--ink);color:var(--paper)}
 .lb.zoomed .lb-side{display:none}
 @media (max-width:700px){.lb-hint{display:none}.lb-side{display:none}}
 
+.pie-aj{font-family:'Archivo',sans-serif;font-size:14px;line-height:1.45;color:var(--muted);margin:14px 0 0;padding-left:12px;border-left:3px solid var(--accent);text-align:left}
+.pie-f{display:block;font-family:'Archivo',sans-serif;font-size:12px;line-height:1.35;color:var(--muted);margin-top:4px}
+
+.fuente.plegable{position:relative;padding-right:56px!important}
+.fuente.plegable:not(.abierta) p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fuente.plegable:not(.abierta) .f-avs{max-width:46%;overflow:hidden;flex-wrap:nowrap}
+.fuente.abierta{flex-wrap:wrap}
+.f-mas{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:2px solid var(--yellow);background:transparent;color:var(--yellow);display:grid;place-items:center;cursor:pointer;transition:transform .2s}
+.fuente.abierta .f-mas{transform:translateY(-50%) rotate(180deg)}
+.f-mas:focus-visible{outline:3px solid #fff;outline-offset:2px}
+
 .lite-bar,.lite-menu{display:none}
 .ver-sw,.lm-ver{background:none;border:0;padding:6px 0;font:700 13px 'Archivo',sans-serif;letter-spacing:.5px;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;opacity:.8}
 html.lite .page>.head,html.lite .mini-head,html.lite .v-home .topbar{display:none!important}
@@ -925,6 +936,11 @@ mark.subr{background:none;color:inherit;padding:.06em .24em;margin:0 -.08em;back
 .v-home .hero-meta .k-av{filter:none;width:1.6em;height:1.6em;vertical-align:-.45em}
 .v-home .hero-meta a{display:inline-flex;align-items:center}
 .v-home .hero-meta{align-items:center}
+.v-home .hm-avs{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
+.v-home .hm-avs a{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.14);font-weight:800}
+.v-home .hm-avs .k-av{width:24px!important;height:24px!important;margin:0!important;vertical-align:0}
+.v-home .hm-n{font-family:'Archivo',sans-serif;font-weight:800}
+.v-home .muchos .k-av{margin-right:.15em}
 .v-home .hero-meta span{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;line-height:1.6em}
 .v-home .masthead.choca .prueba{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;max-width:460px;margin:10px 0 34px}
 .v-home .masthead.choca{flex-wrap:wrap}

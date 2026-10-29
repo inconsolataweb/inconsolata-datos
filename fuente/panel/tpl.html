@@ -70,6 +70,12 @@ dialog::backdrop{background:rgba(22,20,15,.55)}
 .dlg-l button{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:8px 14px;cursor:pointer;font:inherit;color:inherit}
 .dlg-l button:hover,.dlg-l button:focus-visible{background:#fff}
 .dlg-l img{width:52px;height:52px;object-fit:cover;background:var(--line);flex-shrink:0}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:700 14px Archivo,sans-serif;border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:6px 10px;min-height:36px;cursor:pointer}
+.chip:hover{background:var(--ink);color:var(--paper)}
+.chip.quita{text-decoration:line-through;opacity:.55}
+.chip.pon{border-color:var(--accent);color:var(--accent)}
 code{background:#fff;padding:1px 5px;border:1px solid var(--line)}
 ol.pasos li{margin-bottom:8px}
 @media (max-width:640px){header,main,nav.tabs{padding-left:16px;padding-right:16px}.barra{padding:12px 16px}header h1{font-size:34px}}
@@ -86,6 +92,7 @@ __SPRITE__
 <button role="tab" data-t="faldon" aria-selected="false">Faldón</button>
 <button role="tab" data-t="avisos" aria-selected="false">Avisos</button>
 <button role="tab" data-t="novedades" aria-selected="false">Novedades</button>
+<button role="tab" data-t="posts" aria-selected="false">Posts</button>
 <button role="tab" data-t="titulos" aria-selected="false">Títulos</button>
 <button role="tab" data-t="cronologia" aria-selected="false">Cronología</button>
 <button role="tab" data-t="conexion" aria-selected="false">Conexión</button>
@@ -95,6 +102,7 @@ __SPRITE__
 <section id="t-faldon" hidden></section>
 <section id="t-avisos" hidden></section>
 <section id="t-novedades" hidden></section>
+<section id="t-posts" hidden></section>
 <section id="t-titulos" hidden></section>
 <section id="t-cronologia" hidden></section>
 <section id="t-conexion" hidden></section>
@@ -119,8 +127,8 @@ __SPRITE__
 <script>
 var REPO='inconsolataweb/inconsolata-datos',RAW='https://raw.githubusercontent.com/'+REPO+'/main/datos/',API='https://api.github.com/repos/'+REPO+'/contents/datos/';
 var ICONOS=__ICONOS__;
-var F={avisos:{orig:'',obj:null,sha:null},portada_manual:{orig:'',obj:null,sha:null},cronologia:{orig:'',obj:null,sha:null},titulos:{orig:'',obj:null,sha:null}};
-var POSTS=[],TIT={},MED=[],ESP=[],porId={};
+var F={avisos:{orig:'',obj:null,sha:null},portada_manual:{orig:'',obj:null,sha:null},cronologia:{orig:'',obj:null,sha:null},titulos:{orig:'',obj:null,sha:null},ajustes_posts:{orig:'',obj:null,sha:null}};
+var ETQ={},REG=[],AP='',POSTS=[],TIT={},MED=[],ESP=[],porId={};
 function $(s,c){return (c||document).querySelector(s);}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function hoy(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
@@ -138,6 +146,7 @@ function limpio(o){var r={};Object.keys(o).forEach(function(k){var v=o[k];if(v==
 function lista(a){return a.length?'[\n'+a.map(function(x){return ' '+linea(limpio(x));}).join(',\n')+'\n]':'[]';}
 function texto(n){var o=F[n].obj;
  if(n==='titulos')return JSON.stringify(o);
+ if(n==='ajustes_posts'){var ks=Object.keys(o).filter(function(k){var v=limpio(o[k]);if(v.pies&&!Object.keys(v.pies).filter(function(j){return String(v.pies[j]).trim();}).length)delete v.pies;return Object.keys(v).length;});return '{\n'+ks.map(function(k){var v=limpio(o[k]);if(v.pies){var pz={};Object.keys(v.pies).forEach(function(j){if(String(v.pies[j]).trim())pz[j]=String(v.pies[j]).trim();});if(Object.keys(pz).length)v.pies=pz;else delete v.pies;}return JSON.stringify(k)+': '+linea(v);}).join(',\n')+'\n}\n';}
  if(n==='cronologia')return '{\n"visible": '+(o.visible?'true':'false')+',\n"hitos": '+lista(o.hitos||[])+'\n}\n';
  if(n==='avisos'){var fa=o.faldon&&o.faldon.t?linea(limpio(o.faldon)):'null';return '{\n"grandes": '+lista(o.grandes||[])+',\n"ligeros": '+lista(o.ligeros||[])+',\n"faldon": '+fa+'\n}\n';}
  var one=function(x){if(!x)return 'null';x=limpio(x);return Object.keys(x).length?linea(x):'null';};
@@ -148,11 +157,11 @@ function sucio(n){return F[n].obj&&texto(n)!==F[n].orig;}
 function getJSON(n,conApi){
  if(conApi&&token())return fetch(API+n+'.json?ref=main',{headers:{Authorization:'Bearer '+token(),Accept:'application/vnd.github+json'},cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('GitHub '+r.status);return r.json();}).then(function(j){return {txt:b64d(j.content),sha:j.sha};});
  return fetch(RAW+n+'.json?'+Date.now()).then(function(r){if(!r.ok)throw new Error(n+' '+r.status);return r.text();}).then(function(t){return {txt:t,sha:null};});}
-function normal(n,o){o=o||{};if(n==='titulos')return o;if(n==='cronologia'){o.hitos=o.hitos||[];o.visible=!!o.visible;return o;}if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
+function normal(n,o){o=o||{};if(n==='titulos'||n==='ajustes_posts')return o;if(n==='cronologia'){o.hitos=o.hitos||[];o.visible=!!o.visible;return o;}if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
  else{o.fijos=(o.fijos||[]).map(function(x){return typeof x==='string'?{id:x}:x;});o.ocultos=o.ocultos||[];if(typeof o.apertura==='string')o.apertura={id:o.apertura};if(typeof o.destacado==='string')o.destacado={id:o.destacado};}return o;}
 function cargaArchivos(){return Promise.all(Object.keys(F).map(function(n){return getJSON(n,true).then(function(r){F[n].obj=normal(n,JSON.parse(r.txt));F[n].sha=r.sha;F[n].orig=texto(n);});}));}
 function carga(){
- Promise.all([cargaArchivos(),fetch(RAW+'archivo.json').then(function(r){return r.json();}),Promise.resolve(null),fetch(RAW+'especiales.json').then(function(r){return r.json();})])
+ Promise.all([cargaArchivos(),fetch(RAW+'archivo.json').then(function(r){return r.json();}),Promise.all([fetch(RAW+'etiquetas.json').then(function(r){return r.ok?r.json():{};}).catch(function(){return {};}),fetch(RAW+'temas_reglas.json').then(function(r){return r.json();}).catch(function(){return [];})]).then(function(x){ETQ=x[0];REG=x[1];}),fetch(RAW+'especiales.json').then(function(r){return r.json();})])
  .then(function(r){var A=r[1];TIT=F.titulos.obj;MED=A.medios.map(function(m){return m.n;});ESP=r[3];
   POSTS=A.posts.map(function(p){var t=TIT[p.i]||p.t||'';var tt=p.t||'';var ms=(p.m||[]).map(function(i){return MED[i];}).filter(Boolean);
    var o={i:p.i,u:p.u,d:p.d,t:t,tt:tt,ms:ms,im:p.im||'',f:fold(t+' '+ms.join(' ')+' '+p.d)};porId[p.i]=o;return o;});
@@ -209,6 +218,23 @@ avisos:function(){var G=F.avisos.obj.grandes;
 novedades:function(){var L=F.avisos.obj.ligeros;
  return '<h2 class="soft">Novedades</h2><p class="ayuda">Los avisos ligeros de la marca de registro. Una novedad lleva el número rojo durante una semana desde su fecha. Las más recientes van primero.</p>'+
  L.map(function(a,i){return '<div class="card" data-i="'+i+'">'+cabLista('Novedad '+(i+1),i,L.length)+'<div class="fila">'+campo('Fecha','f',a,{tipo:'date'})+campo('Texto','t',a,{ancho:1})+campo('Enlace','u',a,{ay:'opcional',ph:'/medios'})+icoCampo(a)+'</div></div>';}).join('')+'<button class="btn" data-nuevo="ligeros">+ Nueva novedad</button>';},
+posts:function(){var O=F.ajustes_posts.obj,con=Object.keys(O).filter(function(k){return porId[k];});
+ var h='<h2 class="soft">Posts</h2><p class="ayuda">Retoques dentro de un post sin tocar Tumblr: etiquetas que se añaden o se quitan (cambian su sección, tipo, tema o especial), frases con subrayador blanco y pies de foto. Los cambios de etiquetas se aplican en la actualización que se lanza al publicar.</p>'+
+ '<div class="card"><div class="cab"><b>'+(AP?'Post elegido':'Elige un post')+'</b><button class="btn" data-elige="aj">'+(AP?'Cambiar de post':'Elegir post')+'</button></div>'+(con.length?'<div class="caps" style="margin:6px 0 8px">Con ajustes</div><div class="btns">'+con.map(function(k){return '<button class="btn peq" data-ap="'+k+'"'+(k===AP?' style="background:var(--ink);color:var(--paper)"':'')+'>'+esc((porId[k].t||porId[k].d).replace(/\*/g,'').slice(0,40))+'</button>';}).join('')+'</div>':'')+'</div>';
+ if(!AP)return h;
+ var p=porId[AP],a=O[AP]||{},orig=ETQ[AP],mas=a.mas||[],menos=(a.menos||[]).map(fold);
+ var chips=(orig||[]).map(function(t){var q=menos.indexOf(fold(t))>=0;return '<button class="chip'+(q?' quita':'')+'" data-etq="'+esc(t)+'" title="'+(q?'Volver a ponerla':'Quitar esta etiqueta')+'">'+esc(t)+(q?' ↺':' ×')+'</button>';}).join('')+
+  mas.map(function(t,i){return '<button class="chip pon" data-mas="'+i+'" title="Quitar">+ '+esc(t)+' ×</button>';}).join('');
+ var sug=[];['mucho más','extra!','detallitos','metablog','offtopic','infografía','cartografía','gráfico','portada','ilustración','fotografía','vídeo','publicidad','online','apertura'].forEach(function(t){sug.push(t);});
+ ESP.forEach(function(e){(e.tags||[]).forEach(function(t){sug.push(t);});});REG.forEach(function(r){String(r.etiquetas||'').split('|').forEach(function(t){if(t&&!/[\\\[\]().*?+^$]/.test(t))sug.push(t);});});
+ h+='<div class="card"><div style="display:flex;gap:12px;align-items:center;margin-bottom:14px">'+(p.im?'<img src="'+esc(p.im)+'" alt="" style="width:64px;height:64px;object-fit:cover">':'')+'<div><div class="vista" style="margin:0">'+destaca(p.t||'(sin título)')+'</div><div style="font-size:13px;color:var(--muted)">'+esc(p.d)+(p.ms.length?' · '+esc(p.ms.slice(0,3).join(', ')):'')+' · <a href="https://inconsolata.com/post/'+esc(p.u)+'" target="_blank" rel="noopener">ver post</a></div></div></div>'+
+  '<div class="caps" style="margin-bottom:8px">Etiquetas</div><div class="chips">'+(chips||'<span style="color:var(--muted);font-size:14px">'+(orig?'Sin etiquetas.':'Las etiquetas de Tumblr de este post aún no se han leído; aparecerán tras la próxima actualización. Puedes añadir las que quieras.')+'</span>')+'</div>'+
+  '<div class="fila" style="margin:12px 0 0"><label>Añadir etiqueta <small>Enter para añadir</small><input id="aj-tag" list="aj-sug" placeholder="cartografía, accidente tren urda…"></label></div><datalist id="aj-sug">'+sug.filter(function(t,i){return sug.indexOf(t)===i;}).map(function(t){return '<option value="'+esc(t)+'">';}).join('')+'</datalist></div>'+
+  '<div class="card"><div class="cab"><b>Subrayador blanco</b><button class="btn peq" data-aj="sub+">Añadir frase</button></div><p class="ayuda" style="margin-bottom:10px">Copia la frase exacta del texto del post. Se marca la primera vez que aparece.</p>'+
+  (a.subrayados||[]).map(function(t,i){return '<div style="display:flex;gap:8px;margin-bottom:8px"><input data-ajs="'+i+'" value="'+esc(t)+'" placeholder="frase exacta del texto"><button class="btn peq" data-ajsq="'+i+'">Quitar</button></div>';}).join('')+'</div>'+
+  '<div class="card"><div class="cab"><b>Pies de foto</b><button class="btn peq" data-aj="pie+">Añadir pie</button></div><p class="ayuda" style="margin-bottom:10px">El número es el orden de la imagen en el post (1 = la primera). No se aplica en mucho más ni en EXTRA!, que usan sus líneas Trabajo / Medio.</p>'+
+  Object.keys(a.pies||{}).sort(function(x,y){return x-y;}).map(function(n){return '<div style="display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:8px;margin-bottom:8px"><input type="number" min="1" data-ajn="'+n+'" value="'+n+'" aria-label="Número de imagen"><input data-ajp="'+n+'" value="'+esc(a.pies[n])+'" placeholder="Texto del pie"><button class="btn peq" data-ajpq="'+n+'">Quitar</button></div>';}).join('')+'</div>';
+ return h;},
 titulos:function(){var T=F.titulos.obj,q=fold(TQ),L=POSTS.filter(function(p){if(TF==='sin'&&T[p.i])return false;if(TF==='con'&&!T[p.i])return false;if(!q)return true;return fold((T[p.i]||'')+' '+p.tt+' '+p.ms.join(' ')+' '+p.d).indexOf(q)>=0;});
  var vis=L.slice(0,TN);
  return '<h2 class="soft">Títulos</h2><p class="ayuda">El título que muestra la web en la portada, en el post y en el buscador. Rodea con asteriscos lo que va en magenta: <code>El vuelco electoral en *Brasil*, en gráficos</code>. También puedes escribirlo como <code>&lt;Brasil&gt;</code> y se convierte solo. Si dejas un título vacío, la web usa el de Tumblr o la primera frase.</p>'+
@@ -248,7 +274,7 @@ var TAB='portada',CQ='',CT='',TQ='',TF='',TN=40;
 function pinta(){var s=$('#t-'+TAB);var y=scrollY;s.innerHTML=F.avisos.obj||TAB==='conexion'?VISTAS[TAB]():'';scrollTo(0,y);estadoBarra();}
 function pintaTodo(){pinta();}
 function estadoBarra(){var a=sucio('avisos'),p=sucio('portada_manual'),n=a+p;
- var n2=cambiados().length;var O=a?JSON.parse(F.avisos.orig):null,A=F.avisos.obj,sec={faldon:a&&linea(limpio(A.faldon||{}))!==linea(limpio(O.faldon||{})),avisos:a&&lista(A.grandes)!==lista(O.grandes||[]),novedades:a&&lista(A.ligeros)!==lista(O.ligeros||[]),portada:p,cronologia:sucio('cronologia'),titulos:sucio('titulos')};
+ var n2=cambiados().length;var O=a?JSON.parse(F.avisos.orig):null,A=F.avisos.obj,sec={faldon:a&&linea(limpio(A.faldon||{}))!==linea(limpio(O.faldon||{})),avisos:a&&lista(A.grandes)!==lista(O.grandes||[]),novedades:a&&lista(A.ligeros)!==lista(O.ligeros||[]),portada:p,cronologia:sucio('cronologia'),titulos:sucio('titulos'),posts:sucio('ajustes_posts')};
  [].forEach.call(document.querySelectorAll('nav.tabs button'),function(b){var t=b.dataset.t,d=sec[t];b.innerHTML=b.textContent.replace(/\s+$/,'')+(d?'<span class="dot" aria-label="con cambios"></span>':'');});
  n=n2;$('#b-deshacer').disabled=!n;$('#b-copiar').disabled=!n;$('#b-publicar').disabled=!n;
  if(!$('#msg').dataset.fijo){$('#msg').className='';$('#msg').textContent=n?'Hay cambios sin publicar en: '+cambiados().map(function(x){return NOMBRE[x];}).join(', ')+'.':'Sin cambios.';}}
@@ -260,7 +286,10 @@ function objDe(el){var sec=el.closest('[data-sec]'),card=el.closest('[data-i]'),
  if(TAB==='avisos')return A.grandes[i];if(TAB==='novedades')return A.ligeros[i];if(TAB==='faldon')return A.faldon;
  if(sec){var s=sec.dataset.sec;if(s==='apertura')return M.apertura;if(s==='fijos')return M.fijos[i];if(s==='destacado')return M.destacado;}return null;}
 function arrDe(){var M=F.portada_manual.obj,A=F.avisos.obj;if(TAB==='cronologia')return F.cronologia.obj.hitos;return TAB==='avisos'?A.grandes:TAB==='novedades'?A.ligeros:M.fijos;}
-document.addEventListener('input',function(e){var ti=e.target.dataset.tit;if(ti){var v=e.target.value.replace(/<([^<>]+)>/g,'*$1*');if(v!==e.target.value){var ps=e.target.selectionStart;e.target.value=v;e.target.setSelectionRange(ps,ps);}
+document.addEventListener('input',function(e){var d0=e.target.dataset,aj0=AP&&F.ajustes_posts.obj?(F.ajustes_posts.obj[AP]=F.ajustes_posts.obj[AP]||{}):null;
+ if(aj0&&d0.ajs!==undefined){aj0.subrayados[+d0.ajs]=e.target.value;estadoBarra();return;}
+ if(aj0&&d0.ajp!==undefined){aj0.pies[d0.ajp]=e.target.value;estadoBarra();return;}
+ var ti=e.target.dataset.tit;if(ti){var v=e.target.value.replace(/<([^<>]+)>/g,'*$1*');if(v!==e.target.value){var ps=e.target.selectionStart;e.target.value=v;e.target.setSelectionRange(ps,ps);}
   var T=F.titulos.obj,o={};if(v.trim()){if(T[ti]===undefined){o[ti]=v.trim();Object.keys(T).forEach(function(k){o[k]=T[k];});F.titulos.obj=o;TIT=o;}else T[ti]=v.trim();}else{delete T[ti];}
   if(porId[ti])porId[ti].t=(F.titulos.obj[ti]||porId[ti].tt);var vb=e.target.parentNode.querySelector('.vista');vb.innerHTML=v.trim()?destaca(v):'<span style="color:var(--muted)">'+esc(porId[ti]?porId[ti].tt||'(primera frase del post)':'')+'</span>';estadoBarra();return;}
  if(e.target.id==='ti-q'){TQ=e.target.value;TN=40;var pos2=e.target.selectionStart;pinta();var q2=$('#ti-q');q2.focus();q2.setSelectionRange(pos2,pos2);return;}
@@ -272,6 +301,7 @@ document.addEventListener('input',function(e){var ti=e.target.dataset.tit;if(ti)
  if(TAB==='faldon'&&k==='t'){var fv=$('.faldon-v');if(fv){var x=esc(el.value).replace(/\s*»\s*/g,' <i>»</i> ')+' <i>»</i> ';fv.innerHTML=x+x;}}
  if(el.tagName==='SELECT')pinta();else estadoBarra();});
 document.addEventListener('change',function(e){var el=e.target,A=F.avisos.obj,M=F.portada_manual.obj;
+ if(el.dataset.ajn!==undefined&&AP){var aj=F.ajustes_posts.obj[AP],o=el.dataset.ajn,n=String(Math.max(1,parseInt(el.value)||1));if(n!==o&&aj.pies[n]===undefined){aj.pies[n]=aj.pies[o];delete aj.pies[o];}pinta();return;}
  if(el.id==='ti-f'){TF=el.value;TN=40;pinta();return;}
  if(el.id==='cr-esp'&&el.value){F.cronologia.obj.hitos.push({esp:el.value});CQ='';CT='';pinta();return;}
  if(el.id==='cr-t'){CT=el.value;pinta();return;}
@@ -282,6 +312,14 @@ document.addEventListener('change',function(e){var el=e.target,A=F.avisos.obj,M=
  if(el.dataset.media!==undefined){var o=objDe(el);delete o.img;delete o.imgs;delete o.ico;if(el.value==='imgs')o.imgs=['','',''];if(el.value==='img')o.img='';if(el.value==='ico')o.ico=ICONOS[0];pinta();}
  if(el.name==='dm'){M.destacado=el.value==='auto'?null:el.value==='post'?{id:''}:{k:'Destacado »',t:'',p:'',u:'',img:''};pinta();}});
 document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var M=F.portada_manual.obj,A=F.avisos.obj;
+ if(b.dataset.ap){AP=b.dataset.ap;pinta();return;}
+ var AJ=F.ajustes_posts.obj,aj=AP?(AJ[AP]=AJ[AP]||{}):null;
+ if(b.dataset.etq!==undefined&&aj){var t=b.dataset.etq,L=aj.menos=aj.menos||[],k=L.map(fold).indexOf(fold(t));if(k>=0)L.splice(k,1);else L.push(t);pinta();return;}
+ if(b.dataset.mas!==undefined&&aj){aj.mas.splice(+b.dataset.mas,1);pinta();return;}
+ if(b.dataset.aj==='sub+'&&aj){(aj.subrayados=aj.subrayados||[]).push('');pinta();var z=document.querySelectorAll('[data-ajs]');if(z.length)z[z.length-1].focus();return;}
+ if(b.dataset.ajsq!==undefined&&aj){aj.subrayados.splice(+b.dataset.ajsq,1);pinta();return;}
+ if(b.dataset.aj==='pie+'&&aj){aj.pies=aj.pies||{};var n=1;while(aj.pies[n]!==undefined)n++;aj.pies[n]='';pinta();return;}
+ if(b.dataset.ajpq!==undefined&&aj){delete aj.pies[b.dataset.ajpq];pinta();return;}
  if(b.dataset.t){TAB=b.dataset.t;[].forEach.call(document.querySelectorAll('nav.tabs button'),function(x){x.setAttribute('aria-selected',x===b);});[].forEach.call(document.querySelectorAll('main section'),function(s){s.hidden=s.id!=='t-'+TAB;});pinta();scrollTo(0,0);return;}
  if(b.id==='ti-mas'){TN+=40;pinta();return;}
  if(b.dataset.elige){elige(b.dataset.elige);return;}
@@ -314,6 +352,7 @@ function pon(id){var M=F.portada_manual.obj,d=destino;
  if(d==='apertura')M.apertura=Object.assign(M.apertura||{},{id:id});
  else if(d==='destacado')M.destacado=Object.assign(M.destacado||{},{id:id});
  else if(d==='fijos+')M.fijos.push({id:id});
+ else if(d==='aj'){AP=id;}
  else if(d==='crono+'){F.cronologia.obj.hitos.push({id:id,tipo:'pieza'});CQ='';}
  else if(d.indexOf('crono:')===0)F.cronologia.obj.hitos[+d.slice(6)].id=id;
  else if(d==='ocultos+'){if(M.ocultos.indexOf(id)<0)M.ocultos.push(id);}
@@ -322,7 +361,7 @@ function pon(id){var M=F.portada_manual.obj,d=destino;
  $('#dlg').close();pinta();}
 
 // ---------- publicar
-var NOMBRE={avisos:'avisos y faldón',portada_manual:'portada',cronologia:'cronología',titulos:'títulos'};
+var NOMBRE={avisos:'avisos y faldón',portada_manual:'portada',cronologia:'cronología',titulos:'títulos',ajustes_posts:'ajustes de posts'};
 function cambiados(){return Object.keys(F).filter(sucio);}
 function publica(){var tk=token();if(!tk){aviso('Primero conecta el panel con GitHub (pestaña «Conexión») o usa «Copiar a mano».','err');return;}
  var ns=cambiados();$('#b-publicar').disabled=true;aviso('Publicando…');
@@ -331,7 +370,7 @@ function publica(){var tk=token();if(!tk){aviso('Primero conecta el panel con Gi
    if(j.sha!==F[n].sha&&F[n].sha&&b64d(j.content)!==F[n].orig)throw new Error('Alguien ha cambiado '+n+'.json mientras editabas. Recarga el panel y repite el cambio.');
    var txt=texto(n);return fetch(API+n+'.json',{method:'PUT',headers:{Authorization:'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({message:'Panel de portada: '+NOMBRE[n],content:b64e(txt),sha:j.sha,branch:'main'})})
     .then(function(r){return r.json().then(function(x){if(!r.ok)throw new Error(x.message||('GitHub '+r.status));F[n].sha=x.content.sha;F[n].orig=txt;});});});});},Promise.resolve())
- .then(function(){if(ns.indexOf('titulos')<0){aviso('Publicado. La web lo mostrará en unos minutos.','ok');estadoBarra();return;}
+ .then(function(){if(ns.indexOf('titulos')<0&&ns.indexOf('ajustes_posts')<0){aviso('Publicado. La web lo mostrará en unos minutos.','ok');estadoBarra();return;}
   // los títulos también se copian en los datos de la portada: se lanza la actualización para no esperar a la hora
   return fetch('https://api.github.com/repos/'+REPO+'/actions/workflows/actualizar.yml/dispatches',{method:'POST',headers:{Authorization:'Bearer '+tk,'Content-Type':'application/json'},body:JSON.stringify({ref:'main'})})
    .then(function(r){aviso(r.ok?'Publicado. Los posts lo mostrarán en unos minutos y la portada en cuanto acabe la actualización (2 o 3 minutos).':'Publicado. Los posts lo mostrarán en unos minutos; la portada, en la próxima actualización de cada hora.','ok');estadoBarra();})
@@ -339,6 +378,7 @@ function publica(){var tk=token();if(!tk){aviso('Primero conecta el panel con Gi
  .catch(function(e){aviso('No se ha podido publicar: '+e.message,'err');estadoBarra();});}
 function copia(){var ns=cambiados();$('#copia-c').innerHTML=ns.map(function(n){return '<p><b>'+n+'.json</b> · 1) Copia el texto. 2) Abre <a href="https://github.com/'+REPO+'/edit/main/datos/'+n+'.json" target="_blank" rel="noopener">el archivo en GitHub</a>, borra todo, pega y pulsa «Commit changes».</p><textarea readonly style="min-height:180px;font:13px monospace" onfocus="this.select()">'+esc(texto(n))+'</textarea><p><button class="btn peq" data-cp="'+n+'">Copiar</button></p>';}).join('');$('#dlg-copia').showModal();}
 document.addEventListener('click',function(e){var b=e.target.closest('[data-cp]');if(!b)return;navigator.clipboard.writeText(texto(b.dataset.cp)).then(function(){b.textContent='Copiado';});});
+document.addEventListener('keydown',function(e){if(e.target.id==='aj-tag'&&e.key==='Enter'&&AP){var v=e.target.value.trim();if(!v)return;e.preventDefault();var aj=F.ajustes_posts.obj[AP]=F.ajustes_posts.obj[AP]||{},L=aj.menos||[],k=L.map(fold).indexOf(fold(v));if(k>=0)L.splice(k,1);else if((ETQ[AP]||[]).map(fold).indexOf(fold(v))<0&&(aj.mas||[]).map(fold).indexOf(fold(v))<0)(aj.mas=aj.mas||[]).push(v);pinta();var q=document.getElementById('aj-tag');if(q)q.focus();}});
 addEventListener('beforeunload',function(e){if(cambiados().length){e.preventDefault();e.returnValue='';}});
 carga();
 </script>

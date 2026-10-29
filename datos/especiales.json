@@ -1044,6 +1044,23 @@
 "padre": "Catástrofes y accidentes"
 },
 {
+"titulo": "Accidente de tren en Urda (Toledo)",
+"slug": "accidente-tren-urda",
+"tags": [
+"accidente tren urda",
+"accidente ferroviario toledo",
+"accidente urda"
+],
+"tema": "Catástrofes y accidentes",
+"posts": [
+"831740960853655552",
+"831827785244868608"
+],
+"desde": "2026-10-28",
+"hasta": "2026-10-29",
+"padre": "Catástrofes y accidentes"
+},
+{
 "titulo": "Volcán de La Palma",
 "slug": "volcan-de-la-palma",
 "tags": [

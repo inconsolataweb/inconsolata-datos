@@ -36,6 +36,17 @@ HEAD = (f'<header class="head"><a href="/" class="brand soft" aria-label="incons
         '<div class="mh-prog" aria-hidden="true"><span id="mh-bar"></span></div></div>')
 
 TCSS = """
+.pie-aj{font-family:'Archivo',sans-serif;font-size:14px;line-height:1.45;color:var(--muted);margin:14px 0 0;padding-left:12px;border-left:3px solid var(--accent);text-align:left}
+.pie-f{display:block;font-family:'Archivo',sans-serif;font-size:12px;line-height:1.35;color:var(--muted);margin-top:4px}
+
+.fuente.plegable{position:relative;padding-right:56px!important}
+.fuente.plegable:not(.abierta) p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fuente.plegable:not(.abierta) .f-avs{max-width:46%;overflow:hidden;flex-wrap:nowrap}
+.fuente.abierta{flex-wrap:wrap}
+.f-mas{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:2px solid var(--yellow);background:transparent;color:var(--yellow);display:grid;place-items:center;cursor:pointer;transition:transform .2s}
+.fuente.abierta .f-mas{transform:translateY(-50%) rotate(180deg)}
+.f-mas:focus-visible{outline:3px solid #fff;outline-offset:2px}
+
 .lite-bar,.lite-menu{display:none}
 .ver-sw,.lm-ver{background:none;border:0;padding:6px 0;font:700 13px 'Archivo',sans-serif;letter-spacing:.5px;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;opacity:.8}
 html.lite .page>.head,html.lite .mini-head,html.lite .v-home .topbar{display:none!important}
@@ -180,7 +191,7 @@ function get(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'
  return fetch(CDN+f+'.json').then(function(r){return r.json();}).then(function(j){try{sessionStorage.setItem(k,JSON.stringify(j));}catch(e){}return j;});}
 function fecha(d){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+' de '+d.slice(0,4);}
 function ico(k,cls){return '<svg class="'+(cls||'')+'" viewBox="0 0 64 64" role="img" aria-label="'+esc(TN[k])+'" style="overflow:visible"><title>'+esc(TN[k])+'</title><use href="#i-'+k+'" class="k"/><use href="#i-'+k+'" class="m" x="3" y="2.5"/></svg>';}
-var TIT={};
+var TIT={},AJ={};
 __VJS__
 __PJS__
 __PAGJS__
@@ -196,6 +207,12 @@ function esPortadilla(s,k,im,d){if((s!=='m'&&s!=='x')||!im.w||!im.h)return false
  return (r>=4.5&&im.w>=1200&&im.w<=1400)||(s==='m'&&k===0&&r>=4.5)||(s==='m'&&k===0&&r>=2.6&&r<=2.9&&d>='2013');}
 
 // ------------------------------------------------------------------ página de post
+// ajustes del panel de portada: frases subrayadas y pies de foto añadidos sin tocar Tumblr
+function ajustes(body,aj,s){if(!aj)return;
+ (aj.subrayados||[]).forEach(function(f){f=String(f||'').replace(/\s+/g,' ').trim();if(!f)return;
+  var w=document.createTreeWalker(body,NodeFilter.SHOW_TEXT),x;while((x=w.nextNode())){var v=x.nodeValue.replace(/ /g,' '),i=v.indexOf(f);
+   if(i>=0&&!x.parentNode.closest('mark,a,.fuente')){var r=x.splitText(i);r.splitText(f.length);var m=document.createElement('mark');m.className='subr';r.parentNode.replaceChild(m,r);m.appendChild(r);break;}}});
+}
 function post(art,meta,cat,medido){
  var id=rid(art), d=art.dataset.date, mt=meta[id]||['',[],[],[],[]];
  var s=mt[0], tipos=mt[1], meds=mt[2].map(function(i){return cat.medios[i];}), auts=mt[3].map(function(i){return cat.autores[i];}), tems=mt[4];
@@ -224,6 +241,7 @@ function post(art,meta,cat,medido){
  tems=tems.filter(function(i){var q=cat.temas[i];return q&&(!q.x||(q.x==='sub'&&q.e));});
  var tm=tems.length?'<div class="temas"><span class="caps">Temas »</span>'+tems.map(function(i){var q=cat.temas[i];return '<a href="'+(q.x==='sub'?'/especiales#'+q.e:'/buscador#h='+i)+'"'+(q.x==='sub'?' class="esp"':'')+'><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[i]+'"/></svg>'+esc(q.n)+'</a>';}).join('')+'</div>':'';
  if(d>='2026-10-01')subraya(body);
+ ajustes(body,AJ[id],s);
  if(s==='m'||s==='x'||s==='b'||(s==='o'&&body.textContent.length>1500)){
   var o={art:art,body:body,ims:ims,d:d,id:id,cat:cat,tipos:tipos,s:s,t:t,tm:tm};
   var lbv=s==='m'?vMM(o):s==='x'?vX(o):vB(o); if(lbv.length&&window.initLB)initLB(lbv); return;
@@ -244,13 +262,15 @@ function post(art,meta,cat,medido){
  var sr=(s==='m'||s==='x'||s==='b')?null:serieDe(body,id);
  // línea de fuente → bloque negro. Formato actual: «» Medio, del …»; formato antiguo: «Medio, del …» sin el símbolo
  function avsDe(t){var f=fold(t),hit=meds.filter(function(m){return m.avw&&f.indexOf(fold(m.n))>=0;});if(!hit.length&&meds.length===1&&meds[0].avw)hit=[meds[0]];
-  return hit.slice(0,3).map(function(m){return '<a class="f-av" href="'+fichaMedio(m)+'" aria-label="Ficha de '+esc(m.n)+'"><img src="'+m.avw+'" alt=""></a>';}).join('');}
+  return hit.slice(0,meds.length>3?8:3).map(function(m){return '<a class="f-av" href="'+fichaMedio(m)+'" aria-label="Ficha de '+esc(m.n)+'"><img src="'+m.avw+'" alt=""></a>';}).join('');}
  // quita el «»» (y el guion de las listas antiguas) del principio, esté dentro de las etiquetas que esté
  function limpia(p){var c=p.cloneNode(true),w=document.createTreeWalker(c,NodeFilter.SHOW_TEXT),x;
   while((x=w.nextNode())){var v=x.nodeValue.replace(/^[\s\xa0]+/,'');if(!v){x.nodeValue='';continue;}x.nodeValue=v.replace(/^[»\-–]\s*/,'').replace(/^[\s\xa0]+/,'');if(x.nodeValue)break;}
   var h=c.innerHTML;for(var k=0;k<4;k++)h=h.replace(/^\s*<(b|strong|span|i|em)[^>]*>\s*<\/\1>\s*/,'');return h.replace(/^\s*(<br\s*\/?>\s*)+/,'');}
- function hazFuente(p){var dv=document.createElement('div');dv.className='fuente';var av=avsDe(p.textContent);
-  dv.innerHTML='<p><i>»</i> '+limpia(p)+'</p>'+(av?'<span class="f-avs">'+av+'</span>':'');p.replaceWith(dv);}
+ function hazFuente(p){var dv=document.createElement('div');dv.className='fuente';var av=avsDe(p.textContent),larga=p.textContent.replace(/\s+/g,' ').length>150||meds.length>3;
+  dv.innerHTML='<p><i>»</i> '+limpia(p)+'</p>'+(av?'<span class="f-avs">'+av+'</span>':'')+(larga?'<button type="button" class="f-mas" aria-expanded="false" aria-label="Ver la fuente completa"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button>':'');
+  if(larga){dv.classList.add('plegable');dv.querySelector('.f-mas').addEventListener('click',function(){var ab=dv.classList.toggle('abierta');this.setAttribute('aria-expanded',ab?'true':'false');});}
+  p.replaceWith(dv);}
  [].forEach.call(body.querySelectorAll('p'),function(p){if(/^[\s\xa0]*»/.test(p.textContent)&&!p.closest('.fuente'))hazFuente(p);});
  if(!body.querySelector('.fuente')&&s!=='m'&&s!=='x'){
   var ps=[].filter.call(body.querySelectorAll('p'),function(p){return !p.querySelector('img');});
@@ -283,14 +303,15 @@ function post(art,meta,cat,medido){
   });
   vis.innerHTML='<div class="mm-items">'+html+'</div>'; lay.classList.add('single');
  } else if(n){
-  ims.forEach(function(im,i){lb.push({src:im.src,cap:(meds[0]?meds[0].n+' · ':'')+'imagen '+(i+1)+' de '+n});});
+  var PIE=(AJ[id]&&AJ[id].pies)||{},pie=function(i){return String(PIE[i+1]||'').trim();},pieH=function(i,c){return pie(i)?'<p class="'+(c||'pie-aj')+'">'+esc(pie(i))+'</p>':'';};
+  ims.forEach(function(im,i){lb.push({src:im.src,cap:(pie(i)?pie(i)+' · ':'')+(meds[0]?meds[0].n+' · ':'')+'imagen '+(i+1)+' de '+n});});
   if(s==='d'){
-   vis.innerHTML='<div class="dclips">'+ims.map(function(im,i){return '<div class="dclip"><button type="button" class="shot" data-lb="'+i+'" aria-label="Ampliar recorte '+(i+1)+'"><img src="'+esc(im.src)+'" alt="'+esc(alt(i))+'"><span class="zoom">Ampliar »</span></button></div>';}).join('')+'</div>';
+   vis.innerHTML='<div class="dclips">'+ims.map(function(im,i){return '<div class="dclip"><button type="button" class="shot" data-lb="'+i+'" aria-label="Ampliar recorte '+(i+1)+'"><img src="'+esc(im.src)+'" alt="'+esc(alt(i))+'"><span class="zoom">Ampliar »</span></button>'+pieH(i)+'</div>';}).join('')+'</div>';
    lay.classList.add('single');
   } else {
-   var h='<div class="main-sheet"><span class="tape" aria-hidden="true"></span><button type="button" class="shot" data-lb="0" aria-label="Ampliar imagen 1 de '+n+'"><img src="'+esc(ims[0].src)+'" alt="'+esc(alt(0))+'"><span class="zoom">Ampliar »</span></button></div>';
+   var h='<div class="main-sheet"><span class="tape" aria-hidden="true"></span><button type="button" class="shot" data-lb="0" aria-label="Ampliar imagen 1 de '+n+'"><img src="'+esc(ims[0].src)+'" alt="'+esc(alt(0))+'"><span class="zoom">Ampliar »</span></button>'+pieH(0)+'</div>';
    if(n>1)h+='<div><div class="sheet-head"><span class="caps">Todas las imágenes · '+n+'</span><span style="font-size:13px;font-weight:600">Pulsa para ampliar »</span></div><div class="contact'+(n<=4?' c2':'')+'">'+
-     ims.slice(1).map(function(im,j){var i=j+1;return '<div class="frame"><button type="button" class="shot" data-lb="'+i+'" aria-label="Ampliar imagen '+(i+1)+' de '+n+'"><img loading="lazy" src="'+esc(im.src)+'" alt="'+esc(alt(i))+'"><span class="zoom">Ampliar »</span></button><span class="n">'+(i+1)+' / '+n+' <span style="color:var(--accent)">▸</span></span></div>';}).join('')+'</div></div>';
+     ims.slice(1).map(function(im,j){var i=j+1;return '<div class="frame"><button type="button" class="shot" data-lb="'+i+'" aria-label="Ampliar imagen '+(i+1)+' de '+n+'"><img loading="lazy" src="'+esc(im.src)+'" alt="'+esc(alt(i))+'"><span class="zoom">Ampliar »</span></button><span class="n">'+(i+1)+' / '+n+' <span style="color:var(--accent)">▸</span></span>'+pieH(i,'pie-f')+'</div>';}).join('')+'</div></div>';
    vis.innerHTML=h; if(n===1)lay.classList.add('single');
   }
  } else { vis.remove(); lay.classList.add('single'); }
@@ -324,8 +345,8 @@ function listado(meta,cat){
  });
 }
 
-Promise.all([get('meta'),get('catalogo'),get('titulos').catch(function(){return {};})]).then(function(r){
- TIT=r[2]||{};
+Promise.all([get('meta'),get('catalogo'),get('titulos').catch(function(){return {};}),get('ajustes_posts').catch(function(){return {};})]).then(function(r){
+ TIT=r[2]||{};AJ=r[3]||{};
  // logos y avatares fijados al mismo commit que el código (así no se quedan versiones viejas en caché)
  if(window.INC_BASE)r[1].medios.forEach(function(m){['av','avw','logo'].forEach(function(k){if(m[k])m[k]=m[k].replace('https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/',INC_BASE);});});
  autocompleta(r[1]);

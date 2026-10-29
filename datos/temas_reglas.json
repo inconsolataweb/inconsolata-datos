@@ -50,7 +50,7 @@
  {
   "tema": "Catástrofes y accidentes",
   "bloque": "Actualidad",
-  "etiquetas": "accidente ferroviario santiago|germanwings|mh370|dana valencia|volcán la palma|tifón haiyan",
+  "etiquetas": "accidente ferroviario santiago|germanwings|mh370|dana valencia|volcán la palma|tifón haiyan|accidente tren urda|accidente ferroviario toledo|accidente urda",
   "texto": "\\bterremotos?\\b|\\bse[ií]smo\\b|\\btsunami\\b|\\bhurac[aá]n\\b|\\btif[oó]n\\b|\\binundaci\\w+|\\bDANA\\b|\\bvolc[aá]n\\b|\\berupci[oó]n\\b|\\baccidente (a[eé]reo|ferroviario)\\b|\\bnaufragio\\b|\\bincendios? forestal|\\bcat[aá]strofe\\b|\\bapag[oó]n\\b"
  },
  {

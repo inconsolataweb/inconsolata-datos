@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 D = lambda f: os.path.join(RAIZ, 'datos', f)
 BLOG = 'saulcastillo'
-RELEER = 40          # cuántos posts recientes se vuelven a leer siempre (ediciones)
+RELEER = int(os.environ.get('RELEER') or 40)   # cuántos posts recientes se vuelven a leer siempre (ediciones); RELEER=99999 relee todo
 EXCLUIR = {'xaora', 'invitados', 'talie'}
 NO_AUTORES = {'Sao Paulo', 'Nobel de Medicina'}   # nombres que se colaron como autores y no lo son
 SERIES = ['aquí·allí', 'a fondo', 'sala de los horrores', 'teletipos', 'epílogo', 'inconsolab', 'entrevistas', 'audios', 'medios regionales', 'invitados']
@@ -47,6 +47,18 @@ def api_posts():
         for p in ps:
             yield p
         off += 20
+
+def api_post(pid):
+    if os.environ.get('API_LOCAL'):
+        return None
+    u = f'https://api.tumblr.com/v2/blog/{BLOG}.tumblr.com/posts?api_key={os.environ["TUMBLR_API_KEY"]}&id={pid}'
+    try:
+        with urllib.request.urlopen(u, timeout=60) as r:
+            ps = json.load(r)['response']['posts']
+        return ps[0] if ps else None
+    except Exception as e:
+        print('No se pudo leer el post', pid, e)
+        return None
 
 # ---------------------------------------------------------------- extracción
 TAG = re.compile(r'<[^>]+>')
@@ -134,6 +146,16 @@ IDX = json.load(open(D('indice.json')))
 ALIAS = json.load(open(D('alias.json')))
 REGLAS = json.load(open(D('temas_reglas.json')))
 ESP = json.load(open(D('especiales.json')))
+# ajustes hechos desde el panel de portada: etiquetas que se añaden o se quitan a un post (sin tocar Tumblr)
+try:
+    AJ = json.load(open(D('ajustes_posts.json')))
+except Exception:
+    AJ = {}
+# etiquetas originales de Tumblr de cada post, para enseñarlas en el panel
+try:
+    ETQ = json.load(open(D('etiquetas.json')))
+except Exception:
+    ETQ = {}
 # nombres nuevos que no se publican hasta que se revisen (autores y medios que no están en el catálogo)
 try:
     PEND = json.load(open(D('pendientes.json')))
@@ -169,8 +191,16 @@ def nombres(s):
     s = re.sub(r'\s+(?:y|e|&)\s+', ', ', s)
     return [x.strip(' .,;:') for x in s.split(',') if len(x.strip(' .,;:').split()) >= 2]
 
+def con_ajustes(pid, tags):
+    aj = AJ.get(pid) or {}
+    menos = {nz(t) for t in aj.get('menos', [])}
+    tags = [t for t in tags if nz(t) not in menos]
+    ya = {nz(t) for t in tags}
+    return tags + [t for t in aj.get('mas', []) if nz(t) not in ya]
+
 def clasificar(p):
-    tags = p.get('tags', [])
+    ETQ[str(p['id'])] = p.get('tags', [])
+    tags = con_ajustes(str(p['id']), p.get('tags', []))
     tl = [t.lower().strip() for t in tags]
     if EXCLUIR & set(tl):
         return None
@@ -246,14 +276,33 @@ def clasificar(p):
 
 # ---------------------------------------------------------------- actualización
 def main():
+    if os.environ.get('ETIQUETAS_TODAS'):
+        # una pasada por todo el archivo solo para guardar las etiquetas originales (no reclasifica nada)
+        for p in api_posts():
+            ETQ[str(p['id'])] = p.get('tags', [])
+        print('Etiquetas leídas:', len(ETQ))
     existentes = {p['i']: p for p in IDX['posts']}
     nuevos, releidos = 0, 0
     vistos = 0
-    for p in api_posts():
-        vistos += 1
+    leidos = set()
+    def mas_ajustados():
+        # los posts con etiquetas cambiadas desde el panel se releen siempre, aunque sean antiguos
+        for pid in AJ:
+            if pid not in leidos and pid in existentes and (AJ[pid].get('mas') or AJ[pid].get('menos')):
+                q = api_post(pid)
+                if q:
+                    yield q
+    def todos():
+        nonlocal vistos
+        for p in api_posts():
+            vistos += 1
+            if str(p['id']) in existentes and vistos > RELEER:
+                break
+            yield p
+        yield from mas_ajustados()
+    for p in todos():
         pid = str(p['id'])
-        if pid in existentes and vistos > RELEER:
-            break
+        leidos.add(pid)
         if p.get('state', 'published') != 'published':
             continue
         q = clasificar(p)
@@ -263,7 +312,8 @@ def main():
             releidos += 1
             # lo ya revisado a mano se conserva: se suma a lo detectado ahora, nunca se pierde
             old = existentes[pid]
-            for key in ('a', 'm', 'h', 'k'):
+            aj = AJ.get(pid) or {}
+            for key in (('a', 'm') if (aj.get('mas') or aj.get('menos')) else ('a', 'm', 'h', 'k')):
                 q[key] = sorted(set(q[key]) | set(old.get(key, [])), key=lambda x: (str(type(x)), x))
         else:
             nuevos += 1
@@ -275,6 +325,8 @@ def main():
     # especiales: posts con su etiqueta
     for e in ESP:
         ks = {nz(t).replace(' ', '') for t in e['tags']}
+        quitados = {pid for pid, aj in AJ.items() if ks & {nz(t).replace(' ', '') for t in aj.get('menos', [])}}
+        e['posts'] = [i for i in e['posts'] if i not in quitados]
         for q in posts:
             if '_tags' in q and ks & {nz(t).replace(' ', '') for t in q['_tags']} and q['i'] not in e['posts']:
                 e['posts'].append(q['i'])
@@ -296,6 +348,7 @@ def main():
         for n in PEND[k]:
             PEND[k][n] = sorted(set(PEND[k][n]))
     json.dump(PEND, open(D('pendientes.json'), 'w'), ensure_ascii=False, indent=1)
+    json.dump(ETQ, open(D('etiquetas.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     print('Pendientes de revisar:', {k: len(v) for k, v in PEND.items()})
     print(f'Posts nuevos: {nuevos} · releídos: {releidos} · total: {len(posts)}')
 

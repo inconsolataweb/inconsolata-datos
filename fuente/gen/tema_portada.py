@@ -84,6 +84,11 @@ EXTRA = """
 .hero-meta .k-av{filter:none;width:1.6em;height:1.6em;vertical-align:-.45em}
 .hero-meta a{display:inline-flex;align-items:center}
 .hero-meta{align-items:center}
+.hm-avs{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
+.hm-avs a{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.14);font-weight:800}
+.hm-avs .k-av{width:24px!important;height:24px!important;margin:0!important;vertical-align:0}
+.hm-n{font-family:'Archivo',sans-serif;font-weight:800}
+.muchos .k-av{margin-right:.15em}
 .hero-meta span{font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;line-height:1.6em}
 .masthead.choca .prueba{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;max-width:460px;margin:10px 0 34px}
 .masthead.choca{flex-wrap:wrap}
