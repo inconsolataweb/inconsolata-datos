@@ -204,6 +204,9 @@ mark.subr{background:none;color:inherit;padding:.06em .24em;margin:0 -.08em;back
 
 JS = r"""
 (function(){
+// iconos: los del código mandan sobre los que lleve pegados el tema (así un icono nuevo no obliga a volver a pegarlo)
+(function(){var d=document.createElement('div');d.innerHTML=__SYMS__;var sv=d.querySelector('svg');if(!sv)return;[].forEach.call(sv.querySelectorAll('symbol'),function(x){var o=document.getElementById(x.id);if(o)o.remove();});(document.body||document.documentElement).insertBefore(sv,(document.body||document.documentElement).firstChild);})();
+(function(){var y=document.getElementById('y-now');if(y)y.textContent=new Date().getFullYear();})();
 var CDN=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'datos/';
 var LANZAMIENTO='2026-10-27';
 var TN=__TN__, TS=__TS__, SECN={m:'mucho más',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic'};
@@ -469,7 +472,7 @@ LIST = """{block:IndexPage}
 _H = os.path.dirname(os.path.abspath(__file__))
 _CAT = next(p for p in (os.path.join(_H, '..', '..', 'datos', 'catalogo.json'), '/home/claude/inconsolata-datos/datos/catalogo.json') if os.path.exists(p))
 _TEM = [t['n'] for t in json.load(open(_CAT))['temas']]
-JS_FINAL = JS.replace('__VJS__', VJS.replace('ESPIRAL', json.dumps(ESPIRAL_COLOR))).replace('__TN__', json.dumps({k: v[0] for k, v in TIPOS.items()}, ensure_ascii=False)).replace('__TS__', json.dumps([tslug(n) for n in _TEM])).replace('__PJS__', PJS).replace('__PAGJS__', PAG_JS)
+JS_FINAL = JS.replace('__SYMS__', json.dumps('<svg width="0" height="0" style="position:absolute" aria-hidden="true">' + re.sub(r'</?svg[^>]*>', '', symbols() + tema_symbols()) + '</svg>', ensure_ascii=False)).replace('__VJS__', VJS.replace('ESPIRAL', json.dumps(ESPIRAL_COLOR))).replace('__TN__', json.dumps({k: v[0] for k, v in TIPOS.items()}, ensure_ascii=False)).replace('__TS__', json.dumps([tslug(n) for n in _TEM])).replace('__PJS__', PJS).replace('__PAGJS__', PAG_JS)
 JS_FINAL += r"""
 (function(){var h=document.documentElement,v=null;try{v=localStorage.getItem('inc-version');}catch(e){}
  if(v==='completa')h.classList.remove('lite');else if(v==='lite')h.classList.add('lite');
@@ -513,7 +516,7 @@ page = f"""<!DOCTYPE html>
 </main>
 <footer>
 <div class="cmyk-bar" aria-hidden="true"><span style="background:#00A0DC"></span><span style="background:#66C6EA"></span><span style="background:#E5007E"></span><span style="background:#EF66B2"></span><span style="background:#FFD400"></span><span style="background:#FFE566"></span><span style="background:#16140F"></span><span style="background:#7A766C"></span></div>
-<div class="wrap foot"><span class="soft" style="font-size:56px;line-height:1">inc<span style="color:#D1006F">»</span></span><span>© inconsolata» 2011–<span id="y-now">{{CurrentYear}}</span> · un blog de Saúl Castillo<br><button type="button" class="ver-sw" data-version="lite" hidden>Ver la versión lite</button></span><span style="display:flex;gap:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px"><a href="https://x.com/inconsolata">X</a><a href="{{RSS}}">RSS</a><a href="{APOYA}" style="color:var(--yellow)">Apóyanos »</a></span></div>
+<div class="wrap foot"><span class="soft" style="font-size:56px;line-height:1">inc<span style="color:#D1006F">»</span></span><span>© inconsolata» 2011–<span id="y-now">2026</span> · un blog de Saúl Castillo<br><button type="button" class="ver-sw" data-version="lite" hidden>Ver la versión lite</button></span><span style="display:flex;gap:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px"><a href="https://x.com/inconsolata">X</a><a href="{{RSS}}">RSS</a><a href="{APOYA}" style="color:var(--yellow)">Apóyanos »</a></span></div>
 </footer>
 </div>
 {LB_HTML}
