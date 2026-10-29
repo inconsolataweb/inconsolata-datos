@@ -36,6 +36,9 @@ HEAD = (f'<header class="head"><a href="/" class="brand soft" aria-label="incons
         '<div class="mh-prog" aria-hidden="true"><span id="mh-bar"></span></div></div>')
 
 TCSS = """
+.crumbs .k-esp{color:var(--accent)}
+.ficha .esps{margin-top:14px}
+
 .pie-aj{font-family:'Archivo',sans-serif;font-size:14px;line-height:1.45;color:var(--muted);margin:14px 0 0;padding-left:12px;border-left:3px solid var(--accent);text-align:left}
 .pie-f{display:block;font-family:'Archivo',sans-serif;font-size:12px;line-height:1.35;color:var(--muted);margin-top:4px}
 
@@ -216,6 +219,7 @@ function ajustes(body,aj,s){if(!aj)return;
 function post(art,meta,cat,medido){
  var id=rid(art), d=art.dataset.date, mt=meta[id]||['',[],[],[],[]];
  var s=mt[0], tipos=mt[1], meds=mt[2].map(function(i){return cat.medios[i];}), auts=mt[3].map(function(i){return cat.autores[i];}), tems=mt[4];
+ var esp=mt[5]&&cat.esp&&cat.esp[mt[5]]?{slug:mt[5],n:cat.esp[mt[5]]}:null;
  var body=art.querySelector('.body'), raw=art.querySelector('.post-raw'); unwrap(body);
  // imágenes: fotos «antiguas» de Tumblr + figuras del cuerpo (formato nuevo)
  var ims=[];
@@ -249,8 +253,10 @@ function post(art,meta,cat,medido){
  if(h1.classList.contains('auto'))h1.textContent=t; else h1.innerHTML=destaca(t); document.title=quita(t)+' · inconsolata»';
  if(tipos[0]){art.querySelector('.title').insertAdjacentHTML('beforeend',ico(tipos[0],'big-ico'));}
  // migas
- var cr='<a href="/">Portada</a><i>»</i>'+(s&&s!=='m'&&s!=='x'?'<a href="/tagged/'+encodeURIComponent(SECN[s])+'">'+SECN[s]+'</a>':tipos[0]?'<a href="/buscador#k='+tipos[0]+'">'+esc(TN[tipos[0]])+'</a>':'<span>post</span>');
- if(meds[0])cr+='<i>»</i><a href="'+fichaMedio(meds[0])+'">'+esc(meds[0].n)+'</a>';
+ var cr='<a href="/">inconsolata</a><i>»</i>'+(s&&s!=='m'&&s!=='x'?'<a href="/tagged/'+encodeURIComponent(SECN[s])+'">'+SECN[s]+'</a>':tipos[0]?'<a href="/buscador#k='+tipos[0]+'">'+esc(TN[tipos[0]])+'</a>':'<span>post</span>');
+ if(esp)cr+='<i>»</i><a class="k-esp" href="/especiales#'+esc(esp.slug)+'">'+esc(esp.n)+'</a>';
+ if(meds.length>3)cr+='<i>»</i><span>'+meds.length+' medios</span>';
+ else if(meds.length)cr+='<i>»</i>'+meds.map(function(m){return '<a href="'+fichaMedio(m)+'">'+esc(m.n)+'</a>';}).join(', ').replace(/, (<a [^>]*>[^<]*<\/a>)$/,' y $1');
  art.querySelector('.crumbs').innerHTML=cr;
  if(d<LANZAMIENTO)art.querySelector('.legacy').hidden=false;
  // cuerpo: fuera el «⩔» inicial, letra capitular, línea de fuente como bloque negro, fuera la caja de apoyo antigua
@@ -324,7 +330,7 @@ function post(art,meta,cat,medido){
  if(auts.length&&s!=='m'&&s!=='x')dl+='<dt>Créditos</dt><dd>'+auts.map(function(a){return '<a class="credit" href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(', ')+'</dd>';
  var lgs=meds.filter(function(m){return m.logo;}).slice(0,6);
  var logo=lgs.length?'<div class="m-id'+(lgs.length>1?' multi':'')+'">'+lgs.map(function(m){return '<a href="'+fichaMedio(m)+'" aria-label="Ficha de '+esc(m.n)+'"><img class="m-logo" src="'+m.logo+'" alt="Logo de '+esc(m.n)+'" onerror="var d=this.closest(\'.m-id\');this.parentNode.remove();if(d&&!d.querySelector(\'img\'))d.remove()"></a>';}).join('')+'</div>':'';
- art.querySelector('.ficha').innerHTML='<span class="tape" aria-hidden="true"></span><span class="caps">Ficha »</span>'+logo+'<dl>'+dl+'</dl>'+tm;
+ art.querySelector('.ficha').innerHTML='<span class="tape" aria-hidden="true"></span><span class="caps">Ficha »</span>'+logo+'<dl>'+dl+'</dl>'+tm+(esp?'<div class="temas esps"><span class="caps">Especial »</span><a class="esp" href="/especiales#'+esc(esp.slug)+'">'+esc(esp.n)+'</a></div>':'');
  if(sr)lay.insertAdjacentHTML('afterend',serieHTML(sr));
  if(lb.length&&window.initLB)initLB(lb);
 }
@@ -387,7 +393,7 @@ RAW_PHOTOS = """<div class="post-raw" aria-hidden="true">{block:Photo}<img data-
 PERMALINK = f"""{{block:PermalinkPage}}{{block:Posts}}
 <article class="post" data-id="{{PostID}}" data-perm="{{Permalink}}" data-tags="{{block:Tags}}{{Tag}}|{{/block:Tags}}" data-root="{{block:RebloggedFrom}}{{ReblogRootURL}}{{/block:RebloggedFrom}}" data-date="{{Year}}-{{MonthNumberWithZero}}-{{DayOfMonthWithZero}}">
 <div style="padding-top:20px">{LEGACY}</div>
-<div class="crumbs caps"><a href="/">Portada</a></div>
+<div class="crumbs caps"><a href="/">inconsolata</a></div>
 <section class="title"><h1 class="soft">{{block:Title}}{{Title}}{{/block:Title}}</h1></section>
 <section class="layout">
 <div class="visual"></div>

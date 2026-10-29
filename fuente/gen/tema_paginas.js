@@ -4,7 +4,7 @@ var RUTA=(location.pathname.match(/\/(buscador|medios|autores|estadisticas|espec
 var Y1=new Date().getFullYear(),TIPOS_ORD=['info','carto','port','ilus','foto','video','publi','online'];
 var MES3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 function fcorta(d){return +d.slice(8,10)+' '+MES3[+d.slice(5,7)-1]+' '+d.slice(0,4);}
-function crumbs(a){return '<div class="crumbs caps"><a href="/">Portada</a>'+a.map(function(x){return '<i>»</i>'+(x[1]?'<a href="'+x[1]+'">'+esc(x[0])+'</a>':'<span>'+esc(x[0])+'</span>');}).join('')+'</div>';}
+function crumbs(a){return '<div class="crumbs caps"><a href="/">inconsolata</a>'+a.map(function(x){return '<i>»</i>'+(x[1]?'<a href="'+x[1]+'">'+esc(x[0])+'</a>':'<span>'+esc(x[0])+'</span>');}).join('')+'</div>';}
 function tituloP(p){return quita(TIT[p.i]||p.t||'')||'Entrada sin título';}
 function contar(ps,f){var c={};ps.forEach(function(p){f(p).forEach(function(v){c[v]=(c[v]||0)+1;});});return Object.keys(c).sort(function(a,b){return c[b]-c[a];}).map(function(k){return [k,c[k]];});}
 function cartaP(A,p,i){var meds=p.m.slice(0,2).map(function(j){return A.medios[j].n;}).join(' · '),auts=p.a.slice(0,3).map(function(j){return A.autores[j].n;});

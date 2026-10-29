@@ -164,7 +164,7 @@ function vX(o){
  if(!r1){var c=id;for(var q=0;q<4;q++){c=vecino(c,/^EXTRA!/i,true);if(!c)break;r1+='<a href="/post/'+c+'">'+esc(TIT[c].replace(/^EXTRA!\s*/i,''))+'</a>';}}
  var x=nuevoTop('mm-top');
  x.top.innerHTML=(d<LANZAMIENTO?'<div class="wrap">'+LEG+'</div>':'')+'<section class="xhero"><div class="wrap inner"><div class="l">'+
-  '<div class="crumbs caps" style="padding:0"><a href="/" style="color:#fff">Portada</a><i style="color:var(--yellow)">»</i><a href="/tagged/EXTRA!" style="color:#fff">EXTRA!</a></div>'+
+  '<div class="crumbs caps" style="padding:0"><a href="/" style="color:#fff">inconsolata</a><i style="color:var(--yellow)">»</i><a href="/tagged/EXTRA!" style="color:#fff">EXTRA!</a></div>'+
   '<h1 class="xw" aria-label="EXTRA! número '+nn+'"><span aria-hidden="true">E</span><span aria-hidden="true">x</span><span aria-hidden="true">t</span><span aria-hidden="true">r</span><span aria-hidden="true">a</span><span aria-hidden="true">!</span></h1></div>'+
   '<div class="r"><span class="xnum">nº '+nn+'</span><p>'+esc(intro)+'</p><div class="meta">'+(mes?'<span>'+mes[0].toUpperCase()+mes.slice(1)+' de '+anioDe(mes,d)+'</span>':'<span>'+fecha(d)+'</span>')+(items.length?'<span>'+n+' piezas</span><span>'+Object.keys(meds).length+' medios</span>':'<span>'+n+' imágenes</span>')+'</div></div></div></section>';
  x.main.innerHTML='<section class="gal"><div class="gal-head"><span class="caps">Las páginas · '+n+'</span><span style="font-size:13px;font-weight:600">Pulsa para ampliar »</span></div><div class="masonry">'+fr+'</div></section>'+
@@ -221,7 +221,7 @@ function vB(o){
  var toc=heads.length>=2?'<aside class="toc" aria-label="En este post"><nav><span class="caps" style="margin-bottom:6px">En este post</span>'+heads.map(function(h){return '<a href="#'+h.id+'"><i>»</i>'+esc(h.t)+'</a>';}).join('')+'</nav></aside>':'';
  var leg=art.querySelector('.legacy'),endr=finRow(art);
  art.innerHTML=(d<LANZAMIENTO?'<div style="padding-top:20px">'+LEG+'</div>':'')+
-  '<div class="crumbs caps"><a href="/">Portada</a><i>»</i><a href="/tagged/'+encodeURIComponent(badges[0]||'metablog')+'">'+esc(badges[0]||'metablog')+'</a></div>'+
+  '<div class="crumbs caps"><a href="/">inconsolata</a><i>»</i><a href="/tagged/'+encodeURIComponent(badges[0]||'metablog')+'">'+esc(badges[0]||'metablog')+'</a></div>'+
   '<header class="mhead"><div class="badges">'+badges.map(function(x){return '<span class="badge">'+esc(x)+'</span>';}).join('')+'</div><h1 class="soft'+(t.length>60?' long':'')+'">'+destaca(t)+'</h1>'+
   '<div class="byline"><span>por Saúl Castillo</span><span>'+fecha(d)+'</span><span>'+mins+' minuto'+(mins>1?'s':'')+' de lectura</span></div></header>'+hero+
   '<article class="art">'+toc+'</article>'+endr;

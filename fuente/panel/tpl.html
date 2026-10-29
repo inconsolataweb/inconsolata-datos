@@ -150,7 +150,7 @@ function texto(n){var o=F[n].obj;
  if(n==='cronologia')return '{\n"visible": '+(o.visible?'true':'false')+',\n"hitos": '+lista(o.hitos||[])+'\n}\n';
  if(n==='avisos'){var fa=o.faldon&&o.faldon.t?linea(limpio(o.faldon)):'null';return '{\n"grandes": '+lista(o.grandes||[])+',\n"ligeros": '+lista(o.ligeros||[])+',\n"faldon": '+fa+'\n}\n';}
  var one=function(x){if(!x)return 'null';x=limpio(x);return Object.keys(x).length?linea(x):'null';};
- return '{\n"apertura": '+one(o.apertura)+',\n"fijos": '+lista(o.fijos||[])+',\n"ocultos": '+(o.ocultos&&o.ocultos.length?'['+o.ocultos.map(function(x){return JSON.stringify(x);}).join(', ')+']':'[]')+',\n"destacado": '+one(o.destacado)+'\n}\n';}
+ return '{\n"apertura": '+one(o.apertura)+',\n"fijos": '+lista(o.fijos||[])+',\n"ocultos": '+(o.ocultos&&o.ocultos.length?'['+o.ocultos.map(function(x){return JSON.stringify(x);}).join(', ')+']':'[]')+',\n"destacado": '+one(o.destacado)+(o.colores&&Object.keys(o.colores).filter(function(k){return o.colores[k];}).length?',\n"colores": '+JSON.stringify((function(){var c={};Object.keys(o.colores).forEach(function(k){if(o.colores[k])c[k]=o.colores[k];});return c;})()):'')+'\n}\n';}
 function sucio(n){return F[n].obj&&texto(n)!==F[n].orig;}
 
 // ---------- carga
@@ -158,7 +158,7 @@ function getJSON(n,conApi){
  if(conApi&&token())return fetch(API+n+'.json?ref=main',{headers:{Authorization:'Bearer '+token(),Accept:'application/vnd.github+json'},cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('GitHub '+r.status);return r.json();}).then(function(j){return {txt:b64d(j.content),sha:j.sha};});
  return fetch(RAW+n+'.json?'+Date.now()).then(function(r){if(!r.ok)throw new Error(n+' '+r.status);return r.text();}).then(function(t){return {txt:t,sha:null};});}
 function normal(n,o){o=o||{};if(n==='titulos'||n==='ajustes_posts')return o;if(n==='cronologia'){o.hitos=o.hitos||[];o.visible=!!o.visible;return o;}if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
- else{o.fijos=(o.fijos||[]).map(function(x){return typeof x==='string'?{id:x}:x;});o.ocultos=o.ocultos||[];if(typeof o.apertura==='string')o.apertura={id:o.apertura};if(typeof o.destacado==='string')o.destacado={id:o.destacado};}return o;}
+ else{o.colores=o.colores||{};o.fijos=(o.fijos||[]).map(function(x){return typeof x==='string'?{id:x}:x;});o.ocultos=o.ocultos||[];if(typeof o.apertura==='string')o.apertura={id:o.apertura};if(typeof o.destacado==='string')o.destacado={id:o.destacado};}return o;}
 function cargaArchivos(){return Promise.all(Object.keys(F).map(function(n){return getJSON(n,true).then(function(r){F[n].obj=normal(n,JSON.parse(r.txt));F[n].sha=r.sha;F[n].orig=texto(n);});}));}
 function carga(){
  Promise.all([cargaArchivos(),fetch(RAW+'archivo.json').then(function(r){return r.json();}),Promise.all([fetch(RAW+'etiquetas.json').then(function(r){return r.ok?r.json():{};}).catch(function(){return {};}),fetch(RAW+'temas_reglas.json').then(function(r){return r.json();}).catch(function(){return [];})]).then(function(x){ETQ=x[0];REG=x[1];}),fetch(RAW+'especiales.json').then(function(r){return r.json();})])
@@ -194,6 +194,8 @@ portada:function(){var M=F.portada_manual.obj,ap=M.apertura||{},de=M.destacado,d
   '<div class="fila" style="margin-top:14px">'+campo('Tamaño','tam',f,{tipo:'sel',ops:[['','Automático'],['grande','Grande'],['mediana','Mediana'],['pequeña','Pequeña']]})+campo('Otra imagen','img',f,{ph:'https://…jpg',ay:'opcional'})+vigencia(f)+'</div></div>';}).join(''):'<p class="ayuda" style="margin:0">Ninguno.</p>')+'</div>'+
  '<div class="card" data-sec="ocultos"><div class="cab"><b>Posts ocultos en la portada</b><button class="btn peq" data-elige="ocultos+">Ocultar un post</button></div><p class="ayuda" style="margin-bottom:12px">Siguen en el archivo y el buscador; solo desaparecen de la portada.</p>'+
  (M.ocultos.length?M.ocultos.map(function(id,i){return '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div style="flex:1">'+postBox(id,'ocultos:'+i)+'</div><button class="btn peq" data-borra-oc="'+i+'">Volver a mostrar</button></div>';}).join(''):'<p class="ayuda" style="margin:0">Ninguno.</p>')+'</div>'+
+ '<div class="card" data-sec="colores"><div class="cab"><b>Color de las casillas</b><button class="btn peq" data-elige="color+">Añadir post</button></div><p class="ayuda" style="margin-bottom:12px">Cambia el fondo de un post en la portada: el destacado de arriba o su casilla en «lo último». Negro para desgracias y luto; magenta y amarillo para destacar.</p>'+
+ (Object.keys(M.colores).length?Object.keys(M.colores).map(function(id){var c=M.colores[id];return '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><div style="flex:1">'+postBox(id,'color:'+id)+'</div><select data-col="'+id+'" style="width:auto">'+[['negro','Negro'],['magenta','Magenta'],['amarillo','Amarillo'],['blanco','Blanco']].map(function(o){return '<option value="'+o[0]+'"'+(c===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select><span aria-hidden="true" style="width:28px;height:28px;border:2px solid var(--ink);background:'+({negro:'#16140F',magenta:'#D1006F',amarillo:'#FFD400',blanco:'#fff'}[c]||'#fff')+'"></span><button class="btn peq" data-colq="'+id+'">Quitar</button></div>';}).join(''):'<p class="ayuda" style="margin:0">Ninguno: todos con su color de siempre.</p>')+'</div>'+
  '<div class="card" data-sec="destacado"><b>Destacado junto a «tal día como hoy»</b><div class="fila" style="margin-top:12px">'+
  '<label class="chk"><input type="radio" name="dm" value="auto"'+(dm==='auto'?' checked':'')+'> Por defecto (Proyectos · SISMOLIVE)</label><label class="chk"><input type="radio" name="dm" value="post"'+(dm==='post'?' checked':'')+'> Un post de la web</label><label class="chk"><input type="radio" name="dm" value="propio"'+(dm==='propio'?' checked':'')+'> Texto y enlace propios</label></div>'+
  (dm==='post'?postBox(de.id,'destacado')+'<div class="fila" style="margin-top:14px">'+campo('Antetítulo','k',de,{ph:'Destacado »',ay:'opcional'})+campo('Otra imagen','img',de,{ph:'https://…jpg',ay:'opcional'})+vigencia(de)+'</div>':'')+
@@ -301,6 +303,7 @@ document.addEventListener('input',function(e){var d0=e.target.dataset,aj0=AP&&F.
  if(TAB==='faldon'&&k==='t'){var fv=$('.faldon-v');if(fv){var x=esc(el.value).replace(/\s*»\s*/g,' <i>»</i> ')+' <i>»</i> ';fv.innerHTML=x+x;}}
  if(el.tagName==='SELECT')pinta();else estadoBarra();});
 document.addEventListener('change',function(e){var el=e.target,A=F.avisos.obj,M=F.portada_manual.obj;
+ if(el.dataset.col){M.colores[el.dataset.col]=el.value;pinta();return;}
  if(el.dataset.ajn!==undefined&&AP){var aj=F.ajustes_posts.obj[AP],o=el.dataset.ajn,n=String(Math.max(1,parseInt(el.value)||1));if(n!==o&&aj.pies[n]===undefined){aj.pies[n]=aj.pies[o];delete aj.pies[o];}pinta();return;}
  if(el.id==='ti-f'){TF=el.value;TN=40;pinta();return;}
  if(el.id==='cr-esp'&&el.value){F.cronologia.obj.hitos.push({esp:el.value});CQ='';CT='';pinta();return;}
@@ -313,6 +316,7 @@ document.addEventListener('change',function(e){var el=e.target,A=F.avisos.obj,M=
  if(el.name==='dm'){M.destacado=el.value==='auto'?null:el.value==='post'?{id:''}:{k:'Destacado »',t:'',p:'',u:'',img:''};pinta();}});
 document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var M=F.portada_manual.obj,A=F.avisos.obj;
  if(b.dataset.ap){AP=b.dataset.ap;pinta();return;}
+ if(b.dataset.colq){delete F.portada_manual.obj.colores[b.dataset.colq];pinta();return;}
  var AJ=F.ajustes_posts.obj,aj=AP?(AJ[AP]=AJ[AP]||{}):null;
  if(b.dataset.etq!==undefined&&aj){var t=b.dataset.etq,L=aj.menos=aj.menos||[],k=L.map(fold).indexOf(fold(t));if(k>=0)L.splice(k,1);else L.push(t);pinta();return;}
  if(b.dataset.mas!==undefined&&aj){aj.mas.splice(+b.dataset.mas,1);pinta();return;}
@@ -352,6 +356,8 @@ function pon(id){var M=F.portada_manual.obj,d=destino;
  if(d==='apertura')M.apertura=Object.assign(M.apertura||{},{id:id});
  else if(d==='destacado')M.destacado=Object.assign(M.destacado||{},{id:id});
  else if(d==='fijos+')M.fijos.push({id:id});
+ else if(d==='color+'){if(!M.colores[id])M.colores[id]='negro';}
+ else if(d.indexOf('color:')===0){var c0=M.colores[d.slice(6)];delete M.colores[d.slice(6)];M.colores[id]=c0;}
  else if(d==='aj'){AP=id;}
  else if(d==='crono+'){F.cronologia.obj.hitos.push({id:id,tipo:'pieza'});CQ='';}
  else if(d.indexOf('crono:')===0)F.cronologia.obj.hitos[+d.slice(6)].id=id;

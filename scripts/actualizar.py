@@ -421,7 +421,12 @@ def escribir_meta(idx):
     global ESP_DE_TEMA
     ESP_DE_TEMA = {e['de_tema']: e['slug'] for e in ESP if e.get('de_tema')}
     """Archivos ligeros para el tema: qué medio, autores, temas y tipo tiene cada post, y el catálogo de nombres."""
-    meta = {q['i']: [q['s'], q['k'], q['m'], q['a'], q['h']] for q in idx['posts']}
+    # especial de cada post (el más concreto: un capítulo gana a su especial madre)
+    ESP_POST = {}
+    for e in sorted(ESP, key=lambda e: (bool(e.get('cap_de')), -len(e['posts']))):
+        for i in e['posts']:
+            ESP_POST[i] = e['slug']
+    meta = {q['i']: [q['s'], q['k'], q['m'], q['a'], q['h']] + ([ESP_POST[q['i']]] if q['i'] in ESP_POST else []) for q in idx['posts']}
     json.dump(meta, open(D('meta.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     FM = json.load(open(D('fichas_medios.json')))
     AS = json.load(open(D('assets.json')))
@@ -439,6 +444,7 @@ def escribir_meta(idx):
                     'pais': f.get('pais', ''), 'cc': f.get('cc', '')})
     MI = {m['n']: i for i, m in enumerate(idx['medios'])}
     cat = {'medios': med, 'autores': [a['n'] for a in idx['autores']], 'am': [MI.get((a.get('m') or [''])[0], -1) for a in idx['autores']],
+           'esp': {e['slug']: e['titulo'] for e in ESP},
            'temas': [dict({'n': t['n'], 'b': t['b']}, **({'x': t['x']} if t.get('x') else {}), **({'e': ESP_DE_TEMA[t['n']]} if t['n'] in ESP_DE_TEMA else {})) for t in idx['temas']]}
     json.dump(cat, open(D('catalogo.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
 

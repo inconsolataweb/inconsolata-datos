@@ -84,6 +84,25 @@ EXTRA = """
 .hero-meta .k-av{filter:none;width:1.6em;height:1.6em;vertical-align:-.45em}
 .hero-meta a{display:inline-flex;align-items:center}
 .hero-meta{align-items:center}
+.k-esp{color:var(--accent);font-family:'Archivo',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;display:block;margin:2px 0 4px}
+.hero-card .k-esp{display:inline;color:var(--yellow);font-size:inherit;letter-spacing:inherit;margin:0}
+.sheet.dark .k-esp{color:var(--yellow)}
+.hero-card.c-negro{background:var(--ink)}
+.hero-card.c-amarillo{background:var(--yellow);color:var(--ink)}
+.hero-card.c-amarillo h1 a,.hero-card.c-amarillo .hero-meta a{color:var(--ink)}
+.hero-card.c-amarillo h1 em,.hero-card.c-amarillo .k-esp{color:var(--accent)}
+.hero-card.c-amarillo .hero-meta{border-top-color:var(--ink)}
+.hero-card.c-amarillo .k-av{filter:brightness(0)}
+.hero-card.c-blanco{background:#fff;color:var(--ink)}
+.hero-card.c-blanco h1 a,.hero-card.c-blanco .hero-meta a{color:var(--ink)}
+.hero-card.c-blanco h1 em,.hero-card.c-blanco .k-esp{color:var(--accent)}
+.hero-card.c-blanco .hero-meta{border-top-color:var(--ink)}
+.hero-card.c-blanco .k-av{filter:brightness(0)}
+.sheet.c-magenta{background:var(--accent);color:#fff}
+.sheet.c-magenta .tt,.sheet.c-magenta .kicker,.sheet.c-magenta .by{color:#fff}
+.sheet.c-magenta .k-esp{color:var(--yellow)}
+.sheet.c-magenta .k-av{filter:none}
+.sheet.c-amarillo{background:var(--yellow)}
 .hm-avs{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
 .hm-avs a{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.14);font-weight:800}
 .hm-avs .k-av{width:24px!important;height:24px!important;margin:0!important;vertical-align:0}
