@@ -50,6 +50,7 @@ TI = {
  'Titulares': g(f'<rect x="6" y="8" width="52" height="48"/><rect x="12" y="14" width="40" height="12" {F}/><path d="M12 34 H52 M12 42 H52 M12 50 H36" stroke-width="3"/>'),
  'Industria y crisis de medios': g(f'<path d="M6 12 H46 V56 H12 C8 56 6 54 6 50 Z"/><path d="M46 22 H56 V50 C56 54 54 56 50 56 H46"/><path d="M12 20 H40" stroke-width="6"/><path d="M14 32 L22 40 L30 34 L38 46"/><path d="M32 46 H38 V40" {F}/>'),
  'Datos y visualización': g(f'<path d="M8 6 V56 H58"/><circle cx="18" cy="44" r="4" {F}/><circle cx="28" cy="34" r="4" {F}/><circle cx="38" cy="38" r="4" {F}/><circle cx="48" cy="18" r="4" {F}/><path d="M14 50 L56 12" stroke-width="2.5" stroke-dasharray="4 5"/>'),
+ 'Urna': g('<path d="M22 30 V6 H42 V30"/><path d="M27 16 L31 21 L38 12"/><path d="M4 30 H60"/><path d="M8 30 V58 H56 V30"/><path d="M20 30 H44" stroke-width="7"/>'),
  'Tren': g(f'<rect x="15" y="5" width="34" height="40" rx="9"/><rect x="21" y="12" width="22" height="12" rx="2" {F}/><circle cx="23" cy="35" r="3" {F}/><circle cx="41" cy="35" r="3" {F}/><path d="M22 45 L15 57 M42 45 L49 57"/><path d="M6 57 H58"/><path d="M18 51 H46" stroke-width="3"/>'),
 }
 

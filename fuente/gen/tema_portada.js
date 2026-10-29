@@ -42,7 +42,7 @@ var META0={};
 function espDe(p){var sl=(META0[p.id]||[])[5];return sl&&cat0&&cat0.esp&&cat0.esp[sl]?{slug:sl,n:cat0.esp[sl]}:null;}
 function espK(p,cls){var e=espDe(p);return e?'<span class="'+(cls||'k-esp')+'">'+esc(e.n)+' »</span>':'';}
 function tituloDe(p){return p.s==='m'?'mucho más':p.t;}
-function kicker(p,cls){var m=p.meds[0];if(p.meds.length>3)return '<span class="'+(cls||'kicker')+' muchos">'+p.meds.filter(function(x){return x.avw;}).map(function(x){return '<img class="k-av" src="'+esc(x.avw)+'" alt="" title="'+esc(x.n)+'" onerror="this.remove()">';}).join('')+'» '+p.meds.length+' medios · '+ddmm(p.d)+'</span>';return '<span class="'+(cls||'kicker')+'">'+(m&&m.avw?'<img class="k-av" src="'+esc(m.avw)+'" alt="">':'')+'» '+(m?esc(m.n)+' · ':'')+ddmm(p.d)+'</span>';}
+function kicker(p,cls){return '<span class="'+(cls||'kicker')+(p.meds.length>1?' muchos':'')+'">'+(p.meds.length?medsK(p.meds)+' · ':'» ')+ddmm(p.d)+'</span>';}
 
 // ---------- piezas
 function hero(p){var im=p.ims[0];
@@ -50,7 +50,7 @@ function hero(p){var im=p.ims[0];
  return '<section class="hero">'+(im?'<a href="'+esc(p.u)+'" class="hero-img"><div class="ph ht-k">'+img(im.big,(TN[p.k[0]]||'Imagen')+(p.meds[0]?' de '+p.meds[0].n:''))+'</div></a>':'')+
   '<div class="hero-card'+(im?'':' solo')+(p.col?' c-'+p.col:'')+'"><span class="caps" style="letter-spacing:3px">'+ki+(espDe(p)?' <a class="k-esp" href="/especiales#'+esc(espDe(p).slug)+'">'+esc(espDe(p).n)+' »</a>':'')+'</span><h1 class="soft"><a href="'+esc(p.u)+'">'+destaca(p.t)+'</a></h1>'+
   (p.txt?'<p>'+esc(primeras(p.txt.indexOf(quita(p.t))===0?p.txt.slice(quita(p.t).length):p.txt,230))+'</p>':'')+
-  '<div class="hero-meta">'+(p.meds.length>3?'<span class="hm-avs">'+p.meds.map(function(m){return '<a href="'+fichaMedio(m)+'" title="'+esc(m.n)+'" aria-label="Ficha de '+esc(m.n)+'">'+(m.avw?'<img class="k-av" src="'+esc(m.avw)+'" alt="" onerror="this.parentNode.textContent=\''+esc(m.n.charAt(0))+'\'">':esc(m.n.charAt(0)))+'</a>';}).join('')+'</span><span class="hm-n">» '+p.meds.length+' medios</span>':p.meds.slice(0,3).map(function(m){return '<a href="'+fichaMedio(m)+'">'+(m.avw?'<img class="k-av" src="'+esc(m.avw)+'" alt="" onerror="this.remove()">':'')+'» '+esc(m.n)+'</a>';}).join(''))+'<span>'+p.d.split('-').reverse().join('.')+'</span></div></div></section>';}
+  '<div class="hero-meta">'+(p.meds.length?'<span class="hm-avs">'+p.meds.map(function(m){return '<a href="'+fichaMedio(m)+'" title="'+esc(m.n)+'" aria-label="Ficha de '+esc(m.n)+'">'+(m.avw?'<img class="k-av" src="'+esc(m.avw)+'" alt="" onerror="this.parentNode.textContent=\''+esc(m.n.charAt(0))+'\'">':esc(m.n.charAt(0)))+'</a>';}).join('')+'</span><span class="hm-n">» '+(p.meds.length>3?p.meds.length+' medios':p.meds.map(function(m){return '<a href="'+fichaMedio(m)+'">'+esc(m.n)+'</a>';}).join(', ').replace(/, (<a [^>]*>[^<]*<\/a>)$/,' y $1'))+'</span>':'')+'<span>'+p.d.split('-').reverse().join('.')+'</span></div></div></section>';}
 
 // versión lite: «lo último» como lista sencilla (miniatura, medio y título)
 function liteFila(p){var im=p.ims[0],t=p.s==='m'?'mucho más » '+quita(p.t).replace(/^mucho m[aá]s\s*[»·]?\s*/i,''):p.s==='x'?(p.mes?'EXTRA! · lo mejor de '+p.mes:quita(p.t)):p.t;
@@ -66,7 +66,7 @@ function hoja(p,i,pos){
  if(p.s==='b'||p.s==='o'){return a+'class="tsheet"'+st+'>'+tape+'<div class="ts-t"><span class="caps">'+SECN[p.s]+' »</span><h3 class="soft'+(quita(p.t).length>60?' largo':'')+'">'+destaca(p.t)+'</h3>'+(p.txt?'<p>'+esc(primeras(p.txt,170))+'</p>':'')+'<span class="caps" style="color:var(--accent)">Seguir leyendo »</span></div>'+
   (p.ims.length?'<div class="tcoll" aria-hidden="true">'+p.ims.slice(0,3).map(function(im){return '<div class="ph ht-k">'+img(im.sm)+'</div>';}).join('')+'</div>':'')+'</a>';}
  var dark=p.k.indexOf('port')>=0&&p.k.length===1;
- if(p.col==='negro')dark=true;return a+'class="sheet'+(dark?' dark':'')+(p.col&&p.col!=='negro'?' c-'+p.col:'')+'"'+st+'>'+tape+(p.k[0]?ico(p.k[0],'ico '+(i%2?'tl':'tr')):'')+
+ if(p.col==='negro')dark=true;return a+'class="sheet'+(dark?' dark':'')+(p.col&&p.col!=='negro'?' c-'+p.col:'')+'"'+st+'>'+tape+icoP(p.id,p.k[0],'ico '+(i%2?'tl':'tr'))+
   (p.ims[0]?'<div class="ph '+TINTAS[i%4]+'" style="height:'+pos.h+'px">'+img(p.ims[0].sm,(TN[p.k[0]]||'Imagen')+(p.meds[0]?' de '+p.meds[0].n:''))+'</div>':'')+
   espK(p)+kicker(p)+'<span class="tt">'+esc(quita(p.t))+'</span>'+(p.auts.length?'<span class="by">por '+esc(p.auts.slice(0,3).join(', ').replace(/, ([^,]*)$/,' y $1'))+'</span>':'')+'</a>';}
 

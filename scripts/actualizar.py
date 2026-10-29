@@ -445,8 +445,27 @@ def escribir_meta(idx):
     MI = {m['n']: i for i, m in enumerate(idx['medios'])}
     cat = {'medios': med, 'autores': [a['n'] for a in idx['autores']], 'am': [MI.get((a.get('m') or [''])[0], -1) for a in idx['autores']],
            'esp': {e['slug']: e['titulo'] for e in ESP},
+           'espi': iconos_especiales(),
            'temas': [dict({'n': t['n'], 'b': t['b']}, **({'x': t['x']} if t.get('x') else {}), **({'e': ESP_DE_TEMA[t['n']]} if t['n'] in ESP_DE_TEMA else {})) for t in idx['temas']]}
     json.dump(cat, open(D('catalogo.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
+
+def iconos_especiales():
+    """Iconos propios de los especiales (datos/especiales_iconos.json, desde el panel): {slug: [icono, texto]}.
+    Los capítulos sin icono propio heredan el del especial del que forman parte."""
+    try:
+        EI = json.load(open(D('especiales_iconos.json')))
+    except (FileNotFoundError, ValueError):
+        EI = {}
+    by = {e['slug']: e for e in ESP}
+    out = {}
+    for e in ESP:
+        x, vistos = e, set()
+        while x and x['slug'] not in EI and x.get('cap_de') and x['slug'] not in vistos:
+            vistos.add(x['slug']); x = by.get(x['cap_de'])
+        o = EI.get(x['slug']) if x else None
+        if o and o.get('i'):
+            out[e['slug']] = [o['i'], str(o.get('t', ''))[:6]]
+    return out
 
 def escribir_portada(idx, frames):
     """Datos ligeros de la portada: lo último, el último mucho más y EXTRA! con sus fotogramas, el escaparate de temas,

@@ -33,7 +33,10 @@ _R = [
 ]
 _R += [("list('f-h', 'h', cnt(base, 'h', function (p) { return p.h; })", "list('f-h', 'h', cnt(base, 'h', function (p) { return p.h.filter(function (v) { return !D.temas[v].x; }); })"),
        ("var head = p.t || p.b || 'Entrada sin texto';", "var head = quita(TIT[p.i] || '') || p.t || p.b || 'Entrada sin texto';"),
-       ("  p.hay = ' ' + p.x + ' ' +", "  p.hay = ' ' + p.x + ' ' + (TIT[p.i] ? nz(quita(TIT[p.i])) + ' ' : '') +")]
+       ("  p.hay = ' ' + p.x + ' ' +", "  p.hay = ' ' + p.x + ' ' + (TIT[p.i] ? nz(quita(TIT[p.i])) + ' ' : '') +"),
+       ("'<span class=\"ico\">' + p.k.slice(0, 3).map(function (k) { return '<span title=\"' + TN[k] + '\">' + ico(k) + '</span>'; }).join('') + '</span></div>'",
+        "'<span class=\"ico\">' + (icoEsp(espSl(p.i), '', false) ? '<span>' + icoEsp(espSl(p.i), '', false) + '</span>' : p.k.slice(0, 3).map(function (k) { return '<span title=\"' + TN[k] + '\">' + ico(k) + '</span>'; }).join('')) + '</span></div>'"),
+       ("(meds ? ' · ' + esc(meds) : '')", "(p.m.length ? ' · ' + medsI(p.m) : '')")]
 for a, b in _R:
     assert a in _bjs, a[:60]
     _bjs = _bjs.replace(a, b)

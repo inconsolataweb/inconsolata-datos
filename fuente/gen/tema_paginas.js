@@ -7,9 +7,9 @@ function fcorta(d){return +d.slice(8,10)+' '+MES3[+d.slice(5,7)-1]+' '+d.slice(0
 function crumbs(a){return '<div class="crumbs caps"><a href="/">inconsolata</a>'+a.map(function(x){return '<i>»</i>'+(x[1]?'<a href="'+x[1]+'">'+esc(x[0])+'</a>':'<span>'+esc(x[0])+'</span>');}).join('')+'</div>';}
 function tituloP(p){return quita(TIT[p.i]||p.t||'')||'Entrada sin título';}
 function contar(ps,f){var c={};ps.forEach(function(p){f(p).forEach(function(v){c[v]=(c[v]||0)+1;});});return Object.keys(c).sort(function(a,b){return c[b]-c[a];}).map(function(k){return [k,c[k]];});}
-function cartaP(A,p,i){var meds=p.m.slice(0,2).map(function(j){return A.medios[j].n;}).join(' · '),auts=p.a.slice(0,3).map(function(j){return A.autores[j].n;});
- return '<a href="/post/'+esc(p.u)+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(p.k[0]?ico(p.k[0],'ico'):'')+
-  '<div class="ph">'+(p.im?'<img loading="lazy" src="'+esc(p.im)+'" alt="" onerror="this.remove()">':'')+'</div><span class="caps">» '+esc(meds||(SECN[p.s]||''))+' · '+fcorta(p.d)+'</span>'+
+function cartaP(A,p,i){var auts=p.a.slice(0,3).map(function(j){return A.autores[j].n;});
+ return '<a href="/post/'+esc(p.u)+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+icoP(p.i,p.k[0],'ico')+
+  '<div class="ph">'+(p.im?'<img loading="lazy" src="'+esc(p.im)+'" alt="" onerror="this.remove()">':'')+'</div><span class="caps">'+(p.m.length?medsI(p.m):'» '+esc(SECN[p.s]||''))+' · '+fcorta(p.d)+'</span>'+
   '<span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+(p.a.length>3?' y '+(p.a.length-3)+' más':'')+'</span>':'')+'</a>';}
 function barrasAnios(ps){var c={},mx=1,h='',ax='';ps.forEach(function(p){var y=+p.d.slice(0,4);c[y]=(c[y]||0)+1;});
  for(var y=2011;y<=Y1;y++)mx=Math.max(mx,c[y]||0);var n=Y1-2010;
@@ -181,13 +181,13 @@ function autorFicha(A,cat,FM,AX,ai){var a=A.autores[ai],ps=A.posts.filter(functi
   '<div class="wrap">'+barrasAnios(ps)+entradas(A,ps)+'</div>';
  return {html:html,init:function(){activaEntradas(A,ps);if(!W.length)return;var i=Math.floor(Math.random()*W.length);
   function show(){var w=W[i%W.length];document.getElementById('work-a').href='/post/'+w.u;document.getElementById('work-img').setAttribute('s'+'rc',w.im);
-   document.getElementById('work-n').textContent=(i%W.length)+1;document.getElementById('work-m').textContent='» '+w.m.slice(0,2).map(function(j){return A.medios[j].n;}).join(', ')+' · '+fcorta(w.d);}
+   document.getElementById('work-n').textContent=(i%W.length)+1;document.getElementById('work-m').innerHTML=medsI(w.m)+' · '+fcorta(w.d);}
   show();var nb=document.getElementById('work-next');if(nb)nb.addEventListener('click',function(){i+=1+Math.floor(Math.random()*(W.length-1));show();});}};}
 
 // ---------- especiales
 function rangoE(a,b){var f=function(d,y){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+(y?' de '+d.slice(0,4):'');};
  return a===b?f(a,1):a.slice(0,4)===b.slice(0,4)?'del '+f(a,0)+' al '+f(b,1):'del '+f(a,1)+' al '+f(b,1);}
-function icoE(cat,e){var ti=cat.temas.findIndex(function(t){return t.n===e.tema;});if(ti<0)ti=cat.temas.findIndex(function(t){return t.n===e.padre;});return ti>=0?TS[ti]:'';}
+function icoE(cat,e){if(ESPI[e.slug])return ESPI[e.slug];var ti=cat.temas.findIndex(function(t){return t.n===e.tema;});if(ti<0)ti=cat.temas.findIndex(function(t){return t.n===e.padre;});return ti>=0?TS[ti]:'';}
 function espIdx(ES,cat){
  var top=ES.filter(function(e){return !e.cap_de;}),by={};ES.forEach(function(e){by[e.slug]=e;});
  var g={};top.forEach(function(e){(g[e.padre]=g[e.padre]||[]).push(e);});
@@ -201,10 +201,10 @@ function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p
  var ps=x.posts.map(function(i){return byId[i];}).filter(Boolean).sort(function(a,b){return b.d.localeCompare(a.d);});
  document.title=x.titulo+' · especial · inconsolata»';
  var pi=cat.temas.findIndex(function(t){return t.n===x.padre;}),ic=icoE(cat,x),madre=x.cap_de?by[x.cap_de]:null;
- var carta=function(p){var meds=p.m.slice(0,2).map(function(i){return A.medios[i].n;}).join(' · '),auts=p.a.slice(0,3).map(function(i){return A.autores[i].n;});
+ var carta=function(p){var ie=icoEsp(espSl(p.i),'',false),auts=p.a.slice(0,3).map(function(i){return A.autores[i].n;});
   return '<a class="ec" href="/post/'+esc(p.u)+'"><div class="ph">'+(p.im?'<img loading="lazy" src="'+esc(p.im)+'" alt="" onerror="this.remove()">':'')+(p.s?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+
-   '<span class="ico">'+p.k.slice(0,3).map(function(k){return '<span title="'+esc(TN[k])+'"><svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#i-'+k+'"/></svg></span>';}).join('')+'</span></div>'+
-   '<span class="meta"><b>'+(+p.d.slice(8,10))+' '+MES3[+p.d.slice(5,7)-1]+'</b>'+(meds?' · '+esc(meds):'')+'</span><span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};
+   '<span class="ico">'+(ie?'<span>'+ie+'</span>':p.k.slice(0,3).map(function(k){return '<span title="'+esc(TN[k])+'"><svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#i-'+k+'"/></svg></span>';}).join(''))+'</span></div>'+
+   '<span class="meta"><b>'+(+p.d.slice(8,10))+' '+MES3[+p.d.slice(5,7)-1]+'</b>'+(p.m.length?' · '+medsI(p.m):'')+'</span><span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};
  var meses=function(L){var gr={};L.forEach(function(p){(gr[p.d.slice(0,7)]=gr[p.d.slice(0,7)]||[]).push(p);});
   return Object.keys(gr).map(function(k){var v=gr[k];return '<section class="mo"><h3>'+MESES[+k.slice(5,7)-1].replace(/^./,function(c){return c.toUpperCase();})+'<small>'+k.slice(0,4)+' · '+v.length+' '+(v.length===1?'entrada':'entradas')+'</small></h3><div class="g">'+v.map(carta).join('')+'</div></section>';}).join('');};
  var caps=(x.capitulos||[]).map(function(c){return by[c];}).filter(Boolean).sort(function(a,b){return (b.hasta||'').localeCompare(a.hasta||'');}),tl='';
