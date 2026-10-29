@@ -1,7 +1,6 @@
 {
 "grandes": [
- {"k": "Novedad", "t": "Conoce la *nueva* inconsolata»", "u": "/sobre-mi", "img": "https://64.media.tumblr.com/093da2d5a18de7d40895b9ad174fe7ed/dfb73906028a5e2a-ea/s1280x1920/a1ccf50f328829da941a6c0a54c285506f0887c7.jpg", "desde": "2026-10-20", "hasta": "2026-11-30"},
- {"k": "Especial", "t": "Elecciones *29-N*: encuestas, portadas y gráficos", "u": "/especiales#elecciones-29-n", "ico": "Elecciones"}
+ {"k": "Novedad", "t": "Conoce la *nueva* inconsolata»", "u": "/sobre-mi", "img": "https://64.media.tumblr.com/093da2d5a18de7d40895b9ad174fe7ed/dfb73906028a5e2a-ea/s1280x1920/a1ccf50f328829da941a6c0a54c285506f0887c7.jpg", "desde": "2026-10-20", "hasta": "2026-11-30"}
 ],
 "ligeros": [
  {"f": "2026-10-24", "t": "Los títulos destacan ya una palabra en magenta", "ico": "Tipografía"},
@@ -9,5 +8,5 @@
  {"f": "2026-10-20", "t": "El buscador permite filtrar por año y por tema", "u": "/buscador"},
  {"f": "2026-10-15", "t": "Añadidos los logos de 14 medios que faltaban"}
 ],
-"faldon": {"t": "Elecciones 29-N » encuestas, portadas y gráficos de la campaña", "u": "/especiales#elecciones-29-n", "ico": "Elecciones", "especial": "elecciones-29-n"}
+"faldon": {"t": "Accidente ferroviario en Toledo » reconstrucciones visuales de la trágica colisión", "u": "/especiales#accidente-tren-urda", "ico": "Tren", "especial": "accidente-tren-urda"}
 }
