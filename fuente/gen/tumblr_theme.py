@@ -206,6 +206,7 @@ JS = r"""
 (function(){
 // iconos: los del código mandan sobre los que lleve pegados el tema (así un icono nuevo no obliga a volver a pegarlo)
 (function(){var d=document.createElement('div');d.innerHTML=__SYMS__;var sv=d.querySelector('svg');if(!sv)return;[].forEach.call(sv.querySelectorAll('symbol'),function(x){var o=document.getElementById(x.id);if(o)o.remove();});(document.body||document.documentElement).insertBefore(sv,(document.body||document.documentElement).firstChild);})();
+(function(){var B=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/marca/';if(!document.querySelector('link[href*="assets/marca/"]')){[].forEach.call(document.querySelectorAll('link[rel~="icon"],link[rel="apple-touch-icon"]'),function(l){l.remove();});document.head.insertAdjacentHTML('beforeend','<link rel="icon" href="'+B+'favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="'+B+'favicon-32.png"><link rel="apple-touch-icon" href="'+B+'apple-touch-icon.png">');}})();
 (function(){var y=document.getElementById('y-now');if(y)y.textContent=new Date().getFullYear();})();
 var CDN=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'datos/';
 var LANZAMIENTO='2026-10-27';
@@ -496,7 +497,7 @@ page = f"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{block:PostTitle}}{{PostTitle}} · {{/block:PostTitle}}{{Title}}</title>
 <meta name="description" content="{{MetaDescription}}">
-<link rel="shortcut icon" href="{{Favicon}}">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/marca/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/marca/favicon-32.png"><link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/marca/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" href="{{RSS}}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
