@@ -38,6 +38,7 @@ HEAD = (f'<header class="head"><a href="/" class="brand soft" aria-label="incons
 TCSS = """
 .crumbs .k-esp{color:var(--accent)}
 .ficha .esps{margin-top:14px}
+.ficha dd{line-height:1.5}
 
 .pie-aj{font-family:'Archivo',sans-serif;font-size:14px;line-height:1.45;color:var(--muted);margin:14px 0 0;padding-left:12px;border-left:3px solid var(--accent);text-align:left}
 .pie-f{display:block;font-family:'Archivo',sans-serif;font-size:12px;line-height:1.35;color:var(--muted);margin-top:4px}
@@ -207,6 +208,7 @@ JS = r"""
 // iconos: los del código mandan sobre los que lleve pegados el tema (así un icono nuevo no obliga a volver a pegarlo)
 (function(){var d=document.createElement('div');d.innerHTML=__SYMS__;var sv=d.querySelector('svg');if(!sv)return;[].forEach.call(sv.querySelectorAll('symbol'),function(x){var o=document.getElementById(x.id);if(o)o.remove();});(document.body||document.documentElement).insertBefore(sv,(document.body||document.documentElement).firstChild);})();
 (function(){var B=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/marca/';if(!document.querySelector('link[href*="assets/marca/"]')){[].forEach.call(document.querySelectorAll('link[rel~="icon"],link[rel="apple-touch-icon"]'),function(l){l.remove();});document.head.insertAdjacentHTML('beforeend','<link rel="icon" href="'+B+'favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="'+B+'favicon-32.png"><link rel="apple-touch-icon" href="'+B+'apple-touch-icon.png">');}})();
+(function(){if(!document.querySelector('link[href*="Instrument+Sans"]'))document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">');})();
 (function(){var y=document.getElementById('y-now');if(y)y.textContent=new Date().getFullYear();})();
 var CDN=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'datos/';
 var LANZAMIENTO='2026-10-27';
@@ -530,5 +532,11 @@ page = f"""<!DOCTYPE html>
 # Tumblr no admite «{» sueltos en el CSS/JS que se parezcan a variables: comprobación rápida
 bad = re.findall(r'\{(?:text|color|font|image|lang|select):|\{[A-Z][A-Za-z0-9-]*\}', JS_FINAL)
 assert not bad, bad
+# texto: Instrument Sans en lugar de Archivo (Archivo se queda solo en el rótulo de EXTRA!, que es una marca)
+_IS = "Instrument Sans"
+page = page.replace("fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&", "fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&")
+page = re.sub(r"(font-family\s*:\s*|font\s*:[^;{}]*?\s)'?Archivo'?(?=\s*,|\s*;|\s*})", lambda m: m.group(1) + _IS, page)
+page = re.sub(r'font-family="Archivo,', "font-family=\"Instrument Sans,", page)
+page = page.replace(".xw{font-weight:900;font-stretch:62%", ".xw{font-family:'Archivo',sans-serif;font-weight:900;font-stretch:62%")
 open(OUT, 'w').write(page)
 print('ok', round(len(page.encode()) / 1024), 'KB')
