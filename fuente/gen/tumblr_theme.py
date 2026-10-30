@@ -41,6 +41,8 @@ TCSS = """
 .ficha dd{line-height:1.5}
 .hero-card p,.ficha dd,.fuente,.fuente p{font-family:'Instrument Sans',sans-serif!important}
 .ficha .esps{display:flex;justify-content:center}
+@media (max-width:760px){.main-sheet .shot{min-height:0}}
+html.lite .main-sheet .shot{min-height:0}
 
 .pie-aj{font-family:'Archivo',sans-serif;font-size:14px;line-height:1.45;color:var(--muted);margin:14px 0 0;padding-left:12px;border-left:3px solid var(--accent);text-align:left}
 .pie-f{display:block;font-family:'Archivo',sans-serif;font-size:12px;line-height:1.35;color:var(--muted);margin-top:4px}
