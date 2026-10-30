@@ -53,6 +53,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid v
 .post .pm{font-size:13px;color:var(--muted)}
 .post.vacio{color:var(--muted);font-size:14px;justify-content:center}
 .ico-sel{display:flex;gap:8px;align-items:center}
+.nuevos{margin:6px 0 0;font-size:14px;color:var(--muted)}
 .esp-ic{display:flex;gap:16px;align-items:flex-start}
 .ei-v svg,.ei-0{width:64px;height:64px;display:grid;place-items:center;color:var(--ink);border:2px solid var(--line);padding:6px;background:var(--paper);box-sizing:border-box}
 .ei-0{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
@@ -88,7 +89,7 @@ ol.pasos li{margin-bottom:8px}
 __SPRITE__
 <header>
 <div><div class="caps" style="color:var(--accent)">inconsolata»</div><h1 class="soft">Panel de <span>portada</span></h1></div>
-<div id="estado">Cargando los datos de la web…</div>
+<div id="estado">Cargando los datos de la web…</div><div class="nuevos"><button class="btn peq" id="b-nuevos" type="button">Buscar posts nuevos</button> <span id="nuevos-msg" role="status"></span></div>
 </header>
 <nav class="tabs" role="tablist" aria-label="Secciones del panel">
 <button role="tab" data-t="portada" aria-selected="true">Portada</button>
@@ -171,11 +172,27 @@ function getJSON(n,conApi){
 function normal(n,o){o=o||{};if(n==='titulos'||n==='ajustes_posts'||n==='especiales_iconos')return o;if(n==='cronologia'){o.hitos=o.hitos||[];o.visible=!!o.visible;return o;}if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
  else{o.colores=o.colores||{};o.fijos=(o.fijos||[]).map(function(x){return typeof x==='string'?{id:x}:x;});o.ocultos=o.ocultos||[];if(typeof o.apertura==='string')o.apertura={id:o.apertura};if(typeof o.destacado==='string')o.destacado={id:o.destacado};}return o;}
 function cargaArchivos(){return Promise.all(Object.keys(F).map(function(n){return getJSON(n,true).then(function(r){F[n].obj=normal(n,JSON.parse(r.txt));F[n].sha=r.sha;F[n].orig=texto(n);});}));}
+function ponPosts(A){MED=A.medios.map(function(m){return m.n;});porId={};
+ POSTS=A.posts.map(function(p){var t=TIT[p.i]||p.t||'';var tt=p.t||'';var ms=(p.m||[]).map(function(i){return MED[i];}).filter(Boolean);
+  var o={i:p.i,u:p.u,d:p.d,t:t,tt:tt,ms:ms,im:p.im||'',f:fold(t+' '+ms.join(' ')+' '+p.d)};porId[p.i]=o;return o;});}
+// un post recién publicado en Tumblr: se lanza la actualización de la web y, al acabar, se recargan los posts (sin tocar lo que estés editando)
+function buscaNuevos(){var tk=token(),m=$('#nuevos-msg'),b=$('#b-nuevos');if(!tk){m.textContent='Conecta antes el panel con GitHub (pestaña «Conexión»).';return;}
+ var H={Authorization:'Bearer '+tk,Accept:'application/vnd.github+json'},W='https://api.github.com/repos/'+REPO+'/actions/workflows/actualizar.yml',t0=new Date(Date.now()-60000).toISOString(),n0=POSTS.length;
+ b.disabled=true;m.textContent='Leyendo Tumblr… (unos 2 minutos)';
+ fetch(W+'/dispatches',{method:'POST',headers:H,body:JSON.stringify({ref:'main',inputs:{releer:'10'}})}).then(function(r){if(!r.ok)throw new Error('GitHub '+r.status);
+  return new Promise(function(ok,ko){var k=0;(function mira(){k++;fetch(W+'/runs?event=workflow_dispatch&per_page=1',{headers:H,cache:'no-store'}).then(function(r){return r.json();}).then(function(j){var x=(j.workflow_runs||[])[0];
+   if(x&&x.created_at>=t0&&x.status==='completed'){if(x.conclusion==='success')ok();else ko(new Error('la actualización ha fallado'));return;}
+   if(k>40){ko(new Error('tarda demasiado; prueba en unos minutos'));return;}setTimeout(mira,8000);}).catch(function(){setTimeout(mira,8000);});})();});})
+ .then(function(){return Promise.all([fetch(API+'archivo.json?ref=main',{headers:{Authorization:'Bearer '+tk,Accept:'application/vnd.github.raw'},cache:'no-store'}).then(function(r){return r.json();}),
+   fetch(API+'etiquetas.json?ref=main',{headers:{Authorization:'Bearer '+tk,Accept:'application/vnd.github.raw'},cache:'no-store'}).then(function(r){return r.ok?r.json():ETQ;}).catch(function(){return ETQ;}),
+   fetch(API+'especiales.json?ref=main',{headers:{Authorization:'Bearer '+tk,Accept:'application/vnd.github.raw'},cache:'no-store'}).then(function(r){return r.ok?r.json():ESP;}).catch(function(){return ESP;})]);})
+ .then(function(r){ponPosts(r[0]);ETQ=r[1];ESP=r[2];var d=POSTS.length-n0;m.textContent=d>0?(d===1?'Hay 1 post nuevo: ya puedes elegirlo.':'Hay '+d+' posts nuevos: ya puedes elegirlos.'):'Datos al día: no hay posts nuevos en Tumblr.';b.disabled=false;
+  $('#estado').textContent='Datos cargados: '+POSTS.length.toLocaleString('es')+' posts. Conectado a GitHub.';pinta();})
+ .catch(function(e){m.textContent='No se ha podido actualizar: '+e.message+'.';b.disabled=false;});}
+document.addEventListener('click',function(e){if(e.target.id==='b-nuevos')buscaNuevos();});
 function carga(){
  Promise.all([cargaArchivos(),fetch(RAW+'archivo.json').then(function(r){return r.json();}),Promise.all([fetch(RAW+'etiquetas.json').then(function(r){return r.ok?r.json():{};}).catch(function(){return {};}),fetch(RAW+'temas_reglas.json').then(function(r){return r.json();}).catch(function(){return [];})]).then(function(x){ETQ=x[0];REG=x[1];}),fetch(RAW+'especiales.json').then(function(r){return r.json();})])
- .then(function(r){var A=r[1];TIT=F.titulos.obj;MED=A.medios.map(function(m){return m.n;});ESP=r[3];
-  POSTS=A.posts.map(function(p){var t=TIT[p.i]||p.t||'';var tt=p.t||'';var ms=(p.m||[]).map(function(i){return MED[i];}).filter(Boolean);
-   var o={i:p.i,u:p.u,d:p.d,t:t,tt:tt,ms:ms,im:p.im||'',f:fold(t+' '+ms.join(' ')+' '+p.d)};porId[p.i]=o;return o;});
+ .then(function(r){var A=r[1];TIT=F.titulos.obj;ESP=r[3];ponPosts(A);
   $('#estado').textContent='Datos cargados: '+POSTS.length.toLocaleString('es')+' posts.'+(token()?' Conectado a GitHub.':' Sin conectar: ve a «Conexión» para publicar con un clic.');
   pintaTodo();})
  .catch(function(e){$('#estado').innerHTML='<b style="color:var(--accent)">No se han podido cargar los datos</b> ('+esc(e.message)+'). Comprueba la conexión y recarga.';});}
