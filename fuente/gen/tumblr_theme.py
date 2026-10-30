@@ -39,6 +39,8 @@ TCSS = """
 .crumbs .k-esp{color:var(--accent)}
 .ficha .esps{margin-top:14px}
 .ficha dd{line-height:1.5}
+.hero-card p,.ficha dd,.fuente,.fuente p{font-family:'Instrument Sans',sans-serif!important}
+.ficha .esps{display:flex;justify-content:center}
 
 .pie-aj{font-family:'Archivo',sans-serif;font-size:14px;line-height:1.45;color:var(--muted);margin:14px 0 0;padding-left:12px;border-left:3px solid var(--accent);text-align:left}
 .pie-f{display:block;font-family:'Archivo',sans-serif;font-size:12px;line-height:1.35;color:var(--muted);margin-top:4px}
@@ -384,7 +386,7 @@ function post(art,meta,cat,medido){
  if(auts.length&&s!=='m'&&s!=='x')dl+='<dt>Créditos</dt><dd>'+auts.map(function(a){return '<a class="credit" href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(', ')+'</dd>';
  var lgs=meds.filter(function(m){return m.logo;});
  var logo=lgs.length?'<div class="m-id'+(lgs.length>1?' multi':'')+(lgs.length>4?' mucho':'')+'">'+lgs.map(function(m){return '<a href="'+fichaMedio(m)+'" aria-label="Ficha de '+esc(m.n)+'"><img class="m-logo" src="'+m.logo+'" alt="Logo de '+esc(m.n)+'" onerror="var d=this.closest(\'.m-id\');this.parentNode.remove();if(d&&!d.querySelector(\'img\'))d.remove()"></a>';}).join('')+'</div>':'';
- art.querySelector('.ficha').innerHTML='<span class="tape" aria-hidden="true"></span><span class="caps">Ficha »</span>'+logo+'<dl>'+dl+'</dl>'+tm+(esp?'<div class="temas esps"><span class="caps">Especial »</span><a class="esp" href="/especiales#'+esc(esp.slug)+'">'+(ESPI[esp.slug]?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+ESPI[esp.slug]+'"/></svg>':'')+esc(esp.n)+'</a></div>':'');
+ art.querySelector('.ficha').innerHTML='<span class="tape" aria-hidden="true"></span><span class="caps">Ficha »</span>'+logo+'<dl>'+dl+'</dl>'+tm+(esp?'<div class="temas esps"><a class="esp" href="/especiales#'+esc(esp.slug)+'">'+(ESPI[esp.slug]?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+ESPI[esp.slug]+'"/></svg>':'')+esc(esp.n)+'</a></div>':'');
  if(sr)lay.insertAdjacentHTML('afterend',serieHTML(sr));
  if(lb.length&&window.initLB)initLB(lb);
 }
@@ -532,11 +534,7 @@ page = f"""<!DOCTYPE html>
 # Tumblr no admite «{» sueltos en el CSS/JS que se parezcan a variables: comprobación rápida
 bad = re.findall(r'\{(?:text|color|font|image|lang|select):|\{[A-Z][A-Za-z0-9-]*\}', JS_FINAL)
 assert not bad, bad
-# texto: Instrument Sans en lugar de Archivo (Archivo se queda solo en el rótulo de EXTRA!, que es una marca)
-_IS = "Instrument Sans"
+# Instrument Sans: solo el texto del destacado, de la ficha y del cuadro negro de los posts (el resto sigue en Archivo)
 page = page.replace("fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&", "fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&")
-page = re.sub(r"(font-family\s*:\s*|font\s*:[^;{}]*?\s)'?Archivo'?(?=\s*,|\s*;|\s*})", lambda m: m.group(1) + _IS, page)
-page = re.sub(r'font-family="Archivo,', "font-family=\"Instrument Sans,", page)
-page = page.replace(".xw{font-weight:900;font-stretch:62%", ".xw{font-family:'Archivo',sans-serif;font-weight:900;font-stretch:62%")
 open(OUT, 'w').write(page)
 print('ok', round(len(page.encode()) / 1024), 'KB')

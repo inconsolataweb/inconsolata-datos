@@ -658,7 +658,7 @@ var ICR={x:'<path fill="currentColor" d="M18.901 1.153h3.68l-8.04 9.19L24 22.846
  ig:'<rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="4.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="17.6" cy="6.4" r="1.4" fill="currentColor"/>',
  li:'<rect x="2" y="2" width="20" height="20" rx="3" fill="currentColor"/><path fill="#fff" d="M6.2 9.6h2.6V18H6.2zM7.5 5.6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM10.4 9.6h2.5v1.2c.4-.7 1.3-1.4 2.6-1.4 2.7 0 3.2 1.8 3.2 4.1V18h-2.6v-4c0-1 0-2.2-1.3-2.2s-1.6 1-1.6 2.1V18h-2.6z"/>',
  wiki:'<text x="12" y="17.5" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="currentColor">W</text>',
- be:'<text x="12" y="17" text-anchor="middle" font-family="Instrument Sans,Arial,sans-serif" font-size="13" font-weight="900" fill="currentColor">B\u0113</text>',
+ be:'<text x="12" y="17" text-anchor="middle" font-family="Archivo,Arial,sans-serif" font-size="13" font-weight="900" fill="currentColor">B\u0113</text>',
  web:'<circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 12h19M12 2.5c3 3.2 3 15.8 0 19M12 2.5c-3 3.2-3 15.8 0 19" fill="none" stroke="currentColor" stroke-width="1.8"/>',
  bus:'<circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.5 15.5l5.5 5.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
  link:'<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L11.6 6M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.6-1.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>'};
@@ -1262,8 +1262,8 @@ var ESPI_LBL={'t-urna':[50.5,15,40]};
 function prepEspIcos(cat){if(!cat||!cat.espi||prepEspIcos.hecho)return;prepEspIcos.hecho=1;var h='';
  Object.keys(cat.espi).forEach(function(sl){var v=cat.espi[sl],id=symN(v[0]),b=document.getElementById(id),body=b?b.innerHTML:EXTRA_SYM[id];if(!body)return;
   var t=String(v[1]||'').trim(),L=ESPI_LBL[id],lab='',fs;
-  if(t&&L){fs=Math.min(L[1],L[2]/Math.max(1,t.length)*1.75);lab='<text x="32" y="'+L[0]+'" text-anchor="middle" font-family="Instrument Sans,sans-serif" font-weight="800" font-size="'+fs.toFixed(1)+'" fill="var(--lbl,currentColor)" stroke="none">'+esc(t)+'</text>';}
-  else if(t){fs=Math.min(14,50/Math.max(1,t.length)*1.75);lab='<rect x="4" y="46" width="56" height="17" rx="2" fill="var(--lbl,currentColor)" stroke="none"/><text x="32" y="59" text-anchor="middle" font-family="Instrument Sans,sans-serif" font-weight="800" font-size="'+fs.toFixed(1)+'" fill="#fff" stroke="none">'+esc(t)+'</text>';}
+  if(t&&L){fs=Math.min(L[1],L[2]/Math.max(1,t.length)*1.75);lab='<text x="32" y="'+L[0]+'" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="800" font-size="'+fs.toFixed(1)+'" fill="var(--lbl,currentColor)" stroke="none">'+esc(t)+'</text>';}
+  else if(t){fs=Math.min(14,50/Math.max(1,t.length)*1.75);lab='<rect x="4" y="46" width="56" height="17" rx="2" fill="var(--lbl,currentColor)" stroke="none"/><text x="32" y="59" text-anchor="middle" font-family="Archivo,sans-serif" font-weight="800" font-size="'+fs.toFixed(1)+'" fill="#fff" stroke="none">'+esc(t)+'</text>';}
   h+='<symbol id="e-'+sl+'" viewBox="0 0 64 64" overflow="visible">'+body+lab+'</symbol>';ESPI[sl]='e-'+sl;ESPI_N[sl]=(cat.esp&&cat.esp[sl])||'';});
  if(h)document.body.insertAdjacentHTML('afterbegin','<svg width="0" height="0" style="position:absolute" aria-hidden="true">'+h+'</svg>');}
 function icoEsp(sl,cls,dos){var id=ESPI[sl];if(!id)return '';var n=esc(ESPI_N[sl]||'Especial');
@@ -1404,7 +1404,7 @@ function post(art,meta,cat,medido){
  if(auts.length&&s!=='m'&&s!=='x')dl+='<dt>Cr\u00e9ditos</dt><dd>'+auts.map(function(a){return '<a class="credit" href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(', ')+'</dd>';
  var lgs=meds.filter(function(m){return m.logo;});
  var logo=lgs.length?'<div class="m-id'+(lgs.length>1?' multi':'')+(lgs.length>4?' mucho':'')+'">'+lgs.map(function(m){return '<a href="'+fichaMedio(m)+'" aria-label="Ficha de '+esc(m.n)+'"><img class="m-logo" src="'+m.logo+'" alt="Logo de '+esc(m.n)+'" onerror="var d=this.closest(\'.m-id\');this.parentNode.remove();if(d&&!d.querySelector(\'img\'))d.remove()"></a>';}).join('')+'</div>':'';
- art.querySelector('.ficha').innerHTML='<span class="tape" aria-hidden="true"></span><span class="caps">Ficha \u00bb</span>'+logo+'<dl>'+dl+'</dl>'+tm+(esp?'<div class="temas esps"><span class="caps">Especial \u00bb</span><a class="esp" href="/especiales#'+esc(esp.slug)+'">'+(ESPI[esp.slug]?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+ESPI[esp.slug]+'"/></svg>':'')+esc(esp.n)+'</a></div>':'');
+ art.querySelector('.ficha').innerHTML='<span class="tape" aria-hidden="true"></span><span class="caps">Ficha \u00bb</span>'+logo+'<dl>'+dl+'</dl>'+tm+(esp?'<div class="temas esps"><a class="esp" href="/especiales#'+esc(esp.slug)+'">'+(ESPI[esp.slug]?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+ESPI[esp.slug]+'"/></svg>':'')+esc(esp.n)+'</a></div>':'');
  if(sr)lay.insertAdjacentHTML('afterend',serieHTML(sr));
  if(lb.length&&window.initLB)initLB(lb);
 }
