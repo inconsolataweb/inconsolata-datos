@@ -81,7 +81,7 @@ function colocar(L){var out=[],R=[-1.5,1,-2.5,.6,1.4,-2,-1,2,-.8],H=[400,320,360
  return out;}
 
 function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)/i)||[])[1]||'';
- var lab=top?(m.d===hoyISO()?'Hoy, '+DIAS[new Date().getDay()]+' »':'Recién salido »'):'';
+ var lab=(top||m.d===hoyISO())?(m.d===hoyISO()?'Hoy, '+DIAS[new Date().getDay()]+' »':'Recién salido »'):'';
  return '<section class="mm"'+(top?' style="margin-top:44px"':'')+'><div class="wrap inner"><div class="mm-top"><div style="display:flex;flex-direction:column;gap:4px">'+
   (lab?'<span class="caps mm-hoy">'+lab+'</span>':'')+'<span class="caps" style="font-size:15px;letter-spacing:3px">La semana en infografías</span><span class="mm-title soft">mucho más »</span></div>'+
   '<a href="'+esc(m.u)+'" class="btn-yellow">Ver '+(fr.length>1?'las '+(m.n&&m.n>fr.length?fr.length:fr.length):'el post')+' »</a></div>'+
@@ -93,7 +93,7 @@ function webSec(p,W){var w=W&&W.i===p.id?W:{u:p.u,t:p.t,b:p.txt,g:p.ims[0]&&p.im
  var lk=w.lk||p.u,dom=(lk.match(/^https?:\/\/([^/?#]+)(\/[^?#]*)?/)||[]);var url=dom[1]?(dom[1].replace(/^www\./,'')+(dom[2]&&dom[2]!=='/'?dom[2]:'')):'inconsolata.com'+(lk.charAt(0)==='/'?lk:'');
  var ext=/^https?:/.test(lk)&&!/inconsolata\.com|tumblr\.com/.test(lk);
  return '<section class="ew"><div class="wrap ew-in"><div class="ew-tx"><span class="caps ew-k">'+(p.d===hoyISO()?'Hoy » ':'')+'Especial » la web</span><h2 class="soft"><a href="'+esc(lk)+'"'+(ext?' rel="noopener"':'')+'>'+destaca(p.t)+'</a></h2>'+
-  (w.b?'<p>'+esc(primeras(w.b,240))+'</p>':'')+'<a class="ew-cta" href="'+esc(lk)+'">Ver la presentación »</a><a class="ew-post" href="'+esc(p.u)+'">Leer el post »</a></div>'+
+  (w.b?'<p>'+esc(primeras(w.b,240))+'</p>':'')+'<a class="ew-cta" href="'+esc(lk)+'">Ver la presentación »</a></div>'+
   (w.g?'<a class="ew-nav" href="'+esc(lk)+'" aria-hidden="true" tabindex="-1"><span class="ew-bar"><i></i><i></i><i></i><span>'+esc(url)+'</span></span><span class="ew-win"><img src="'+esc(w.g)+'" alt=""></span></a>':'')+'</div>'+
   ((w.fr||[]).length?'<div class="ew-tira"><div class="ew-tr">'+w.fr.map(function(f){return '<a href="'+esc(lk)+'"><img loading="lazy" src="'+esc(f[0])+'" alt="'+esc(f[1]||'')+'">'+(f[1]?'<span class="caps">'+esc(f[1])+' ▸</span>':'')+'</a>';}).join('')+'</div></div>':'')+'</section>';}
 function xdaySec(x){return '<section class="xday"><div class="in"><a href="'+esc(x.u)+'" class="xd-a"><span class="caps xd-k">'+(x.d===hoyISO()?'Hoy sale el EXTRA! »':'Recién salido »')+'</span>'+
@@ -266,9 +266,11 @@ function portada(meta,cat){
      md=nx&&(nx.innerHTML.match(/Medio\s*<\/i>\s*:\s*<b>([^<]*)<\/b>/)||[])[1];it.push([srcDe(i,400),md||'',+(i.getAttribute('data-orig-width')||0),+(i.getAttribute('data-orig-height')||0)]);});
     mm.fr=it.filter(function(f,k){return !esPortadilla('m',k,{w:f[2],h:f[3]},mmP.d);}).map(function(f){return [f[0],f[1]];});}
    if(!mm.fr)mm.fr=mmP.ims.map(function(im){return [im.sm,''];});usados[mmP.id]=1;}
-  if(top&&top.s==='m'&&mm){arriba=mmSec(mm,true);mm.arriba=true;}
+  // especial web: manda en la portada mientras sea lo último publicado (un «mucho más» posterior no lo desplaza; va en su sitio de siempre)
+  var wP=aper?null:L.find(function(p){return p.s!=='m';});
+  if(wP&&wP.s==='w'){arriba=webSec(wP,P.w);usados[wP.id]=1;var sinHero=true;}
+  else if(top&&top.s==='m'&&mm){arriba=mmSec(mm,true);mm.arriba=true;}
   else if(top&&top.s==='x'){arriba=xdaySec(top);usados[top.id]=1;}
-  else if(top&&top.s==='w'){arriba=webSec(top,P.w);usados[top.id]=1;var sinHero=true;}
   var resto=L.filter(function(p){return !usados[p.id];});
   var h=sinHero?null:aper||resto.find(function(p){return p.s!=='d'&&p.s!=='x'&&p.ims.length;})||resto[0];
   if(h)usados[h.id]=1;

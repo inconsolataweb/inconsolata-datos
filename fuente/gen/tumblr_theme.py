@@ -265,7 +265,7 @@ JS = r"""
 (function(){if(!document.querySelector('link[href*="Instrument+Sans"]'))document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">');})();
 (function(){var y=document.getElementById('y-now');if(y)y.textContent=new Date().getFullYear();})();
 var CDN=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'datos/';
-var LANZAMIENTO='2026-10-27';
+var LANZAMIENTO='2026-11-01';
 var TN=__TN__, TS=__TS__, SECN={m:'mucho más',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic',w:'especial web'};
 var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
