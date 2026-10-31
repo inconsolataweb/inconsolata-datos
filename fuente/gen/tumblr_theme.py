@@ -529,7 +529,15 @@ LIST = """{block:IndexPage}
 _H = os.path.dirname(os.path.abspath(__file__))
 _CAT = next(p for p in (os.path.join(_H, '..', '..', 'datos', 'catalogo.json'), '/home/claude/inconsolata-datos/datos/catalogo.json') if os.path.exists(p))
 _TEM = [t['n'] for t in json.load(open(_CAT))['temas']]
-JS_FINAL = JS.replace('__SYMS__', json.dumps('<svg width="0" height="0" style="position:absolute" aria-hidden="true">' + re.sub(r'</?svg[^>]*>', '', symbols() + tema_symbols()) + '</svg>', ensure_ascii=False)).replace('__VJS__', VJS.replace('ESPIRAL', json.dumps(ESPIRAL_COLOR))).replace('__TN__', json.dumps({k: v[0] for k, v in TIPOS.items()}, ensure_ascii=False)).replace('__TS__', json.dumps([tslug(n) for n in _TEM])).replace('__PJS__', PJS).replace('__PAGJS__', PAG_JS)
+BIENVENIDA = r'''
+// /bienvenida: la página de presentación ocupa toda la ventana (se sirve desde los datos, igual que el resto del código)
+window.INC_BV=/\/bienvenida(\.html)?\/?$/.test(location.pathname);
+(function(){if(!window.INC_BV)return;var h=document.documentElement;h.style.visibility='hidden';
+ fetch((window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/bienvenida/index.html').then(function(r){if(!r.ok)throw new Error(r.status);return r.text();})
+ .then(function(t){window.INC_BIENVENIDA=1;document.open();document.write(t);document.close();})
+ .catch(function(e){console.error('inconsolata»: bienvenida',e);h.style.visibility='';});})();
+'''
+JS_FINAL = BIENVENIDA + JS.replace('__SYMS__', json.dumps('<svg width="0" height="0" style="position:absolute" aria-hidden="true">' + re.sub(r'</?svg[^>]*>', '', symbols() + tema_symbols()) + '</svg>', ensure_ascii=False)).replace('__VJS__', VJS.replace('ESPIRAL', json.dumps(ESPIRAL_COLOR))).replace('__TN__', json.dumps({k: v[0] for k, v in TIPOS.items()}, ensure_ascii=False)).replace('__TS__', json.dumps([tslug(n) for n in _TEM])).replace('__PJS__', PJS).replace('__PAGJS__', PAG_JS)
 JS_FINAL += r"""
 (function(){var h=document.documentElement,v=null;try{v=localStorage.getItem('inc-version');}catch(e){}
  if(v==='completa')h.classList.remove('lite');else if(v==='lite')h.classList.add('lite');
@@ -546,6 +554,7 @@ JS_FINAL += r"""
 document.addEventListener('click',function(e){var b=e.target.closest('.dd-b');document.querySelectorAll('.dd').forEach(function(d){var bt=d.querySelector('.dd-b'),m=d.querySelector('.dd-m'),ab=b&&d.contains(b)?bt.getAttribute('aria-expanded')!=='true':false;bt.setAttribute('aria-expanded',ab?'true':'false');m.hidden=!ab;});});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')document.querySelectorAll('.dd-b[aria-expanded=true]').forEach(function(b){b.click();b.focus();});});
 """
+JS_FINAL = JS_FINAL[:len(BIENVENIDA)] + 'if(!window.INC_BV){\n' + JS_FINAL[len(BIENVENIDA):] + '\n}'
 page = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
