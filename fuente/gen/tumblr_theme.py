@@ -17,7 +17,7 @@ from common import ESPIRAL_COLOR
 OUT = sys.argv[1]
 APOYA = 'https://buymeacoffee.com/saulcastillo'
 
-NAV = (f'<nav aria-label="Secciones"><a href="/sobre-mi">Sobre mí</a><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a>'
+NAV = (f'<nav aria-label="Secciones"><a href="https://saulcastillo.es/#sobre-mi">Sobre mí</a><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a>'
        f'<div class="dd"><button type="button" class="dd-b" aria-expanded="false" aria-haspopup="true">Archivo <i aria-hidden="true">▾</i></button><div class="dd-m" hidden><a href="/archive">Ver el archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a></div></div>{SEARCH}<a href="{APOYA}" class="btn-ink">Apóyanos »</a></nav>')
 LITE = (f'<div class="lite-bar"><a class="lb-brand soft" href="/" aria-label="inconsolata», ir a la portada">inc<span>»</span></a><div class="lb-acc">'
         '<a class="lb-nov" href="/novedades" aria-label="Novedades de la web"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 3v34M3 20h34" stroke="currentColor" stroke-width="2.4"/></svg><b class="lb-n" id="lb-n" hidden></b></a>'
@@ -25,7 +25,7 @@ LITE = (f'<div class="lite-bar"><a class="lb-brand soft" href="/" aria-label="in
         '<button type="button" class="lb-menu" data-lite="menu" aria-expanded="false" aria-controls="lite-menu"><span class="lb-h" aria-hidden="true"><i></i><i></i><i></i></span>Menú</button></div></div>'
         '<div class="lite-menu" id="lite-menu" hidden>' + SEARCH.replace('q-top', 'q-lite') +
         '<nav class="lm-nav" aria-label="Secciones"><a href="/">Portada</a><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a><a href="/autores">Autores</a><a href="/especiales">Especiales</a>'
-        '<a href="/archive">Archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a><a href="/novedades">Novedades</a><a href="/sobre-mi">Sobre mí</a></nav>'
+        '<a href="/archive">Archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a><a href="/novedades">Novedades</a><a href="https://saulcastillo.es/#sobre-mi">Sobre mí</a></nav>'
         f'<a class="lm-apoya" href="{APOYA}">Apóyanos »</a>{SOCIAL}<button type="button" class="lm-ver" data-version="completa">Ver la versión completa de la web</button></div>')
 HEAD = (f'<header class="head"><a href="/" class="brand soft" aria-label="inconsolata», ir a la portada">inc<span>»</span></a>'
         f'<div class="hd-right">{NAV}<div class="hd-row2">{SOCIAL}</div></div></header>'
@@ -41,6 +41,10 @@ TCSS = """
 .ficha dd{line-height:1.5}
 .hero-card p,.ficha dd,.fuente,.fuente p{font-family:'Instrument Sans',sans-serif!important}
 .ficha .esps{display:flex;justify-content:center}
+/* las comillas de los logos, enteras (Safari recortaba su cola izquierda) */
+.brand span,.mh-brand span,.lb-brand span{display:inline-block;padding:0 .06em 0 .14em;margin:0 -.06em 0 -.14em}
+/* aviso grande: en el escritorio, en el hueco a la derecha de la imagen del destacado */
+.v-home .hero .prueba.en-hero{position:relative;left:auto;right:auto;top:auto;bottom:auto;grid-column:8/13;grid-row:1;justify-self:end;align-self:start;width:100%;max-width:400px;margin:26px 26px 0 0;z-index:3}
 @media (max-width:760px){.main-sheet .shot{min-height:0}}
 html.lite .main-sheet .shot{min-height:0}
 

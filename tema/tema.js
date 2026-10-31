@@ -457,10 +457,14 @@ function avMedia(a){
 var cat0=null;
 // la prueba de imprenta se coloca a la derecha del logo medido de verdad (letras ya cargadas y animaci\u00f3n acabada);
 // si aun as\u00ed no cabe, baja debajo del logo
-function colocaPrueba(){var mh=document.querySelector('.v-home .masthead');if(!mh)return;var m=mh.querySelector('.mast');if(!m)return;
+// en el escritorio el aviso va al hueco libre junto a la imagen del destacado; si no hay destacado o la pantalla es estrecha, se queda en la cabecera
+function ubicaPrueba(){var pr=document.getElementById('prueba'),hero=document.querySelector('.v-home .hero'),mh=document.querySelector('.v-home .masthead');if(!pr||!mh)return;
+ var ok=hero&&hero.querySelector('.hero-img')&&matchMedia('(min-width:1000px)').matches&&!document.documentElement.classList.contains('lite');
+ if(ok&&pr.parentNode!==hero){hero.appendChild(pr);pr.classList.add('en-hero');}else if(!ok&&pr.parentNode!==mh){mh.insertBefore(pr,mh.querySelector('.side'));pr.classList.remove('en-hero');}}
+function colocaPrueba(){ubicaPrueba();var mh=document.querySelector('.v-home .masthead');if(!mh)return;var m=mh.querySelector('.mast');if(!m)return;
  var r0=mh.getBoundingClientRect(),rg=document.createRange();rg.selectNodeContents(m);var rt=rg.getBoundingClientRect();if(!rt.width)rt=m.getBoundingClientRect();
  mh.style.setProperty('--mw',Math.round(rt.right-r0.left)+'px');mh.classList.remove('choca');
- var pr=document.getElementById('prueba');if(pr&&!pr.hidden){var pb=pr.getBoundingClientRect();if(pb.left<rt.right+12&&pb.top<rt.bottom-8&&pb.bottom>rt.top)mh.classList.add('choca');}}
+ var pr=document.getElementById('prueba');if(pr&&!pr.hidden&&pr.parentNode===mh){var pb=pr.getBoundingClientRect();if(pb.left<rt.right+12&&pb.top<rt.bottom-8&&pb.bottom>rt.top)mh.classList.add('choca');}}
 function avisos(A){var hoy=hoyISO(),vig=function(a){return (!a.desde||a.desde<=hoy)&&(!a.hasta||a.hasta>=hoy);};
  var cerr=ls('inc-avisos-cerrados')||[],G=(A.grandes||[]).filter(function(a){return vig(a)&&cerr.indexOf(avisoId(a))<0;}),cur=0;
  var box=document.getElementById('prueba');
@@ -469,7 +473,7 @@ function avisos(A){var hoy=hoyISO(),vig=function(a){return (!a.desde||a.desde<=h
    '<a class="pr" href="'+esc(a.u||'#')+'" aria-label="'+esc((a.k||'Aviso')+': '+quita(a.t))+'"><span class="slug"><span class="k">'+esc(a.k||'Aviso')+'</span><span>prueba '+(cur+1)+'/'+G.length+'</span><span>'+hoy.slice(8)+'\u00b7'+hoy.slice(5,7)+'\u00b7'+hoy.slice(2,4)+'</span></span>'+
    '<span class="row">'+avMedia(a)+'<span class="t soft">'+destaca(a.t)+'</span></span><span class="bar" aria-hidden="true">'+BAR.map(function(c,i){return '<i style="background:'+c+';--i:'+i+'"></i>';}).join('')+'</span></a>'+
    '<div class="ctrl">'+(G.length>1?'<button data-prev aria-label="Aviso anterior">\u2039</button><span class="n">'+(cur+1)+'/'+G.length+'</span><button data-next aria-label="Aviso siguiente">\u203a</button>':'')+'<button class="x" data-cerrar aria-label="Cerrar aviso">\u00d7</button></div>';
-  box.hidden=false;var mh=document.querySelector('.v-home .masthead');colocaPrueba();
+  box.hidden=false;colocaPrueba();var mh=box.parentNode;
   if(anim){mh.classList.remove('go');void mh.offsetWidth;mh.classList.add('go');}}
  box.addEventListener('click',function(e){
   if(e.target.closest('[data-cerrar]')){cerr.push(avisoId(G[cur]));ls('inc-avisos-cerrados',cerr.slice(-40));G.splice(cur,1);cur=0;pinta(false);}

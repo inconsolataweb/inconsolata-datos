@@ -190,6 +190,10 @@ footer{background:var(--ink);color:var(--paper)}
 .ficha dd{line-height:1.5}
 .hero-card p,.ficha dd,.fuente,.fuente p{font-family:'Instrument Sans',sans-serif!important}
 .ficha .esps{display:flex;justify-content:center}
+/* las comillas de los logos, enteras (Safari recortaba su cola izquierda) */
+.brand span,.mh-brand span,.lb-brand span{display:inline-block;padding:0 .06em 0 .14em;margin:0 -.06em 0 -.14em}
+/* aviso grande: en el escritorio, en el hueco a la derecha de la imagen del destacado */
+.v-home .hero .prueba.en-hero{position:relative;left:auto;right:auto;top:auto;bottom:auto;grid-column:8/13;grid-row:1;justify-self:end;align-self:start;width:100%;max-width:400px;margin:26px 26px 0 0;z-index:3}
 @media (max-width:760px){.main-sheet .shot{min-height:0}}
 html.lite .main-sheet .shot{min-height:0}
 
