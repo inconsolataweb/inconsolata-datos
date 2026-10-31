@@ -19,7 +19,7 @@ function ls(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)|
 function deTarjeta(c,meta,cat){
  var id=rid(c),mt=meta[id],tags=(c.dataset.tags||'').toLowerCase().split('|').filter(Boolean);
  var tg=function(r){return tags.some(function(t){return r.test(t);});};
- var s=mt?mt[0]:tg(/^mucho ?m[aá]s$/)?'m':tg(/^extra!?$/)?'x':tg(/^detallitos$/)?'d':tg(/^metablog$/)?'b':'';
+ var s=mt&&mt[0]?mt[0]:tg(/^especial ?web$/)?'w':tg(/^mucho ?m[aá]s$/)?'m':tg(/^extra!?$/)?'x':tg(/^detallitos$/)?'d':tg(/^metablog$/)?'b':'';
  var d=c.dataset.date||'';
  var ims=[],hr=(c.dataset.hr||'').trim().split(/\s+/).filter(Boolean),sm=(c.dataset.img||'').trim().split(/\s+/).filter(Boolean);
  hr.forEach(function(u,i){ims.push({big:u,sm:sm[i]||u});});
@@ -32,7 +32,9 @@ function deTarjeta(c,meta,cat){
  var txt=deco(c.dataset.txt||'').replace(/^[\s⩔]+/,'');if(c.dataset.root)txt=txt.replace(/^[\w.-]+:\s*/,'').replace(/^[\s⩔]+/,'');
  if(bh&&txt.indexOf(bh.textContent.trim())===0)txt=txt.slice(bh.textContent.trim().length).replace(/^[\s⩔]+/,'');
  if(!t)t=primeras(txt,110);
- return {id:id,tags:tags,u:c.getAttribute('href'),d:d,s:s,k:mt?mt[1]:[],meds:mt?mt[2].map(function(i){return cat.medios[i];}).filter(Boolean):[],
+ var lk=(c.dataset.link||'').trim();if(!lk&&body){var la=[].find.call(body.querySelectorAll('a[href]'),function(a){return !/tumblr\.com|^#/.test(a.getAttribute('href'));});if(la)lk=la.getAttribute('href');}
+ var gif='';if(s==='w'&&body){var g0=body.querySelector('img');if(g0)gif=g0.getAttribute('src')||'';}
+ return {id:id,tags:tags,lk:lk,gif:gif,u:c.getAttribute('href'),d:d,s:s,k:mt?mt[1]:[],meds:mt?mt[2].map(function(i){return cat.medios[i];}).filter(Boolean):[],
   auts:mt?mt[3].map(function(i){return cat.autores[i];}):[],ims:ims,t:t,txt:txt,body:body};
 }
 function deDato(r,cat){return {id:r[0],u:'/post/'+r[1],d:r[2],s:r[3],k:r[4],meds:r[7].map(function(n){return medioN(cat,n);}),auts:[],
@@ -89,7 +91,8 @@ function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)/i)||
   '<div class="film"><div class="perf"></div><div class="frames">'+fr.slice(0,7).map(function(f,i){return '<a class="frame" href="'+esc(m.u)+'#mm-'+(i+1)+'"><div class="ph">'+img(f[0])+'</div><span>'+esc(f[1]||'')+(f[1]?' ▸':'')+'</span></a>';}).join('')+'</div><div class="perf"></div></div></div></section>';}
 
 // especial web (etiqueta «especial web»): banda blanca a todo el ancho con el GIF en un navegador y una tira de contactos
-function webSec(p,W){var w=W&&W.i===p.id?W:{u:p.u,t:p.t,b:p.txt,g:p.ims[0]&&p.ims[0].big,fr:p.ims.slice(1).map(function(im){return [im.sm,''];})};
+function webSec(p,W){var AJp=(typeof AJ!=='undefined'&&AJ[p.id]&&AJ[p.id].pies)||{};
+ var w=W&&W.i===p.id?W:{u:p.u,lk:p.lk,t:p.t,b:p.txt,g:p.gif||(p.ims[0]&&p.ims[0].big),fr:p.ims.slice(1).map(function(im,k){return [im.big||im.sm,String(AJp[k+2]||'')];})};
  var lk=w.lk||p.u,dom=(lk.match(/^https?:\/\/([^/?#]+)(\/[^?#]*)?/)||[]);var url=dom[1]?(dom[1].replace(/^www\./,'')+(dom[2]&&dom[2]!=='/'?dom[2]:'')):'inconsolata.com'+(lk.charAt(0)==='/'?lk:'');
  var ext=/^https?:/.test(lk)&&!/inconsolata\.com|tumblr\.com/.test(lk);
  return '<section class="ew"><div class="wrap ew-in"><div class="ew-tx"><span class="caps ew-k">'+(p.d===hoyISO()?'Hoy » ':'')+'Especial » la web</span><h2 class="soft"><a href="'+esc(lk)+'"'+(ext?' rel="noopener"':'')+'>'+destaca(p.t)+'</a></h2>'+
