@@ -192,8 +192,27 @@ footer{background:var(--ink);color:var(--paper)}
 .ficha .esps{display:flex;justify-content:center}
 /* las comillas de los logos, enteras (Safari recortaba su cola izquierda) */
 .brand span,.mh-brand span,.lb-brand span{display:inline-block;padding:0 .06em 0 .14em;margin:0 -.06em 0 -.14em}
-/* aviso grande: en el escritorio, en el hueco a la derecha de la imagen del destacado */
-.v-home .hero .prueba.en-hero{position:relative;left:auto;right:auto;top:auto;bottom:auto;grid-column:8/13;grid-row:1;justify-self:end;align-self:start;width:100%;max-width:400px;margin:26px 26px 0 0;z-index:3}
+/* avisos de portada: tira bajo la cabecera (A) y columna junto al destacado (D) */
+.v-home .tira{display:flex;align-items:center;gap:18px;border-bottom:1px solid var(--ink);padding:12px 0;margin:-6px 0 18px}
+.v-home .tira[hidden],.v-home .colav[hidden]{display:none}
+.tira .tr-k,.colav .cl-k{font:800 12px Archivo,sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);flex-shrink:0}
+.tira .tr-t{flex:1;min-width:0;font-size:24px;line-height:1.1;color:var(--ink);text-decoration:none}
+.tira .tr-t em,.colav .cl-t em{color:var(--accent);font-style:inherit}
+.tira .tr-q{color:var(--accent)}
+.tira .tr-t:hover,.colav .cl-t:hover{text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
+.cbar{display:flex;flex-shrink:0}.cbar i{display:block;width:22px;height:12px}
+.tira .x,.colav .x,.colav .cl-c button{background:none;border:0;padding:4px 6px;font:700 20px Archivo,sans-serif;line-height:1;color:var(--ink);cursor:pointer;min-width:32px;min-height:32px}
+.colav{position:relative;width:290px;border-top:3px solid var(--ink);padding-top:10px;margin:0 0 30px}
+.colav .cl-k{display:flex;justify-content:space-between;align-items:center}
+.colav .cl-c{display:flex;align-items:center;gap:2px;color:var(--ink);font-weight:700;letter-spacing:1px}
+.colav .cl-c button{font-size:16px}
+.colav .cl-t{display:block;font-size:30px;line-height:1.02;color:var(--ink);text-decoration:none;margin:6px 0 12px}
+.colav .cbar{width:100%}.colav .cbar i{flex:1;width:auto;height:8px}
+.v-home .hero .colav.en-hero{grid-column:8/13;grid-row:1;justify-self:end;align-self:start;margin:-30px 30px 0 0;z-index:3}
+.colav.go{animation:clIn .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes clIn{from{opacity:0;transform:translateY(-14px)}}
+@media (prefers-reduced-motion:reduce){.colav.go{animation:none}}
+@media (max-width:700px){.v-home .tira{flex-wrap:wrap;gap:6px 14px}.tira .tr-t{flex-basis:100%;order:3;font-size:21px}.tira .cbar{margin-left:auto}.colav{width:auto}}
 @media (max-width:760px){.main-sheet .shot{min-height:0}}
 html.lite .main-sheet .shot{min-height:0}
 

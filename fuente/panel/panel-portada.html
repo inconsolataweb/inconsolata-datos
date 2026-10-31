@@ -54,6 +54,7 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid v
 .post.vacio{color:var(--muted);font-size:14px;justify-content:center}
 .ico-sel{display:flex;gap:8px;align-items:center}
 .nuevos{margin:6px 0 0;font-size:14px;color:var(--muted)}
+h3.sub{font-size:22px;margin:10px 0 2px}
 .esp-ic{display:flex;gap:16px;align-items:flex-start}
 .ei-v svg,.ei-0{width:64px;height:64px;display:grid;place-items:center;color:var(--ink);border:2px solid var(--line);padding:6px;background:var(--paper);box-sizing:border-box}
 .ei-0{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
@@ -160,7 +161,7 @@ function texto(n){var o=F[n].obj;
  if(n==='especiales_iconos'){var ke=Object.keys(o).filter(function(k){return o[k]&&o[k].i;});return '{\n'+ke.map(function(k){var v={i:o[k].i,t:String(o[k].t||'').trim()};return JSON.stringify(k)+': '+JSON.stringify(v).replace(/":/g,'": ').replace(/,"/g,', "');}).join(',\n')+'\n}\n';}
  if(n==='ajustes_posts'){var ks=Object.keys(o).filter(function(k){var v=limpio(o[k]);if(v.pies&&!Object.keys(v.pies).filter(function(j){return String(v.pies[j]).trim();}).length)delete v.pies;return Object.keys(v).length;});return '{\n'+ks.map(function(k){var v=limpio(o[k]);if(v.pies){var pz={};Object.keys(v.pies).forEach(function(j){if(String(v.pies[j]).trim())pz[j]=String(v.pies[j]).trim();});if(Object.keys(pz).length)v.pies=pz;else delete v.pies;}return JSON.stringify(k)+': '+linea(v);}).join(',\n')+'\n}\n';}
  if(n==='cronologia')return '{\n"visible": '+(o.visible?'true':'false')+',\n"hitos": '+lista(o.hitos||[])+'\n}\n';
- if(n==='avisos'){var fa=o.faldon&&o.faldon.t?linea(limpio(o.faldon)):'null';return '{\n"grandes": '+lista(o.grandes||[])+',\n"ligeros": '+lista(o.ligeros||[])+',\n"faldon": '+fa+'\n}\n';}
+ if(n==='avisos'){var fa=o.faldon&&o.faldon.t?linea(limpio(o.faldon)):'null',ti=o.tira&&o.tira.t?linea(limpio(o.tira)):'null';return '{\n"tira": '+ti+',\n"grandes": '+lista(o.grandes||[])+',\n"ligeros": '+lista(o.ligeros||[])+',\n"faldon": '+fa+'\n}\n';}
  var one=function(x){if(!x)return 'null';x=limpio(x);return Object.keys(x).length?linea(x):'null';};
  return '{\n"apertura": '+one(o.apertura)+',\n"fijos": '+lista(o.fijos||[])+',\n"ocultos": '+(o.ocultos&&o.ocultos.length?'['+o.ocultos.map(function(x){return JSON.stringify(x);}).join(', ')+']':'[]')+',\n"destacado": '+one(o.destacado)+(o.colores&&Object.keys(o.colores).filter(function(k){return o.colores[k];}).length?',\n"colores": '+JSON.stringify((function(){var c={};Object.keys(o.colores).forEach(function(k){if(o.colores[k])c[k]=o.colores[k];});return c;})()):'')+'\n}\n';}
 function sucio(n){return F[n].obj&&texto(n)!==F[n].orig;}
@@ -169,7 +170,7 @@ function sucio(n){return F[n].obj&&texto(n)!==F[n].orig;}
 function getJSON(n,conApi){
  if(conApi&&token())return fetch(API+n+'.json?ref=main',{headers:{Authorization:'Bearer '+token(),Accept:'application/vnd.github+json'},cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('GitHub '+r.status);return r.json();}).then(function(j){return {txt:b64d(j.content),sha:j.sha};});
  return fetch(RAW+n+'.json?'+Date.now()).then(function(r){if(!r.ok)throw new Error(n+' '+r.status);return r.text();}).then(function(t){return {txt:t,sha:null};});}
-function normal(n,o){o=o||{};if(n==='titulos'||n==='ajustes_posts'||n==='especiales_iconos')return o;if(n==='cronologia'){o.hitos=o.hitos||[];o.visible=!!o.visible;return o;}if(n==='avisos'){o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
+function normal(n,o){o=o||{};if(n==='titulos'||n==='ajustes_posts'||n==='especiales_iconos')return o;if(n==='cronologia'){o.hitos=o.hitos||[];o.visible=!!o.visible;return o;}if(n==='avisos'){o.tira=o.tira||{};o.grandes=o.grandes||[];o.ligeros=o.ligeros||[];o.faldon=o.faldon||{};}
  else{o.colores=o.colores||{};o.fijos=(o.fijos||[]).map(function(x){return typeof x==='string'?{id:x}:x;});o.ocultos=o.ocultos||[];if(typeof o.apertura==='string')o.apertura={id:o.apertura};if(typeof o.destacado==='string')o.destacado={id:o.destacado};}return o;}
 function cargaArchivos(){return Promise.all(Object.keys(F).map(function(n){return getJSON(n,true).then(function(r){F[n].obj=normal(n,JSON.parse(r.txt));F[n].sha=r.sha;F[n].orig=texto(n);});}));}
 function ponPosts(A){MED=A.medios.map(function(m){return m.n;});porId={};
@@ -237,13 +238,16 @@ faldon:function(){var f=F.avisos.obj.faldon,on=!!f.t;
  campo('Enlace','u',f,{ph:'/especiales#… o https://…'})+icoCampo(f)+campo('Hasta','hasta',f,{tipo:'date',ay:'vacío = sin fin'})+
  '<label class="chk" style="grid-column:1/-1"><input type="checkbox" id="f-dest"'+(f.especial?' checked':'')+(f.u&&/^\/especiales#/.test(f.u)?'':' disabled')+'> Destacar también este especial en la sección de temas de la portada</label>'+
  (f.especial?campo('Imagen del especial','img',f,{ph:'https://…jpg',ay:'opcional; si no, la de su tema'}):'')+'</div></div>';},
-avisos:function(){var G=F.avisos.obj.grandes;
- return '<h2 class="soft">Avisos</h2><p class="ayuda">Las «pruebas de imprenta» que aparecen junto a la cabecera de la portada. Si hay varios, se pasan con flechas. Rodea una palabra con asteriscos para ponerla en magenta: <code>Conoce la *nueva* web</code>.</p>'+
- G.map(function(a,i){var med=a.ico?'ico':a.imgs&&a.imgs.length?'imgs':a.img?'img':'';
-  return '<div class="card'+(caducado(a)?' off':'')+'" data-i="'+i+'">'+cabLista('Aviso '+(i+1)+(caducado(a)?' · caducado':''),i,G.length)+'<div class="vista">'+destaca(a.t||'…')+'</div><div class="fila" style="margin-top:14px">'+
-  campo('Etiqueta','k',a,{ph:'Novedad, Especial, Aviso…'})+campo('Título','t',a,{ancho:1})+campo('Enlace','u',a,{ph:'/post/… o /especiales#…'})+
-  '<label>Acompañado de<select data-media><option value=""'+(med===''?' selected':'')+'>Nada</option><option value="img"'+(med==='img'?' selected':'')+'>Una imagen</option><option value="imgs"'+(med==='imgs'?' selected':'')+'>Tres imágenes</option><option value="ico"'+(med==='ico'?' selected':'')+'>Un icono</option></select></label>'+
-  (med==='img'?campo('Imagen','img',a,{ph:'https://…jpg'}):'')+(med==='imgs'?[0,1,2].map(function(k){return '<label>Imagen '+(k+1)+'<input data-k="imgs.'+k+'" value="'+esc((a.imgs||[])[k]||'')+'" placeholder="https://…jpg"></label>';}).join(''):'')+(med==='ico'?icoCampo(a):'')+
+avisos:function(){var G=F.avisos.obj.grandes,T=F.avisos.obj.tira,on=!!T.t;
+ return '<h2 class="soft">Avisos</h2><p class="ayuda">Dos avisos independientes en la portada. Rodea una palabra con asteriscos para ponerla en magenta: <code>Conoce la *nueva* web</code>. Quien cierra un aviso con la ✕ no lo vuelve a ver.</p>'+
+ '<h3 class="sub">Tira bajo la cabecera</h3><p class="ayuda">Una línea fina entre la cabecera y el faldón, como un sumario de periódico.</p>'+
+ '<div class="card'+(on?'':' off')+'" data-sec="tira"><label class="chk" style="margin-bottom:14px"><input type="checkbox" id="t-on"'+(on?' checked':'')+'> Mostrar la tira</label>'+
+ (on?'<div class="vista">'+destaca(T.t||'…')+'</div><div class="fila" style="margin-top:14px">'+campo('Etiqueta','k',T,{ph:'Novedad, Especial, Aviso…'})+campo('Texto','t',T,{ancho:1})+campo('Enlace','u',T,{ph:'/post/… o /bienvenida'})+vigencia(T)+'</div>':'')+'</div>'+
+ '<h3 class="sub" style="margin-top:34px">Columna junto al destacado</h3><p class="ayuda">En el ordenador, en el hueco a la derecha de la imagen del destacado; en el móvil, bajo la cabecera. Si hay varios, se pasan con flechas.</p>'+
+ G.map(function(a,i){var act=!a.off;
+  return '<div class="card'+(caducado(a)||!act?' off':'')+'" data-i="'+i+'">'+cabLista('Aviso '+(i+1)+(caducado(a)?' · caducado':!act?' · desactivado':''),i,G.length)+
+  '<label class="chk" style="margin:4px 0 12px"><input type="checkbox" data-act="'+i+'"'+(act?' checked':'')+'> Mostrar este aviso</label><div class="vista">'+destaca(a.t||'…')+'</div><div class="fila" style="margin-top:14px">'+
+  campo('Etiqueta','k',a,{ph:'Novedad, Especial, Aviso…'})+campo('Título','t',a,{ancho:1})+campo('Enlace','u',a,{ph:'/post/… o /bienvenida'})+
   vigencia(a)+'</div></div>';}).join('')+'<button class="btn" data-nuevo="grandes">+ Nuevo aviso</button>';},
 novedades:function(){var L=F.avisos.obj.ligeros;
  return '<h2 class="soft">Novedades</h2><p class="ayuda">Los avisos ligeros de la marca de registro. Una novedad lleva el número rojo durante una semana desde su fecha. Las más recientes van primero.</p>'+
@@ -313,7 +317,7 @@ var TAB='portada',CQ='',CT='',TQ='',TF='',TN=40,EQ='',EN=30;
 function pinta(){var s=$('#t-'+TAB);var y=scrollY;s.innerHTML=F.avisos.obj||TAB==='conexion'?VISTAS[TAB]():'';scrollTo(0,y);estadoBarra();}
 function pintaTodo(){pinta();}
 function estadoBarra(){var a=sucio('avisos'),p=sucio('portada_manual'),n=a+p;
- var n2=cambiados().length;var O=a?JSON.parse(F.avisos.orig):null,A=F.avisos.obj,sec={faldon:a&&linea(limpio(A.faldon||{}))!==linea(limpio(O.faldon||{})),avisos:a&&lista(A.grandes)!==lista(O.grandes||[]),novedades:a&&lista(A.ligeros)!==lista(O.ligeros||[]),portada:p,cronologia:sucio('cronologia'),titulos:sucio('titulos'),posts:sucio('ajustes_posts'),especiales:sucio('especiales_iconos')};
+ var n2=cambiados().length;var O=a?JSON.parse(F.avisos.orig):null,A=F.avisos.obj,sec={faldon:a&&linea(limpio(A.faldon||{}))!==linea(limpio(O.faldon||{})),avisos:a&&(lista(A.grandes)!==lista(O.grandes||[])||linea(limpio(A.tira||{}))!==linea(limpio(O.tira||{}))),novedades:a&&lista(A.ligeros)!==lista(O.ligeros||[]),portada:p,cronologia:sucio('cronologia'),titulos:sucio('titulos'),posts:sucio('ajustes_posts'),especiales:sucio('especiales_iconos')};
  [].forEach.call(document.querySelectorAll('nav.tabs button'),function(b){var t=b.dataset.t,d=sec[t];b.innerHTML=b.textContent.replace(/\s+$/,'')+(d?'<span class="dot" aria-label="con cambios"></span>':'');});
  n=n2;$('#b-deshacer').disabled=!n;$('#b-copiar').disabled=!n;$('#b-publicar').disabled=!n;
  if(!$('#msg').dataset.fijo){$('#msg').className='';$('#msg').textContent=n?'Hay cambios sin publicar en: '+cambiados().map(function(x){return NOMBRE[x];}).join(', ')+'.':'Sin cambios.';}}
@@ -322,7 +326,7 @@ function aviso(t,cl){var m=$('#msg');m.textContent=t;m.className=cl||'';m.datase
 // ---------- edición
 function objDe(el){var sec=el.closest('[data-sec]'),card=el.closest('[data-i]'),i=card?+card.dataset.i:null,M=F.portada_manual.obj,A=F.avisos.obj;
  if(TAB==='cronologia')return F.cronologia.obj.hitos[i];
- if(TAB==='avisos')return A.grandes[i];if(TAB==='novedades')return A.ligeros[i];if(TAB==='faldon')return A.faldon;
+ if(TAB==='avisos')return sec&&sec.dataset.sec==='tira'?A.tira:A.grandes[i];if(TAB==='novedades')return A.ligeros[i];if(TAB==='faldon')return A.faldon;
  if(sec){var s=sec.dataset.sec;if(s==='apertura')return M.apertura;if(s==='fijos')return M.fijos[i];if(s==='destacado')return M.destacado;}return null;}
 function arrDe(){var M=F.portada_manual.obj,A=F.avisos.obj;if(TAB==='cronologia')return F.cronologia.obj.hitos;return TAB==='avisos'?A.grandes:TAB==='novedades'?A.ligeros:M.fijos;}
 document.addEventListener('input',function(e){var d0=e.target.dataset,aj0=AP&&F.ajustes_posts.obj?(F.ajustes_posts.obj[AP]=F.ajustes_posts.obj[AP]||{}):null;
@@ -349,6 +353,8 @@ document.addEventListener('change',function(e){var el=e.target,A=F.avisos.obj,M=
  if(el.id==='cr-esp'&&el.value){F.cronologia.obj.hitos.push({esp:el.value});CQ='';CT='';pinta();return;}
  if(el.id==='cr-t'){CT=el.value;pinta();return;}
  if(el.id==='cr-vis'){F.cronologia.obj.visible=el.checked;pinta();return;}
+ if(el.id==='t-on'){if(el.checked){A.tira=A._tira||{k:'Novedad',t:'Conoce la *nueva* inconsolata»',u:'/bienvenida'};}else{A._tira=A.tira;A.tira={};}pinta();return;}
+ if(el.dataset.act!==undefined){var g=A.grandes[+el.dataset.act];if(el.checked)delete g.off;else g.off=true;pinta();return;}
  if(el.id==='f-on'){if(el.checked){A.faldon=A._faldon||{t:'Escribe aquí el texto » del faldón'};}else{A._faldon=A.faldon;A.faldon={};}pinta();}
  if(el.id==='f-esp'){var f=A.faldon;if(el.value){f.u='/especiales#'+el.value;if(f.especial)f.especial=el.value;}else{if(/^\/especiales#/.test(f.u||''))f.u='';delete f.especial;delete f.img;}pinta();}
  if(el.id==='f-dest'){var f2=A.faldon,sl=((f2.u||'').match(/^\/especiales#(.+)$/)||[])[1];if(el.checked&&sl)f2.especial=sl;else{delete f2.especial;delete f2.img;}pinta();}

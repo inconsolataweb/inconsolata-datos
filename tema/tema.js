@@ -457,33 +457,30 @@ function avMedia(a){
 var cat0=null;
 // la prueba de imprenta se coloca a la derecha del logo medido de verdad (letras ya cargadas y animaci\u00f3n acabada);
 // si aun as\u00ed no cabe, baja debajo del logo
-// en el escritorio el aviso va al hueco libre junto a la imagen del destacado; si no hay destacado o la pantalla es estrecha, se queda en la cabecera
-function ubicaPrueba(){var pr=document.getElementById('prueba'),hero=document.querySelector('.v-home .hero'),mh=document.querySelector('.v-home .masthead');if(!pr||!mh)return;
+// columna de aviso: en el escritorio, en el hueco a la derecha de la imagen del destacado; si no hay destacado o la pantalla es estrecha, bajo la cabecera
+function colocaPrueba(){var pr=document.getElementById('prueba'),hero=document.querySelector('.v-home .hero'),mh=document.querySelector('.v-home .masthead');if(!pr||!mh)return;
  var ok=hero&&hero.querySelector('.hero-img')&&matchMedia('(min-width:1000px)').matches&&!document.documentElement.classList.contains('lite');
- if(ok&&pr.parentNode!==hero){hero.appendChild(pr);pr.classList.add('en-hero');}else if(!ok&&pr.parentNode!==mh){mh.insertBefore(pr,mh.querySelector('.side'));pr.classList.remove('en-hero');}}
-function colocaPrueba(){ubicaPrueba();var mh=document.querySelector('.v-home .masthead');if(!mh)return;var m=mh.querySelector('.mast');if(!m)return;
- var r0=mh.getBoundingClientRect(),rg=document.createRange();rg.selectNodeContents(m);var rt=rg.getBoundingClientRect();if(!rt.width)rt=m.getBoundingClientRect();
- mh.style.setProperty('--mw',Math.round(rt.right-r0.left)+'px');mh.classList.remove('choca');
- var pr=document.getElementById('prueba');if(pr&&!pr.hidden&&pr.parentNode===mh){var pb=pr.getBoundingClientRect();if(pb.left<rt.right+12&&pb.top<rt.bottom-8&&pb.bottom>rt.top)mh.classList.add('choca');}}
+ if(ok&&pr.parentNode!==hero){hero.appendChild(pr);pr.classList.add('en-hero');}
+ else if(!ok&&pr.parentNode===hero){var t=document.getElementById('tira');(t||mh).insertAdjacentElement('afterend',pr);pr.classList.remove('en-hero');}}
 function avisos(A){var hoy=hoyISO(),vig=function(a){return (!a.desde||a.desde<=hoy)&&(!a.hasta||a.hasta>=hoy);};
  var cerr=ls('inc-avisos-cerrados')||[],G=(A.grandes||[]).filter(function(a){return vig(a)&&cerr.indexOf(avisoId(a))<0;}),cur=0;
- var box=document.getElementById('prueba');
+ var box=document.getElementById('prueba');G=G.filter(function(a){return !a.off&&a.t;});
+ var BAR4='<span class="cbar" aria-hidden="true"><i style="background:#00A0DC"></i><i style="background:#E5007E"></i><i style="background:#FFD400"></i><i style="background:#16140F"></i></span>';
  function pinta(anim){if(!G.length){box.hidden=true;return;}var a=G[cur];
-  box.innerHTML='<i class="crop c1"></i><i class="crop c1b"></i><i class="crop c2"></i><i class="crop c2b"></i><i class="crop c3"></i><i class="crop c3b"></i><i class="crop c4"></i><i class="crop c4b"></i>'+
-   '<a class="pr" href="'+esc(a.u||'#')+'" aria-label="'+esc((a.k||'Aviso')+': '+quita(a.t))+'"><span class="slug"><span class="k">'+esc(a.k||'Aviso')+'</span><span>prueba '+(cur+1)+'/'+G.length+'</span><span>'+hoy.slice(8)+'\u00b7'+hoy.slice(5,7)+'\u00b7'+hoy.slice(2,4)+'</span></span>'+
-   '<span class="row">'+avMedia(a)+'<span class="t soft">'+destaca(a.t)+'</span></span><span class="bar" aria-hidden="true">'+BAR.map(function(c,i){return '<i style="background:'+c+';--i:'+i+'"></i>';}).join('')+'</span></a>'+
-   '<div class="ctrl">'+(G.length>1?'<button data-prev aria-label="Aviso anterior">\u2039</button><span class="n">'+(cur+1)+'/'+G.length+'</span><button data-next aria-label="Aviso siguiente">\u203a</button>':'')+'<button class="x" data-cerrar aria-label="Cerrar aviso">\u00d7</button></div>';
-  box.hidden=false;colocaPrueba();var mh=box.parentNode;
-  if(anim){mh.classList.remove('go');void mh.offsetWidth;mh.classList.add('go');}}
+  box.innerHTML='<div class="cl-k"><span>'+esc(a.k||'Aviso')+' \u00bb</span><span class="cl-c">'+(G.length>1?'<button data-prev aria-label="Aviso anterior">\u2039</button><span>'+(cur+1)+'/'+G.length+'</span><button data-next aria-label="Aviso siguiente">\u203a</button>':'')+'<button class="x" data-cerrar aria-label="Cerrar aviso">\u00d7</button></span></div>'+
+   '<a class="cl-t soft" href="'+esc(a.u||'#')+'">'+destaca(a.t)+'</a>'+BAR4;
+  box.hidden=false;colocaPrueba();if(anim){box.classList.remove('go');void box.offsetWidth;box.classList.add('go');}}
  box.addEventListener('click',function(e){
   if(e.target.closest('[data-cerrar]')){cerr.push(avisoId(G[cur]));ls('inc-avisos-cerrados',cerr.slice(-40));G.splice(cur,1);cur=0;pinta(false);}
   if(e.target.closest('[data-next]')){cur=(cur+1)%G.length;pinta(false);}
   if(e.target.closest('[data-prev]')){cur=(cur+G.length-1)%G.length;pinta(false);}});
- // la prueba sale cuando la cabecera ya se ha plegado en inc\u00bb
- setTimeout(function(){pinta(true);},matchMedia('(prefers-reduced-motion: reduce)').matches?0:3300);
+ setTimeout(function(){pinta(true);},matchMedia('(prefers-reduced-motion: reduce)').matches?0:900);
  addEventListener('resize',colocaPrueba);
- var mst=document.querySelector('.v-home .mast');if(mst){mst.addEventListener('animationend',colocaPrueba);if(window.ResizeObserver)new ResizeObserver(colocaPrueba).observe(mst);}
- if(document.fonts&&document.fonts.ready)document.fonts.ready.then(colocaPrueba);
+ // tira bajo la cabecera
+ var T=A.tira,tb=document.getElementById('tira');
+ if(tb&&T&&T.t&&vig(T)&&cerr.indexOf('tira:'+avisoId(T))<0){
+  tb.innerHTML='<span class="tr-k">'+esc(T.k||'Aviso')+'</span><a class="tr-t soft" href="'+esc(T.u||'#')+'">'+destaca(T.t)+(/\u00bb\s*$/.test(T.t)?'':' <span class="tr-q">\u00bb</span>')+'</a>'+BAR4+'<button class="x" aria-label="Cerrar aviso">\u00d7</button>';tb.hidden=false;
+  tb.querySelector('.x').addEventListener('click',function(){cerr.push('tira:'+avisoId(T));ls('inc-avisos-cerrados',cerr.slice(-40));tb.hidden=true;});}
  // ligeros
  var Lg=(A.ligeros||[]).filter(function(a){return !a.desde||a.desde<=hoy;}).sort(function(a,b){return (b.f||'').localeCompare(a.f||'');});
  // una novedad sigue marcada durante una semana desde su fecha; abrir la lista solo para la animaci\u00f3n
@@ -508,10 +505,11 @@ function cabecera(){var d=new Date(),t=d.toLocaleDateString('es-ES',{weekday:'lo
  return '<div class="topbar"><span><span class="cmyk" aria-hidden="true"><span style="background:#00A0DC"></span><span style="background:#E5007E"></span><span style="background:#FFD400"></span><span style="background:#16140F"></span></span>'+
   esc(t.charAt(0).toUpperCase()+t.slice(1))+'&nbsp;\u00b7&nbsp;A\u00f1o '+romano(n)+'</span><div class="hd-slot"></div></div>'+
   '<div class="wrap"><header class="masthead"><a href="/" class="mast soft" aria-label="inconsolata\u00bb, ir a la portada">inc'+fold+'<span class="reg q">\u00bb<span class="reg-y" aria-hidden="true">\u00bb</span><span class="reg-c" aria-hidden="true">\u00bb</span></span></a>'+
-  '<aside class="prueba" id="prueba" aria-label="Aviso" hidden></aside>'+
+  
   '<div class="side"><div class="side-top"><div class="reg-w"><button class="rbtn" id="rbtn" aria-expanded="false" aria-controls="panel"><span class="sr">Novedades de la web</span><svg viewBox="0 0 64 64" fill="none" stroke-width="1.6" aria-hidden="true"><circle cx="32" cy="32" r="16"/><circle cx="32" cy="32" r="8"/><path d="M32 4v56M4 32h56"/></svg><span class="dot" aria-hidden="true"></span></button>'+
   '<div class="panel" id="panel" hidden><h3><span>Novedades de la web</span><span class="cmyk" aria-hidden="true"><span style="background:#00A0DC"></span><span style="background:#E5007E"></span><span style="background:#FFD400"></span><span style="background:#16140F"></span></span></h3><ul></ul><a class="all" href="/novedades">Todas las novedades \u00bb</a></div></div></div>'+
-  '<span class="mini soft">inconsolata<span style="color:var(--accent)">\u00bb</span></span><span class="tagline">la web del dise\u00f1o period\u00edstico</span></div></header></div>';}
+  '<span class="mini soft">inconsolata<span style="color:var(--accent)">\u00bb</span></span><span class="tagline">la web del dise\u00f1o period\u00edstico</span></div></header>'+
+  '<aside class="tira" id="tira" aria-label="Aviso" hidden></aside><aside class="colav" id="prueba" aria-label="Aviso" hidden></aside></div>';}
 
 function faldon(f,cat){if(!f||!f.t||(f.hasta&&f.hasta<hoyISO()))return '';
  var ti=f.ico?cat.temas.findIndex(function(t){return t.n===f.ico;}):-1,sy=ti>=0?TS[ti]:symN(f.ico);
