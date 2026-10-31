@@ -43,6 +43,29 @@ TCSS = """
 .ficha .esps{display:flex;justify-content:center}
 /* las comillas de los logos, enteras (Safari recortaba su cola izquierda) */
 .brand span,.mh-brand span,.lb-brand span{display:inline-block;padding:0 .06em 0 .14em;margin:0 -.06em 0 -.14em}
+/* especial web: banda blanca de borde a borde */
+.v-home .ew{background:#fff;color:var(--ink);margin:64px 0 0;padding:60px 0 0;border-top:6px solid var(--ink);border-bottom:6px solid var(--ink);position:relative;z-index:1}
+.v-home .ew-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:56px;align-items:center}
+.v-home .ew-k{color:var(--accent);font-size:13px;letter-spacing:3px}
+.v-home .ew h2{font-size:clamp(56px,7.4vw,108px);line-height:.88;margin:14px 0 18px;letter-spacing:-.01em}
+.v-home .ew h2 a{color:var(--ink);text-decoration:none}.v-home .ew h2 em{color:var(--accent);font-style:inherit}
+.v-home .ew p{font:400 19px/1.5 'Instrument Sans',sans-serif;max-width:480px;margin:0 0 28px}
+.v-home .ew-cta{display:inline-block;background:var(--accent);color:#fff;font:800 15px Archivo,sans-serif;letter-spacing:3px;text-transform:uppercase;padding:18px 26px;box-shadow:7px 7px 0 var(--ink);text-decoration:none;transition:transform .15s,box-shadow .15s}
+.v-home .ew-cta:hover,.v-home .ew-cta:focus-visible{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--ink)}
+.v-home .ew-post{display:inline-block;margin-left:26px;font:800 13px Archivo,sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--ink);text-decoration:underline;text-underline-offset:5px}
+.v-home .ew-nav{display:block;border-radius:12px;overflow:hidden;background:#2B2822;box-shadow:14px 14px 0 var(--yellow);transform:rotate(1.2deg);text-decoration:none}
+.v-home .ew-bar{display:flex;gap:8px;align-items:center;padding:10px 14px}.v-home .ew-bar i{width:11px;height:11px;border-radius:50%;background:#5A554B}
+.v-home .ew-bar span{margin-left:12px;flex:1;background:#3A362E;color:#BDB5A3;font:600 13px Archivo,sans-serif;padding:5px 12px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v-home .ew-win{display:block;aspect-ratio:16/10;overflow:hidden;background:var(--paper)}.v-home .ew-win img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.v-home .ew-tira{margin-top:60px;background:var(--ink);padding:18px 0 18px max(24px,calc((100% - 1312px)/2));overflow:hidden}
+.v-home .ew-tr{display:flex;gap:16px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-snap-type:x proximity}
+.v-home .ew-tr::-webkit-scrollbar{display:none}
+.v-home .ew-tr a{flex:0 0 250px;background:#fff;padding:8px 8px 10px;text-decoration:none;color:var(--ink);scroll-snap-align:start;transition:transform .15s}
+.v-home .ew-tr a:hover{transform:translateY(-4px)}
+.v-home .ew-tr img{width:100%;height:150px;object-fit:cover;object-position:top;display:block}
+.v-home .ew-tr .caps{display:block;font-size:11px;letter-spacing:2px;margin-top:8px}
+.v-home .ew+.wrap>section:first-child{margin-top:72px}
+@media (max-width:900px){.v-home .ew{padding-top:40px}.v-home .ew-in{grid-template-columns:1fr;gap:36px}.v-home .ew-post{display:block;margin:18px 0 0}.v-home .ew-tira{margin-top:44px}.v-home .ew-tr a{flex-basis:200px}.v-home .ew-tr img{height:120px}}
 /* avisos de portada: tira bajo la cabecera (A) y columna junto al destacado (D) */
 .v-home .tira{display:flex;align-items:center;gap:18px;border-bottom:1px solid var(--ink);padding:12px 0;margin:-6px 0 18px}
 .v-home .tira[hidden],.v-home .colav[hidden]{display:none}
@@ -63,6 +86,7 @@ TCSS = """
 .colav .cl-t{display:block;font-size:30px;line-height:1.02;color:var(--ink);text-decoration:none;margin:8px 0 12px}
 .colav .cbar{width:100%}.colav .cbar i{flex:1;width:auto;height:8px}
 .v-home .hero .colav.en-hero{grid-column:8/13;grid-row:1;justify-self:end;align-self:start;margin:-30px 30px 0 0;z-index:3}
+.v-home .sec-head .colav.en-sh{margin:0 0 0 auto;align-self:flex-end}
 .colav.go{animation:clIn .6s cubic-bezier(.2,.8,.2,1) both}
 @keyframes clIn{from{opacity:0;transform:translateY(-14px)}}
 @media (prefers-reduced-motion:reduce){.colav.go{animation:none}}
@@ -242,7 +266,7 @@ JS = r"""
 (function(){var y=document.getElementById('y-now');if(y)y.textContent=new Date().getFullYear();})();
 var CDN=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'datos/';
 var LANZAMIENTO='2026-10-27';
-var TN=__TN__, TS=__TS__, SECN={m:'mucho más',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic'};
+var TN=__TN__, TS=__TS__, SECN={m:'mucho más',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic',w:'especial web'};
 var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function get(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'null');if(c)return Promise.resolve(c);}catch(e){}

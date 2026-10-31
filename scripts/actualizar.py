@@ -87,7 +87,9 @@ def imagenes(p):
                         'ss': [(a['url'], a['width']) for a in ph.get('alt_sizes', []) if a.get('url') and a.get('width')]})
     if p['type'] == 'video' and p.get('thumbnail_url'):
         out.append({'url': p['thumbnail_url'], 'w': p.get('thumbnail_width'), 'h': p.get('thumbnail_height')})
-    for field in ('body', 'caption'):
+    if p.get('link_image'):
+        out.append({'url': p['link_image'], 'w': None, 'h': None, 'ss': []})
+    for field in ('body', 'caption', 'description'):
         for t in IMG_RE.findall(p.get(field) or ''):
             u = attr(t, 'src')
             if u and 'media.tumblr.com' in u:
@@ -97,6 +99,8 @@ def imagenes(p):
 
 def seccion(tags, titulo):
     tl = [t.lower().replace(' ', '') for t in tags]
+    if 'especialweb' in tl:
+        return 'web'
     if 'muchomás' in tl or 'muchomas' in tl or titulo.lower().startswith('mucho más'):
         return 'muchomas'
     if 'extra!' in tl or 'extra' in tl:
@@ -139,7 +143,7 @@ ITEM_RE = re.compile(r'<i>\s*Trabajo\s*</i>\s*:\s*(.*?)\|\s*<i>\s*Medio\s*</i>\s
 TIPO_TAG = [('carto', r'cartograf'), ('port', r'^portadas?$'), ('publi', r'^publicidad$'), ('video', r'^v[ií]deos?$'),
             ('foto', r'^fotograf'), ('ilus', r'^ilustraci'), ('graf', r'^gr[aá]ficos?$'), ('online', r'^(online|interactivos?)$'),
             ('info', r'^infograf')]
-SEC = {'muchomas': 'm', 'extra': 'x', 'detallitos': 'd', 'metablog': 'b', 'offtopic': 'o', 'normal': ''}
+SEC = {'web': 'w', 'muchomas': 'm', 'extra': 'x', 'detallitos': 'd', 'metablog': 'b', 'offtopic': 'o', 'normal': ''}
 
 # ---------------------------------------------------------------- catálogos
 IDX = json.load(open(D('indice.json')))
@@ -204,7 +208,7 @@ def clasificar(p):
     tl = [t.lower().strip() for t in tags]
     if EXCLUIR & set(tl):
         return None
-    cuerpo = (p.get('body') or '') + (p.get('caption') or '')
+    cuerpo = (p.get('body') or '') + (p.get('caption') or '') + (p.get('description') or '')
     titulo_raw = (p.get('title') or '').strip()
     texto = txt(cuerpo.replace('[[MORE]]', ' '))
     texto = re.sub(r'<([^<>\s][^<>]{0,118})>', r'\1', texto)   # <palabras> subrayadas a mano
@@ -272,6 +276,12 @@ def clasificar(p):
         '_tags': tl,
         '_fr': [[miniatura(im), (items[k][1] if k < len(items) else '')] for k, im in enumerate([im for im in ims if not im['cover']][:10])] if sec in ('muchomas', 'extra') else None,
     }
+    if sec == 'web':
+        # especial web: enlace, imagen principal a tamaño grande (un GIF sigue animado) y el resto para la tira, con los pies del panel
+        pies = (AJ.get(str(p['id'])) or {}).get('pies') or {}
+        lk = p.get('url') or next((h for h in re.findall(r'href="([^"]+)"', cuerpo) if 'tumblr.com' not in h), '')
+        post['_web'] = {'lk': lk, 'g': ims[0]['url'] if ims else '', 'b': texto[:400],
+                        'fr': [[miniatura(im, 640), str(pies.get(str(k + 2), ''))] for k, im in enumerate(ims[1:12])]}
     return post
 
 # ---------------------------------------------------------------- actualización
@@ -334,6 +344,7 @@ def main():
         if fechas:
             e['desde'], e['hasta'] = fechas[0], fechas[-1]
     frames = {q['i']: q.pop('_fr') for q in posts if q.get('_fr')}
+    webs = {q['i']: q.pop('_web') for q in posts if q.get('_web')}
     for q in posts:
         q.pop('_tags', None); q.pop('_fr', None)
     aplicar_estructura(posts)
@@ -343,7 +354,7 @@ def main():
     json.dump(ESP, open(D('especiales.json'), 'w'), ensure_ascii=False, indent=0)
     estadisticas(posts)
     escribir_meta(IDX)
-    escribir_portada(IDX, frames)
+    escribir_portada(IDX, frames, webs)
     for k in PEND:
         for n in PEND[k]:
             PEND[k][n] = sorted(set(PEND[k][n]))
@@ -467,7 +478,7 @@ def iconos_especiales():
             out[e['slug']] = [o['i'], str(o.get('t', ''))[:6]]
     return out
 
-def escribir_portada(idx, frames):
+def escribir_portada(idx, frames, webs=None):
     """Datos ligeros de la portada: lo último, el último mucho más y EXTRA! con sus fotogramas, el escaparate de temas,
     los medios del año y las efemérides («tal día como hoy», un archivo por mes)."""
     posts = idx['posts']
@@ -496,6 +507,12 @@ def escribir_portada(idx, frames):
                     'm': [MN[i] for i in q['m']]}
         if sec == 'x':
             out[sec]['num'] = 1 + sum(1 for p in posts if p['s'] == 'x' and p['d'] < q['d'])
+    # especial web (etiqueta «especial web»): el más reciente, con su enlace, su GIF y la tira
+    q = next((q for q in posts if q['s'] == 'w'), None)
+    if q:
+        wb = (webs or {}).get(q['i']) or ((old.get('w') or {}) if (old.get('w') or {}).get('i') == q['i'] else {})
+        out['w'] = {'i': q['i'], 'u': q['u'], 'd': q['d'], 't': titulo(q), 'b': wb.get('b') or q['b'], 'lk': wb.get('lk', ''),
+                    'g': wb.get('g') or q['im'], 'fr': wb.get('fr', [])}
     # escaparate de temas: recuento y tres imágenes recientes de cada uno
     TE = idx['temas']
     vit = []

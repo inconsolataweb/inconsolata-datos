@@ -88,6 +88,14 @@ function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)/i)||
   (num?'<div class="mm-num" aria-hidden="true">'+num.toUpperCase()+'</div>':'')+
   '<div class="film"><div class="perf"></div><div class="frames">'+fr.slice(0,7).map(function(f,i){return '<a class="frame" href="'+esc(m.u)+'#mm-'+(i+1)+'"><div class="ph">'+img(f[0])+'</div><span>'+esc(f[1]||'')+(f[1]?' ▸':'')+'</span></a>';}).join('')+'</div><div class="perf"></div></div></div></section>';}
 
+// especial web (etiqueta «especial web»): banda blanca a todo el ancho con el GIF en un navegador y una tira de contactos
+function webSec(p,W){var w=W&&W.i===p.id?W:{u:p.u,t:p.t,b:p.txt,g:p.ims[0]&&p.ims[0].big,fr:p.ims.slice(1).map(function(im){return [im.sm,''];})};
+ var lk=w.lk||p.u,dom=(lk.match(/^https?:\/\/([^/?#]+)(\/[^?#]*)?/)||[]);var url=dom[1]?(dom[1].replace(/^www\./,'')+(dom[2]&&dom[2]!=='/'?dom[2]:'')):'inconsolata.com'+(lk.charAt(0)==='/'?lk:'');
+ var ext=/^https?:/.test(lk)&&!/inconsolata\.com|tumblr\.com/.test(lk);
+ return '<section class="ew"><div class="wrap ew-in"><div class="ew-tx"><span class="caps ew-k">'+(p.d===hoyISO()?'Hoy » ':'')+'Especial » la web</span><h2 class="soft"><a href="'+esc(lk)+'"'+(ext?' rel="noopener"':'')+'>'+destaca(p.t)+'</a></h2>'+
+  (w.b?'<p>'+esc(primeras(w.b,240))+'</p>':'')+'<a class="ew-cta" href="'+esc(lk)+'">Ver la presentación »</a><a class="ew-post" href="'+esc(p.u)+'">Leer el post »</a></div>'+
+  (w.g?'<a class="ew-nav" href="'+esc(lk)+'" aria-hidden="true" tabindex="-1"><span class="ew-bar"><i></i><i></i><i></i><span>'+esc(url)+'</span></span><span class="ew-win"><img src="'+esc(w.g)+'" alt=""></span></a>':'')+'</div>'+
+  ((w.fr||[]).length?'<div class="ew-tira"><div class="ew-tr">'+w.fr.map(function(f){return '<a href="'+esc(lk)+'"><img loading="lazy" src="'+esc(f[0])+'" alt="'+esc(f[1]||'')+'">'+(f[1]?'<span class="caps">'+esc(f[1])+' ▸</span>':'')+'</a>';}).join('')+'</div></div>':'')+'</section>';}
 function xdaySec(x){return '<section class="xday"><div class="in"><a href="'+esc(x.u)+'" class="xd-a"><span class="caps xd-k">'+(x.d===hoyISO()?'Hoy sale el EXTRA! »':'Recién salido »')+'</span>'+
  '<div class="w" aria-label="EXTRA!">Extra!</div><div class="t">'+(x.num?'Nº '+x.num+' · ':'')+'lo mejor del diseño de prensa'+(x.mes?' de '+esc(x.mes):'')+'</div>'+
  (x.meds.length?'<p>'+esc(x.meds.length)+' medios en esta entrega: '+esc(x.meds.map(function(m){return m.n;}).join(', '))+'.</p>':'')+'<span class="go">Abrir el EXTRA! »</span></a>'+
@@ -168,7 +176,11 @@ var cat0=null;
 function colocaPrueba(){var pr=document.getElementById('prueba'),hero=document.querySelector('.v-home .hero'),mh=document.querySelector('.v-home .masthead');if(!pr||!mh)return;
  var ok=hero&&hero.querySelector('.hero-img')&&matchMedia('(min-width:1000px)').matches&&!document.documentElement.classList.contains('lite');
  if(ok&&pr.parentNode!==hero){hero.appendChild(pr);pr.classList.add('en-hero');}
- else if(!ok&&pr.parentNode===hero){var t=document.getElementById('tira');(t||mh).insertAdjacentElement('afterend',pr);pr.classList.remove('en-hero');}}
+ else if(!ok&&pr.parentNode===hero){var t=document.getElementById('tira');(t||mh).insertAdjacentElement('afterend',pr);pr.classList.remove('en-hero');}
+ // sin destacado (día de especial web): en el escritorio, junto al título de «lo último»
+ var sh=document.querySelector('.v-home .ew')&&document.querySelector('.v-home .ew+.wrap .sec-head');
+ if(!hero&&sh&&matchMedia('(min-width:1000px)').matches&&!document.documentElement.classList.contains('lite')){if(pr.parentNode!==sh){sh.appendChild(pr);pr.classList.add('en-sh');}}
+ else if(pr.classList.contains('en-sh')){var t2=document.getElementById('tira');(t2||mh).insertAdjacentElement('afterend',pr);pr.classList.remove('en-sh');}}
 function avisos(A){var hoy=hoyISO(),vig=function(a){return (!a.desde||a.desde<=hoy)&&(!a.hasta||a.hasta>=hoy);};
  var cerr=ls('inc-avisos-cerrados')||[],G=(A.grandes||[]).filter(function(a){return vig(a)&&cerr.indexOf(avisoId(a))<0;}),cur=0;
  var box=document.getElementById('prueba');G=G.filter(function(a){return !a.off&&a.t;});
@@ -256,8 +268,9 @@ function portada(meta,cat){
    if(!mm.fr)mm.fr=mmP.ims.map(function(im){return [im.sm,''];});usados[mmP.id]=1;}
   if(top&&top.s==='m'&&mm){arriba=mmSec(mm,true);mm.arriba=true;}
   else if(top&&top.s==='x'){arriba=xdaySec(top);usados[top.id]=1;}
+  else if(top&&top.s==='w'){arriba=webSec(top,P.w);usados[top.id]=1;var sinHero=true;}
   var resto=L.filter(function(p){return !usados[p.id];});
-  var h=aper||resto.find(function(p){return p.s!=='d'&&p.s!=='x'&&p.ims.length;})||resto[0];
+  var h=sinHero?null:aper||resto.find(function(p){return p.s!=='d'&&p.s!=='x'&&p.ims.length;})||resto[0];
   if(h)usados[h.id]=1;
   fx=fx.filter(function(p){return !usados[p.id];});fx.forEach(function(p){usados[p.id]=1;});
   var ult=fx.concat(L.filter(function(p){return !usados[p.id]&&p.s!=='m';})).slice(0,Math.max(9,fx.length));
