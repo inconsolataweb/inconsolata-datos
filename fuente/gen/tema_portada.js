@@ -186,7 +186,7 @@ function avisos(A){var hoy=hoyISO(),vig=function(a){return (!a.desde||a.desde<=h
  // tira bajo la cabecera
  var T=A.tira,tb=document.getElementById('tira');
  if(tb&&T&&T.t&&vig(T)&&cerr.indexOf('tira:'+avisoId(T))<0){
-  tb.innerHTML='<span class="tr-k">'+esc(T.k||'Aviso')+'</span><a class="tr-t soft" href="'+esc(T.u||'#')+'">'+destaca(T.t)+(/»\s*$/.test(T.t)?'':' <span class="tr-q">»</span>')+'</a>'+BAR4+'<button class="x" aria-label="Cerrar aviso">×</button>';tb.hidden=false;
+  tb.innerHTML='<span class="tr-k">'+esc(T.k||'Aviso')+'</span><a class="tr-t soft" href="'+esc(T.u||'#')+'">'+destaca(T.t)+(/»\s*$/.test(T.t)?'':' <span class="tr-q">»</span>')+'</a><button class="x" aria-label="Cerrar aviso">×</button>';tb.hidden=false;
   tb.querySelector('.x').addEventListener('click',function(){cerr.push('tira:'+avisoId(T));ls('inc-avisos-cerrados',cerr.slice(-40));tb.hidden=true;});}
  // ligeros
  var Lg=(A.ligeros||[]).filter(function(a){return !a.desde||a.desde<=hoy;}).sort(function(a,b){return (b.f||'').localeCompare(a.f||'');});
