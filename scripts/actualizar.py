@@ -390,9 +390,10 @@ def clasificar(p):
         'im': miniatura(th) if th else '', 'r': round(th['w'] / th['h'], 2) if th and th.get('w') and th.get('h') else 1.3,
         'n': len(ims),
         '_res': resumen(texto),
+        '_im2': miniatura(th, 640) if th else '',
         '_pz': piezas or None,
         '_tags': tl,
-        '_fr': [[miniatura(im), (items[k][1] if k < len(items) else '')] for k, im in enumerate([im for im in ims if not im['cover']][:40])] if sec in ('muchomas', 'extra') else None,
+        '_fr': [[miniatura(im, 640), (items[k][1] if k < len(items) else '')] for k, im in enumerate([im for im in ims if not im['cover']][:40])] if sec in ('muchomas', 'extra') else None,
     }
     if sec == 'web':
         # especial web: enlace, imagen principal a tamaño grande (un GIF sigue animado) y el resto para la tira, con los pies del panel
@@ -469,6 +470,8 @@ def main():
     frames = {q['i']: q.pop('_fr') for q in posts if q.get('_fr')}
     webs = {q['i']: q.pop('_web') for q in posts if q.get('_web')}
     RES.update({q['i']: q.pop('_res') for q in posts if q.get('_res')})
+    IM2.update({q['i']: q.pop('_im2') for q in posts if q.get('_im2')})
+    for q in posts: q.pop('_im2', None)
     PZ.update({q['i']: q.pop('_pz') for q in posts if q.get('_pz')})
     for q in posts:
         q.pop('_tags', None); q.pop('_fr', None); q.pop('_res', None); q.pop('_pz', None)
@@ -606,6 +609,7 @@ def iconos_especiales():
     return out
 
 RES = {}
+IM2 = {}   # miniatura más grande (640 px) para la versión móvil de la portada
 PZ = {}
 def escribir_portada(idx, frames, webs=None):
     """Datos ligeros de la portada: lo último, el último mucho más y EXTRA! con sus fotogramas, el escaparate de temas,
@@ -623,8 +627,9 @@ def escribir_portada(idx, frames, webs=None):
     def titulo(q):
         return TIT.get(q['i']) or q['t'] or q['b']
     viejos = {r[0]: r[6] for r in (old.get('rec') or []) + (old.get('man') or [])}
+    viejos2 = {r[0]: r[9] for r in (old.get('rec') or []) + (old.get('man') or []) if len(r) > 9}
     def corto(q):
-        return [q['i'], q['u'], q['d'], q['s'], q['k'], titulo(q), RES.get(q['i']) or viejos.get(q['i']) or q['b'], [MN[i] for i in q['m'][:3]], q['im']]
+        return [q['i'], q['u'], q['d'], q['s'], q['k'], titulo(q), RES.get(q['i']) or viejos.get(q['i']) or q['b'], [MN[i] for i in q['m'][:3]], q['im'], IM2.get(q['i']) or viejos2.get(q['i']) or q['im']]
     out = {'rec': [corto(q) for q in posts[:40]]}
     for sec in ('m', 'x'):
         q = next((q for q in posts if q['s'] == sec), None)

@@ -78,6 +78,51 @@ VCSS = (ambito(_mm_css(), '.v-mm')
         + ambito(_var('extra.py', 'XCSS'), '.v-x')
         + ambito(_var('metablog.py', 'MCSS') + _var('sismolive.py', 'SCSS'), '.v-b')
         + """
+/* ===== móvil: mucho más ===== */
+html.lite .v-mm .mm-hero .inner{display:block;padding:22px 16px 20px}
+html.lite .v-mm .mm-hero .txt{gap:10px}
+html.lite .v-mm .mm-hero .caps{font-size:11px!important;letter-spacing:2px!important}
+html.lite .v-mm .mm-hero h1{font-size:40px;line-height:.95}
+html.lite .v-mm .mm-hero .num{font-size:30px;line-height:1;-webkit-text-stroke:0;color:var(--ink)}
+html.lite .v-mm .mm-hero p{font-size:16px;line-height:1.45}
+html.lite .v-mm .cover-fan{display:none}
+html.lite .v-mm .index .thumbs{display:flex!important;overflow-x:auto;gap:8px;padding:6px 16px;scrollbar-width:none}
+html.lite .v-mm .index .thumbs a{flex:0 0 84px}
+html.lite .v-mm .index .thumbs .t{height:100px}
+html.lite .v-mm .index .thumbs span{font-size:9px;letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.lite .v-mm .filters{position:relative;top:auto}
+html.lite .v-mm .filters .tk-r{padding:8px 10px 8px 16px;gap:8px}
+html.lite .v-mm .filters button,html.lite .v-mm .tk-t{min-height:36px;padding:6px 10px;font-size:13px}
+html.lite .v-mm .filters svg,html.lite .v-mm .tk-t svg{width:18px;height:18px}
+.vz-bar{display:none}
+html.lite .vz-bar{display:grid;grid-template-columns:44px 1fr 44px auto;align-items:center;gap:6px;padding:8px 12px 10px 8px;background:var(--ink);color:var(--paper);position:sticky;top:0;z-index:9;margin:0 calc(50% - 50vw)}
+.vz-bar button{background:none;border:0;color:inherit;font:inherit;cursor:pointer}
+.vz-p,.vz-s{font:900 30px/1 'Fraunces',serif!important;color:var(--yellow)!important;height:40px}
+.vz-n{text-align:center;font:800 13px 'Archivo',sans-serif;letter-spacing:2px}
+.vz-m{font:800 10px 'Archivo',sans-serif!important;letter-spacing:1.5px;text-transform:uppercase;border:2px solid var(--yellow)!important;color:var(--yellow)!important;padding:7px 8px!important}
+.vz-pr{grid-column:1/-1;height:3px;background:#3A3731;display:block}.vz-pr i{display:block;height:100%;background:var(--yellow);width:0;transition:width .2s}
+.vz-bar.lista .vz-p,.vz-bar.lista .vz-s,.vz-bar.lista .vz-pr{visibility:hidden}
+html.lite .v-mm #items .item{display:flex;flex-direction:column;gap:14px;padding:22px 16px 26px;margin:0;border-bottom:1px solid #C9C4B8}
+html.lite .v-mm #items .item .img{order:1;transform:none!important;box-shadow:5px 5px 0 var(--ink);padding:8px;min-height:0;grid-column:auto;border:2px solid var(--ink)}
+html.lite .v-mm #items .item .img img{max-height:70vh;width:100%;object-fit:contain}
+html.lite .v-mm #items .item .tape,html.lite .v-mm #items .item .zoom{display:none}
+html.lite .v-mm #items .item .txt{order:2;grid-column:auto;gap:8px}
+html.lite .v-mm #items .item .txt .ico,html.lite .v-mm #items .item .txt .ico-esp{display:none}
+html.lite .v-mm #items .item h2{font-size:21px;line-height:1.15}
+html.lite .v-mm #items .item .medio{font-size:11px;letter-spacing:1.5px;gap:8px}
+html.lite .v-mm #items .item .medio .av{width:24px;height:24px}
+html.lite .v-mm #items .item .supl{font-size:10px;letter-spacing:1.5px;margin-left:8px;padding-left:8px}
+html.lite .v-mm #items .item .by{font-size:15px}
+html.lite .v-mm #items .item .when{font-size:12px}
+html.lite .v-mm #items .item .desc{font-size:16px}
+html.lite .v-mm #items.visor{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;align-items:flex-start}
+html.lite .v-mm #items.visor::-webkit-scrollbar{display:none}
+html.lite .v-mm #items.visor .item{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;border-bottom:0}
+html.lite .v-mm #items.visor .item[hidden]{display:none}
+html.lite .v-mm #items.visor .item .img{display:flex;align-items:center;justify-content:center;height:58vh;background:#fff}
+html.lite .v-mm #items.visor .item .img img{max-height:100%;height:100%;object-fit:contain}
+html.lite .v-mm .close{padding:0 16px;display:flex;flex-direction:column;gap:12px}
+html.lite .v-mm .close .pn{padding:16px}html.lite .v-mm .close .pn .big{font-size:26px}
 .v-mm .mm-top .legacy,.v-x .mm-top .legacy{margin:16px 0}
 .v-mm .close .pn{border:2px solid var(--ink);padding:28px;display:flex;flex-direction:column;gap:8px}
 .v-mm .close .pn .big{font-size:44px;line-height:1}

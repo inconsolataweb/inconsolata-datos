@@ -182,6 +182,32 @@ html.lite .v-home .frames{display:flex!important;overflow-x:auto;scroll-snap-typ
 html.lite .v-home .frames .frame{flex:0 0 42%;scroll-snap-align:start}
 html.lite .v-home .proj h3{font-size:38px!important;overflow-wrap:anywhere}
 html.lite .legacy{font-size:13px}
+/* ===== móvil: reglas comunes (tamaños con techo, sin giros, imágenes dentro de su caja) ===== */
+html.lite h1.soft,html.lite .title h1,html.lite .eh h1{font-size:clamp(30px,9vw,38px)!important;line-height:1.02!important;letter-spacing:-.01em!important;overflow-wrap:break-word}
+html.lite .idx-top h1,html.lite .nov-top h1,html.lite .cr-top h1{font-size:clamp(32px,10vw,40px)!important}
+html.lite .big-ico{width:52px!important;height:52px!important}
+html.lite .eh .big{width:64px!important;height:64px!important}
+html.lite .eh .in{padding-top:22px!important;padding-bottom:22px!important;gap:12px!important}
+html.lite .eh .meta{font-size:11px;gap:4px 12px}
+html.lite .card,html.lite .ec,html.lite .main-sheet,html.lite .frame,html.lite .sheet,html.lite .polaroid,html.lite .wk-sample,html.lite .wk-top>*{transform:none!important}
+html.lite .tape{display:none!important}
+html.lite img{max-width:100%}
+html.lite .who .chips,html.lite .others .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:6px;margin-right:-16px;padding-right:16px}
+html.lite .who .chips::-webkit-scrollbar,html.lite .others .chips::-webkit-scrollbar{display:none}
+html.lite .who .chips a,html.lite .others .chips a{flex-shrink:0}
+html.lite .hb{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 40px!important}
+html.lite .hb a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px!important}
+html.lite .name-row .av-medio,html.lite .wk-top .logo-big{max-width:56px;max-height:56px}
+html.lite .wk-top img{max-height:64px;width:auto}
+html.lite .lc-tit,html.lite .post .title{gap:12px}
+html.lite .work{transform:none!important;box-shadow:5px 5px 0 var(--ink)!important;width:100%!important;max-width:none!important}
+html.lite .work img{max-height:56vh;width:100%;object-fit:contain}
+html.lite .work figcaption{padding-right:76px}
+html.lite .fhero{flex-direction:column!important;align-items:stretch!important}
+html.lite .fhero .fvis{width:100%!important;max-width:none!important;order:2;margin-top:18px}
+html.lite .name-row .av-medio img,html.lite .name-row .av-medio svg,html.lite .name-row .av-medio .av-slot{max-width:52px!important;max-height:52px!important;width:auto!important}
+html.lite .name-row .av-medio{font-size:10px}
+
 
 
 mark.subr{background:none;color:inherit;padding:.06em .24em;margin:0 -.08em;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath d='M6 9C34 3 70 8 104 4s68 1 90 5c4 7 3 16 1 24-30 3-62 0-98 4S26 38 4 34C1 27 2 16 6 9z' fill='white'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:100% 96%;background-position:0 55%;-webkit-box-decoration-break:clone;box-decoration-break:clone}

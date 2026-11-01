@@ -7,6 +7,25 @@ function espDeEtq(et){var C=(typeof cat0!=='undefined'&&cat0)||{},T=C.espt||{};i
  for(var sl in T){if(T[sl].slice(1).some(function(g){return f.indexOf(fold(g))>=0;}))return sl;}return '';}
 function espNom(sl){var C=(typeof cat0!=='undefined'&&cat0)||{};return (C.esp&&C.esp[sl])||'Especial';}
 function espSym(sl){if(typeof ESPI!=='undefined'&&ESPI[sl])return ESPI[sl];var C=(typeof cat0!=='undefined'&&cat0)||{},tn=((C.espt||{})[sl]||[])[0],ti=(C.temas||[]).findIndex(function(t){return t.n===tn||t.e===sl;});return ti>=0?TS[ti]:'i-info';}
+// móvil: las piezas del mucho más, una a una a pantalla completa (deslizando), o en lista
+function visorMM(n){var box=document.getElementById('items');if(!box)return;var modo='visor';try{modo=localStorage.getItem('inc-mm-modo')||'visor';}catch(e){}
+ var bar=document.createElement('div');bar.className='vz-bar';
+ bar.innerHTML='<button type="button" class="vz-p" aria-label="Pieza anterior">‹</button><span class="vz-n" aria-live="polite"></span><button type="button" class="vz-s" aria-label="Pieza siguiente">›</button><button type="button" class="vz-m"></button><span class="vz-pr" aria-hidden="true"><i></i></span>';
+ box.parentNode.insertBefore(bar,box);
+ var vis=function(){return [].filter.call(box.querySelectorAll('.item'),function(z){return !z.hidden;});},act=0;
+ var cuenta=function(reset){var L=vis();if(reset){act=0;box.scrollLeft=0;}
+  if(box.classList.contains('visor')){var w=box.clientWidth||1;act=Math.max(0,Math.min(L.length-1,Math.round(box.scrollLeft/w)));}
+  bar.querySelector('.vz-n').textContent=box.classList.contains('visor')?(act+1)+' / '+L.length:L.length+' piezas';
+  bar.querySelector('.vz-pr i').style.width=(L.length?(act+1)/L.length*100:0)+'%';};
+ var pon=function(m){modo=m;box.classList.toggle('visor',m==='visor');bar.classList.toggle('lista',m!=='visor');bar.querySelector('.vz-m').textContent=m==='visor'?'Ver en lista':'Ver una a una';try{localStorage.setItem('inc-mm-modo',m);}catch(e){}cuenta(true);};
+ var ve=function(k){var L=vis();k=Math.max(0,Math.min(L.length-1,k));if(L[k])box.scrollTo({left:L[k].offsetLeft-box.offsetLeft,behavior:'smooth'});};
+ bar.querySelector('.vz-p').addEventListener('click',function(){ve(act-1);});bar.querySelector('.vz-s').addEventListener('click',function(){ve(act+1);});
+ bar.querySelector('.vz-m').addEventListener('click',function(){pon(modo==='visor'?'lista':'visor');bar.scrollIntoView(true);});
+ var tm;box.addEventListener('scroll',function(){clearTimeout(tm);tm=setTimeout(function(){cuenta();},60);},{passive:true});
+ // los enlaces a una pieza (#mm-N: tira de miniaturas, fichas, especiales) la abren en el visor
+ var irA=function(h){var el=h&&document.getElementById(h.slice(1));if(el&&el.classList.contains('item')&&box.classList.contains('visor')){bar.scrollIntoView(true);box.scrollLeft=el.offsetLeft-box.offsetLeft;cuenta();return true;}};
+ document.addEventListener('click',function(e){var a=e.target.closest('a[href^="#mm-"]');if(a&&irA(a.getAttribute('href'))){e.preventDefault();}});
+ window.mmVisor={cuenta:cuenta};pon(modo);if(/^#mm-\d+$/.test(location.hash))setTimeout(function(){irA(location.hash);},300);}
 function medioPor(cat,n){n=(n||'').replace(/\s*(?:#|n\.?º\s*|núm\.?\s*)[\d.,]+\s*$/i,'');var f=fold(n);if(!f)return null;var ex=function(f){return cat.medios.find(function(m){return fold(m.n)===f;});};
  // «Suplemento (Medio)»: cuenta como el medio del paréntesis si no hay un medio con el nombre entero («La Razón (México)»)
  var pa=n.match(/\(([^()]+)\)\s*$/);
@@ -124,7 +143,7 @@ function vMM(o){
  var items=it.map(function(r,i){
   var al=(TN[r.tipo]||'Imagen')+(r.md?' de '+(r.mo?r.mo.n:r.md):'')+(r.tr?': '+r.tr:'');
   var y=r.fe?anioDe(r.fe.split(' de ')[1],d):'';
-  return '<article class="item'+(i%2?' alt':'')+'" id="mm-'+(i+1)+'" data-tipo="'+r.tipo+'" data-etq="'+esc((r.etq||[]).map(fold).join('|'))+'"><button type="button" class="img" data-lb="'+i+'" aria-label="Ampliar: '+esc(r.tr||('imagen '+(i+1)))+'"><span class="tape" aria-hidden="true"></span><img loading="lazy" src="'+esc(r.im.src)+'" alt="'+esc(al)+'" onerror="this.remove()"><span class="zoom">Ampliar »</span></button>'+
+  return '<article class="item'+(i%2?' alt':'')+'" id="mm-'+(i+1)+'" data-tipo="'+r.tipo+'" data-etq="'+esc((r.etq||[]).map(fold).join('|'))+'"><button type="button" class="img" data-lb="'+i+'" aria-label="Ampliar: '+esc(r.tr||('imagen '+(i+1)))+'"><span class="tape" aria-hidden="true"></span><img loading="lazy" src="'+esc(r.im.el?srcDe(r.im.el,1280):r.im.src)+'" alt="'+esc(al)+'" onerror="this.remove()"><span class="zoom">Ampliar »</span></button>'+
    '<div class="txt">'+(r.es?'<a class="ico-esp" href="/especiales#'+esc(r.es)+'"><svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Especial: '+esc(espNom(r.es))+'" style="overflow:visible"><title>Especial: '+esc(espNom(r.es))+'</title><use href="#'+espSym(r.es)+'" class="k"/><use href="#'+espSym(r.es)+'" class="m" x="3" y="2.5"/></svg></a>':ico(r.tipo,'ico'))+(r.md?'<span class="md-l">'+(r.mo&&r.mo.ficha?'<a href="'+fichaMedio(r.mo)+'" class="medio">':'<span class="medio">')+(r.mo&&r.mo.av?'<span class="av" aria-hidden="true"><img src="'+r.mo.av+'" alt=""></span>':'')+esc(r.mo?r.mo.n:r.md)+(r.mo&&r.mo.ficha?'</a>':'</span>')+(r.mo&&fold(r.md)!==fold(r.mo.n)&&/\(.+\)|#\s*\d|n\.?º\s*\d/i.test(r.md)?'<span class="supl">'+esc(r.md)+'</span>':'')+'</span>':'')+
    (r.tr?'<h2>'+esc(r.tr)+'</h2>':'')+(r.desc?'<p class="desc">'+r.desc+'</p>':'')+(r.au.length?'<span class="by">por '+r.au.map(function(a){return '<a href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(' y ')+'</span>':'')+
    (r.fe?'<span class="when">'+esc(r.fe)+' de '+y+'</span>':'')+'</div></article>';}).join('');
@@ -153,7 +172,9 @@ function vMM(o){
   setTimeout(gira,50);var gt;addEventListener('resize',function(){clearTimeout(gt);gt=setTimeout(gira,200);});
   fw.addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;var f=b.dataset.f;
    [].forEach.call(fw.querySelectorAll('button[data-f]'),function(z){z.setAttribute('aria-pressed',String(z.dataset.f===f));});
-   var t=f.slice(2);[].forEach.call(document.querySelectorAll('.item'),function(z){z.hidden=f==='t:todas'?false:f.charAt(0)==='t'?z.dataset.tipo!==t:('|'+z.dataset.etq+'|').indexOf('|'+t+'|')<0;});});}
+   var t=f.slice(2);[].forEach.call(document.querySelectorAll('.item'),function(z){z.hidden=f==='t:todas'?false:f.charAt(0)==='t'?z.dataset.tipo!==t:('|'+z.dataset.etq+'|').indexOf('|'+t+'|')<0;});
+   if(window.mmVisor)mmVisor.cuenta(true);});}
+ if(document.documentElement.classList.contains('lite'))visorMM(n);
  document.title='mucho más » semana '+num+' · inconsolata»';
  return lb;
 }
