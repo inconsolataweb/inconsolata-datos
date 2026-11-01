@@ -60,10 +60,6 @@ def npf_web(pid):
         print('No se pudo leer en NPF el post', pid, e)
         return {}
     out = {'lk': '', 'tx': []}
-    if ps:
-        q = ps[0]
-        print('NPF', {k: str(v)[:200] for k, v in q.items() if k not in ('content', 'trail', 'blog', 'reblog')})
-        print('NPF BLOQUES', [{k: str(v)[:150] for k, v in b.items() if k != 'media'} for b in q.get('content') or []][:6], q.get('layout'))
     for b in (ps[0].get('content') or []) if ps else []:
         if b.get('type') == 'link':
             out['lk'] = out['lk'] or b.get('url', '')
@@ -337,7 +333,7 @@ def clasificar(p):
         nw = npf_web(p['id'])
         lk = p.get('url') or nw.get('lk') or next((h for h in re.findall(r'href="([^"]+)"', cuerpo) if 'tumblr.com' not in h), '')
         lk = (AJ.get(str(p['id'])) or {}).get('enlace') or lk
-        bt = ' '.join(nw.get('tx') or []).strip() or texto
+        bt = (AJ.get(str(p['id'])) or {}).get('texto') or ' '.join(nw.get('tx') or []).strip() or texto
         if bt and titulo_raw == '' and bt.startswith(titulo):
             bt = bt[len(titulo):].strip()
         post['_web'] = {'lk': lk, 'g': ims[0]['url'] if ims else '', 'b': bt[:400],
