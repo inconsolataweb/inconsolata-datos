@@ -10,12 +10,12 @@ function contar(ps,f){var c={};ps.forEach(function(p){f(p).forEach(function(v){c
 // piezas de mucho más y EXTRA! (archivo.posts[].pz = [imagen, tipo, medios, autores, etiquetas]): en una ficha o un especial
 // se muestra la pieza de ese medio, autor o etiqueta, no la primera del post
 var CTXP=null;
-function vistaP(p){if(p._pz)return {im:p._pz[0]||p.im,m:p._pz[2].length?p._pz[2]:p.m,a:p._pz[3]};var z=p.pz,c=CTXP,base={im:p.im,m:p.m,a:p.a};if(!z||!c)return base;
+function vistaP(p){if(p._pz)return {im:p._pz[0]||p.im,m:p._pz[2].length?p._pz[2]:p.m,a:p._pz[3],z:p._pz};var z=p.pz,c=CTXP,base={im:p.im,m:p.m,a:p.a};if(!z||!c)return base;
  var f=function(x){if(c.m!=null)return x[2].indexOf(c.m)>=0;if(c.a!=null)return x[3].indexOf(c.a)>=0;if(c.e)return (x[4]||[]).some(function(t){return c.e.indexOf(fold(t))>=0;});return false;};
  var x=z.find(function(x){return f(x)&&x[0];})||z.find(f);if(!x)return base;
- return {im:x[0]||p.im,m:x[2].length?x[2]:p.m,a:x[3]};}
+ return {im:x[0]||p.im,m:x[2].length?x[2]:p.m,a:x[3],z:x};}
 function cartaP(A,p,i){var v=vistaP(p),auts=v.a.slice(0,3).map(function(j){return A.autores[j].n;});
- return '<a href="/post/'+esc(p.u)+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+icoP(p.i,p.k[0],'ico')+
+ return '<a href="/post/'+esc(p.u)+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
   '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'» '+esc(SECN[p.s]||''))+' · '+fcorta(p.d)+'</span>'+
   '<span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+(v.a.length>3?' y '+(v.a.length-3)+' más':'')+'</span>':'')+'</a>';}
 function barrasAnios(ps){var c={},mx=1,h='',ax='';ps.forEach(function(p){var y=+p.d.slice(0,4);c[y]=(c[y]||0)+1;});
@@ -220,7 +220,7 @@ function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p
  var trozos=function(L){var o=[];L.forEach(function(p){var c=CTXP.e,zs=(p.pz||[]).map(function(z,k){return [z,k];}).filter(function(q){return (q[0][4]||[]).some(function(t){return c.indexOf(fold(t))>=0;});});
   if(zs.length<1)o.push(p);else zs.forEach(function(q){var y=Object.create(p);y._pz=q[0];y._k=q[1];y.m=q[0][2].length?q[0][2]:[];y.a=q[0][3];y.k=[q[0][1]];o.push(y);});});return o;};
  ps=trozos(ps);
- var carta=function(p){var v=vistaP(p),ie=icoEsp(espSl(p.i),'',false),auts=v.a.slice(0,3).map(function(i){return A.autores[i].n;});
+ var carta=function(p){var v=vistaP(p),ie=v.z?icoEsp(espDeEtq(v.z[4]),'',false):icoEsp(espSlI(p.i),'',false),auts=v.a.slice(0,3).map(function(i){return A.autores[i].n;});
   return '<a class="ec" href="/post/'+esc(p.u)+(p._pz?'#mm-'+(p._k+1):'')+'"><div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt=""" onerror="this.remove()">':'')+(p.s?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+
    '<span class="ico">'+(ie?'<span>'+ie+'</span>':p.k.slice(0,3).map(function(k){return '<span title="'+esc(TN[k])+'"><svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#i-'+k+'"/></svg></span>';}).join(''))+'</span></div>'+
    '<span class="meta"><b>'+(+p.d.slice(8,10))+' '+MES3[+p.d.slice(5,7)-1]+'</b>'+(v.m.length?' · '+medsI(v.m):'')+'</span><span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};

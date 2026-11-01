@@ -309,7 +309,10 @@ function icoEsp(sl,cls,dos){var id=ESPI[sl];if(!id)return '';var n=esc(ESPI_N[sl
  return '<svg class="'+(cls||'')+'" viewBox="0 0 64 64" role="img" aria-label="'+n+'" style="overflow:visible"><title>'+n+'</title><use href="#'+id+'" class="k"/>'+(dos===false?'':'<use href="#'+id+'" class="m" x="3" y="2.5"/>')+'</svg>';}
 // icono de una pieza: el de su especial si lo tiene; si no, el de su tipo
 function espSl(id){return (typeof META0!=='undefined'&&META0&&(META0[id]||[])[5])||'';}
-function icoP(id,k,cls){var e=icoEsp(espSl(id),cls);return e||(k?ico(k,cls):'');}
+// icono del especial solo si el post entero es del especial: en los recopilatorios (mucho más, EXTRA!) va pieza a pieza
+function espSlI(id){var m=(typeof META0!=='undefined'&&META0&&META0[id])||[];return m[0]==='m'||m[0]==='x'?'':(m[5]||'');}
+function icoP(id,k,cls){var e=icoEsp(espSlI(id),cls);return e||(k?ico(k,cls):'');}
+function icoPz(z,cls){var e=typeof espDeEtq==='function'?espDeEtq(z[4]):'';return (e&&icoEsp(e,cls))||ico(z[1]||'info',cls);}
 function esPortadilla(s,k,im,d){if((s!=='m'&&s!=='x')||!im.w||!im.h)return false;var r=im.w/im.h;
  return (r>=4.5&&im.w>=1200&&im.w<=1400)||(s==='m'&&k===0&&r>=4.5)||(s==='m'&&k===0&&r>=2.6&&r<=2.9&&d>='2013');}
 
@@ -358,7 +361,7 @@ function post(art,meta,cat,medido){
   var lbv=s==='m'?vMM(o):s==='x'?vX(o):vB(o); if(lbv.length&&window.initLB)initLB(lbv); return;
  }
  if(h1.classList.contains('auto'))h1.textContent=t; else h1.innerHTML=destaca(t); document.title=quita(t)+' · inconsolata»';
- var bico=icoEsp(mt[5],'big-ico')||(tipos[0]?ico(tipos[0],'big-ico'):'');if(bico)art.querySelector('.title').insertAdjacentHTML('beforeend',bico);
+ var bico=icoEsp(mt[0]==='m'||mt[0]==='x'?'':mt[5],'big-ico')||(tipos[0]?ico(tipos[0],'big-ico'):'');if(bico)art.querySelector('.title').insertAdjacentHTML('beforeend',bico);
  // migas
  var cr='<a href="/">inconsolata</a><i>»</i>'+(s&&s!=='m'&&s!=='x'?'<a href="/tagged/'+encodeURIComponent(SECN[s])+'">'+SECN[s]+'</a>':tipos[0]?'<a href="/buscador#k='+tipos[0]+'">'+esc(TN[tipos[0]])+'</a>':'<span>post</span>');
  if(esp)cr+='<i>»</i><a class="k-esp" href="/especiales#'+esc(esp.slug)+'">'+esc(esp.n)+'</a>';
