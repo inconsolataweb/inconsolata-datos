@@ -51,7 +51,21 @@ def _mm_css():
     b = st.index('@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}')
     c = st.index('.cover-fan{')
     e = st.index('.head .brand{display:block')
-    return st[a:b] + st[c:e] + '.filters{top:56px}'
+    return st[a:b] + st[c:e] + '.filters{top:56px}' + """
+.filters.tk{overflow:hidden}
+.tk-v{display:flex;width:max-content}
+.tk-r{display:flex;align-items:center;gap:10px;padding:12px 10px 12px 24px;flex-shrink:0}
+.tk-v.gira{animation:tkm var(--tk,40s) linear infinite}
+.tk-v.gira:hover,.tk-v.gira:focus-within{animation-play-state:paused}
+@keyframes tkm{to{transform:translateX(-50%)}}
+.tk-l{font-size:13px;letter-spacing:3px;margin:0 2px 0 14px;white-space:nowrap}
+.tk-l:first-child{margin-left:0}
+.filters .tk-r button{white-space:nowrap}
+.tk-t{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font:700 14px Archivo,sans-serif;color:var(--ink);background:var(--yellow);border:2px solid var(--ink);padding:8px 14px;min-height:44px;text-decoration:none}
+.tk-t svg{width:24px;height:24px;overflow:visible}
+.tk-t:hover{background:var(--ink);color:var(--paper)}
+@media (prefers-reduced-motion:reduce){.filters.tk{overflow-x:auto}}
+"""
 
 VCSS = (ambito(_mm_css(), '.v-mm')
         + ambito(_var('extra.py', 'XCSS'), '.v-x')

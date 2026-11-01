@@ -76,7 +76,7 @@ function vMM(o){
  var b=o.body,id=o.id,d=o.d,cat=o.cat,ims=o.ims,n=ims.length;
  var num=((TIT[id]||'')+' '+b.textContent).replace(/ /g,' ').match(/semana\s+([IVXLCDM]+)(?![A-Za-zÁÉÍÓÚáéíóúÑñ])/);num=num?num[1].toUpperCase():'';
  // sin número en el título: el «mucho más» sale cada domingo desde el 30 de octubre de 2011, así que se cuenta por semanas
- if(!num&&d){var sem=Math.round((new Date(d+'T12:00:00')-new Date('2011-10-30T12:00:00'))/(7*864e5))+1;if(sem>0)num=romano(sem);}
+ if(!num&&d){var sem=Math.round((new Date(d+'T12:00:00')-new Date('2011-10-30T12:00:00'))/(7*864e5));if(sem>0)num=romano(sem);}
  var p1=[].find.call(b.querySelectorAll('p'),function(p){var t=p.textContent.trim();return t.length>60&&!/Trabajo\s*:/.test(t)&&!/^[…\.]+$/.test(t);});
  var intro=p1?p1.textContent.replace(/ /g,' ').trim().replace(/\s*[^.!?]*(tras el salto|salto de rigor)[^.!?]*[.!?:]?\s*$/i,'').trim():'';
  var def=o.tipos.length===1?o.tipos[0]:'info';
@@ -116,7 +116,7 @@ function vMM(o){
  var items=it.map(function(r,i){
   var al=(TN[r.tipo]||'Imagen')+(r.md?' de '+r.md:'')+(r.tr?': '+r.tr:'');
   var y=r.fe?anioDe(r.fe.split(' de ')[1],d):'';
-  return '<article class="item'+(i%2?' alt':'')+'" id="mm-'+(i+1)+'" data-tipo="'+r.tipo+'"><button type="button" class="img" data-lb="'+i+'" aria-label="Ampliar: '+esc(r.tr||('imagen '+(i+1)))+'"><span class="tape" aria-hidden="true"></span><img loading="lazy" src="'+esc(r.im.src)+'" alt="'+esc(al)+'" onerror="this.remove()"><span class="zoom">Ampliar »</span></button>'+
+  return '<article class="item'+(i%2?' alt':'')+'" id="mm-'+(i+1)+'" data-tipo="'+r.tipo+'" data-etq="'+esc((r.etq||[]).map(fold).join('|'))+'"><button type="button" class="img" data-lb="'+i+'" aria-label="Ampliar: '+esc(r.tr||('imagen '+(i+1)))+'"><span class="tape" aria-hidden="true"></span><img loading="lazy" src="'+esc(r.im.src)+'" alt="'+esc(al)+'" onerror="this.remove()"><span class="zoom">Ampliar »</span></button>'+
    '<div class="txt">'+ico(r.tipo,'ico')+(r.md?(r.mo&&r.mo.ficha?'<a href="'+fichaMedio(r.mo)+'" class="medio">':'<span class="medio">')+(r.mo&&r.mo.av?'<span class="av" aria-hidden="true"><img src="'+r.mo.av+'" alt=""></span>':'')+esc(r.mo?r.mo.n:r.md)+(r.mo&&r.mo.ficha?'</a>':'</span>'):'')+
    (r.tr?'<h2>'+esc(r.tr)+'</h2>':'')+(r.desc?'<p class="desc">'+r.desc+'</p>':'')+(r.au.length?'<span class="by">por '+r.au.map(function(a){return '<a href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(' y ')+'</span>':'')+
    (r.fe?'<span class="when">'+esc(r.fe)+' de '+y+'</span>':'')+'</div></article>';}).join('');
@@ -124,13 +124,26 @@ function vMM(o){
  var prev=vecino(id,/^Mucho más/i,true),nextw=vecino(id,/^Mucho más/i,false);
  var pn=function(k,lab){if(!k)return '';var t=(TIT[k].match(/semana\s+([IVXLCDM]+)(?![A-Za-zÁÉÍÓÚáéíóúÑñ])/)||[])[1]||'';return '<a href="/post/'+k+'" class="pn"><span class="caps">'+lab+'</span><span class="big soft">'+t+'</span></a>';};
  var x=nuevoTop('mm-top');
- x.top.innerHTML=(d<LANZAMIENTO?'<div class="wrap">'+LEG+'</div>':'')+hero+(n?th:'')+(Object.keys(cu).length>2?'<div class="filters"><div class="wrap" id="filters"><span class="caps" style="margin-right:6px">Ver »</span></div></div>':'');
+ // cinta en movimiento: tipos de pieza, temas del post y etiquetas de las piezas (los tipos y las etiquetas filtran; los temas llevan a su página)
+ var CT=(typeof cat0!=='undefined'&&cat0)||o.cat,mtT=((typeof META0!=='undefined'&&META0[id])||[])[4]||[],temasP=mtT.map(function(i){return CT.temas[i];}).filter(function(t){return t&&t.x!=='oculto';});
+ var nT={};temasP.forEach(function(t){nT[fold(t.n)]=1;});
+ var etqs={};it.forEach(function(r){(r.etq||[]).forEach(function(e){var k=fold(e);if(!k||nT[k])return;etqs[k]=etqs[k]||{n:e,c:0};etqs[k].c++;});});
+ var chips='<span class="caps tk-l">Ver »</span>'+['todas','info','carto','graf','ilus','port','foto','video','online'].filter(function(t){return cu[t];}).map(function(t){return '<button type="button" data-f="t:'+t+'" aria-pressed="'+(t==='todas')+'">'+(t==='todas'?'Todas':ico(t)+esc(TN[t]))+' ('+cu[t]+')</button>';}).join('')+
+  (temasP.length?'<span class="caps tk-l">Temas »</span>'+temasP.map(function(t){var ti=CT.temas.indexOf(t);return '<a class="tk-t" href="'+(t.x==='sub'&&t.e?'/especiales#'+esc(t.e):'/buscador#h='+ti)+'"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+(t.x==='sub'&&ESPI[t.e]||TS[ti])+'"/></svg>'+esc(t.n)+'</a>';}).join(''):'')+
+  (Object.keys(etqs).length?'<span class="caps tk-l">Etiquetas »</span>'+Object.keys(etqs).map(function(k){return '<button type="button" data-f="e:'+esc(k)+'" aria-pressed="false">#'+esc(etqs[k].n)+' ('+etqs[k].c+')</button>';}).join(''):'');
+ x.top.innerHTML=(d<LANZAMIENTO?'<div class="wrap">'+LEG+'</div>':'')+hero+(n?th:'')+(n>1?'<div class="filters tk"><div class="tk-v" id="filters"><div class="tk-r">'+chips+'</div></div></div>':'');
  x.main.innerHTML='<div id="items">'+items+'</div><section class="close">'+pn(prev,'« Semana anterior')+pn(nextw,'Semana siguiente »')+(o.art.querySelector('.support')?o.art.querySelector('.support').outerHTML:'')+'</section>';
  var fw=document.getElementById('filters');
- if(fw)['todas','info','carto','graf','ilus','port','foto'].forEach(function(t){if(!cu[t])return;var bt=document.createElement('button');bt.type='button';
-  bt.setAttribute('aria-pressed',t==='todas'?'true':'false');bt.innerHTML=(t==='todas'?'Todas':ico(t)+esc(TN[t]))+' ('+cu[t]+')';
-  bt.addEventListener('click',function(){[].forEach.call(fw.querySelectorAll('button'),function(z){z.setAttribute('aria-pressed','false');});bt.setAttribute('aria-pressed','true');
-   [].forEach.call(document.querySelectorAll('.item'),function(z){z.hidden=!(t==='todas'||z.dataset.tipo===t);});});fw.appendChild(bt);});
+ if(fw){var tr=fw.querySelector('.tk-r');
+  // si no cabe, la cinta se duplica y avanza sola (se para al pasar el ratón o al usar el teclado; quieta si se pide menos movimiento)
+  var gira=function(){var c=fw.querySelector('.tk-c');if(c)c.remove();fw.classList.remove('gira');
+   if(matchMedia('(prefers-reduced-motion: reduce)').matches||tr.scrollWidth<=fw.parentNode.clientWidth)return;
+   c=tr.cloneNode(true);c.className='tk-r tk-c';c.setAttribute('aria-hidden','true');[].forEach.call(c.querySelectorAll('a,button'),function(z){z.tabIndex=-1;});fw.appendChild(c);
+   fw.style.setProperty('--tk',Math.max(25,tr.scrollWidth/45)+'s');fw.classList.add('gira');};
+  setTimeout(gira,50);var gt;addEventListener('resize',function(){clearTimeout(gt);gt=setTimeout(gira,200);});
+  fw.addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;var f=b.dataset.f;
+   [].forEach.call(fw.querySelectorAll('button[data-f]'),function(z){z.setAttribute('aria-pressed',String(z.dataset.f===f));});
+   var t=f.slice(2);[].forEach.call(document.querySelectorAll('.item'),function(z){z.hidden=f==='t:todas'?false:f.charAt(0)==='t'?z.dataset.tipo!==t:('|'+z.dataset.etq+'|').indexOf('|'+t+'|')<0;});});}
  document.title='mucho más » semana '+num+' · inconsolata»';
  return lb;
 }
