@@ -300,7 +300,7 @@ def clasificar(p):
     }
     if sec == 'web':
         print('ESPECIAL WEB', p['id'], p.get('type'), {k: (str(v)[:300]) for k, v in p.items() if k in ('url', 'title', 'link_url', 'description', 'excerpt', 'publisher', 'link_image')})
-        print('CUERPO', cuerpo[:3000].replace('\n', ' '))
+        print('CUERPO', re.sub(r'<figure.*?</figure>', '[fig]', cuerpo, flags=re.S)[:4000].replace('\n', ' '))
         # especial web: enlace, imagen principal a tamaño grande (un GIF sigue animado) y el resto para la tira, con los pies del panel
         pies = (AJ.get(str(p['id'])) or {}).get('pies') or {}
         lk = p.get('url') or next((h for h in re.findall(r'href="([^"]+)"', cuerpo) if 'tumblr.com' not in h), '')
