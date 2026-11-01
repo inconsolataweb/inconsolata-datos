@@ -48,6 +48,32 @@ def api_posts():
             yield p
         off += 20
 
+def npf_web(pid):
+    """Especial web: el formato antiguo de la API pierde los bloques de enlace y a veces el texto; se leen en NPF."""
+    if os.environ.get('API_LOCAL'):
+        return {}
+    u = f'https://api.tumblr.com/v2/blog/{BLOG}.tumblr.com/posts?api_key={os.environ["TUMBLR_API_KEY"]}&id={pid}&npf=true'
+    try:
+        with urllib.request.urlopen(u, timeout=60) as r:
+            ps = json.load(r)['response']['posts']
+    except Exception as e:
+        print('No se pudo leer en NPF el post', pid, e)
+        return {}
+    out = {'lk': '', 'tx': []}
+    for b in (ps[0].get('content') or []) if ps else []:
+        if b.get('type') == 'link':
+            out['lk'] = out['lk'] or b.get('url', '')
+            if b.get('description'):
+                out['tx'].append(b['description'])
+            out['lt'] = out.get('lt') or b.get('title', '')
+        elif b.get('type') == 'text' and b.get('subtype') not in ('heading1', 'heading2') and b.get('text'):
+            out['tx'].append(b['text'])
+            for f in b.get('formatting') or []:
+                if f.get('type') == 'link' and not out['lk'] and 'tumblr.com' not in f.get('url', ''):
+                    out['lk'] = f['url']
+    print('ESPECIAL WEB (NPF)', pid, out['lk'], ' '.join(out['tx'])[:120])
+    return out
+
 def api_post(pid):
     if os.environ.get('API_LOCAL'):
         return None
@@ -246,6 +272,9 @@ def clasificar(p):
     if sec == 'muchomas':
         m = re.search(r'semana\s+([IVXLCDM]+)', titulo_raw + ' ' + texto[:80], re.I)
         titulo = 'Mucho más · semana ' + m.group(1).upper() if m else 'Mucho más'
+    elif sec == 'web' and not titulo:
+        m = re.search(r'<h[12][^>]*>(.*?)</h[12]>', cuerpo, re.S)
+        titulo = txt(m.group(1)).strip() if m else titulo
     elif sec == 'extra':
         titulo = 'EXTRA! nº ' + str(1 + sum(1 for q in IDX['posts'] if q['s'] == 'x' and q['d'] < fecha))
     # medios: líneas de fuente en negrita, campos «Medio:» y etiquetas
@@ -299,12 +328,15 @@ def clasificar(p):
         '_fr': [[miniatura(im), (items[k][1] if k < len(items) else '')] for k, im in enumerate([im for im in ims if not im['cover']][:40])] if sec in ('muchomas', 'extra') else None,
     }
     if sec == 'web':
-        print('ESPECIAL WEB', p['id'], p.get('type'), {k: (str(v)[:300]) for k, v in p.items() if k in ('url', 'title', 'link_url', 'description', 'excerpt', 'publisher', 'link_image')})
-        print('CUERPO', re.sub(r'<figure.*?</figure>', '[fig]', cuerpo, flags=re.S)[:4000].replace('\n', ' '))
         # especial web: enlace, imagen principal a tamaño grande (un GIF sigue animado) y el resto para la tira, con los pies del panel
         pies = (AJ.get(str(p['id'])) or {}).get('pies') or {}
-        lk = p.get('url') or next((h for h in re.findall(r'href="([^"]+)"', cuerpo) if 'tumblr.com' not in h), '')
-        post['_web'] = {'lk': lk, 'g': ims[0]['url'] if ims else '', 'b': texto[:400],
+        nw = npf_web(p['id'])
+        lk = p.get('url') or nw.get('lk') or next((h for h in re.findall(r'href="([^"]+)"', cuerpo) if 'tumblr.com' not in h), '')
+        lk = (AJ.get(str(p['id'])) or {}).get('enlace') or lk
+        bt = ' '.join(nw.get('tx') or []).strip() or texto
+        if bt and titulo_raw == '' and bt.startswith(titulo):
+            bt = bt[len(titulo):].strip()
+        post['_web'] = {'lk': lk, 'g': ims[0]['url'] if ims else '', 'b': bt[:400],
                         'fr': [[miniatura(im, 640), str(pies.get(str(k + 2), ''))] for k, im in enumerate(ims[1:12])]}
     return post
 
