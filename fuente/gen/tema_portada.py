@@ -112,6 +112,19 @@ EXTRA = """
 .masthead.choca .prueba{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;max-width:460px;margin:10px 0 34px}
 .masthead.choca{flex-wrap:wrap}
 .rbtn.new.visto svg{animation:none}
+.mm{overflow:hidden}
+.film.cinta{display:block;height:auto;max-height:none;margin:6px -12px 44px;padding:0 0 4px;overflow:hidden;transform:rotate(-.6deg)}
+.cn-v .frame .ph{flex-shrink:0}
+.cn-v{display:flex;width:max-content}
+.cn-v .cn-r{display:flex;gap:12px;padding:6px 6px 6px 12px;flex-shrink:0}
+.cn-v .frame{width:200px;flex-shrink:0}
+.cn-v .frame .ph{height:230px;overflow:hidden}
+.cn-v .frame .ph img{width:100%;height:100%;object-fit:cover;object-position:top}
+.cn-v.gira{animation:cnm var(--cn,60s) linear infinite}
+.cn-v.gira:hover,.cn-v.gira:focus-within{animation-play-state:paused}
+@keyframes cnm{to{transform:translateX(-50%)}}
+.cn-v.quieta{width:auto;overflow-x:auto}
+@media (max-width:820px){.cn-v .frame{width:150px}.cn-v .frame .ph{height:180px}}
 .tdl-pl{margin-top:12px}
 .tdl-pl summary{cursor:pointer;display:inline-flex;align-items:center;gap:8px;font:800 12px 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase;border:2px solid var(--ink);padding:8px 14px;min-height:40px;background:var(--paper);list-style:none}
 .tdl-pl summary::-webkit-details-marker{display:none}

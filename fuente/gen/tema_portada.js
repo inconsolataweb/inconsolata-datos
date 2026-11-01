@@ -88,7 +88,12 @@ function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)(?![A
   (lab?'<span class="caps mm-hoy">'+lab+'</span>':'')+'<span class="caps" style="font-size:15px;letter-spacing:3px">La semana en infografías</span><span class="mm-title soft">mucho más »</span></div>'+
   '<a href="'+esc(m.u)+'" class="btn-yellow">Ver '+(fr.length>1?'las '+fr.length:'el post')+' »</a></div>'+
   (num?'<div class="mm-num" aria-hidden="true">'+num.toUpperCase()+'</div>':'')+
-  '<div class="film"><div class="perf"></div><div class="frames">'+fr.slice(0,7).map(function(f,i){return '<a class="frame" href="'+esc(m.u)+'#mm-'+(i+1)+'"><div class="ph">'+img(f[0])+'</div><span>'+esc(f[1]||'')+(f[1]?' ▸':'')+'</span></a>';}).join('')+'</div><div class="perf"></div></div></div></section>';}
+  '</div><div class="film cinta"><div class="perf"></div><div class="cn-v" data-cinta><div class="frames cn-r">'+fr.map(function(f,i){return '<a class="frame" href="'+esc(m.u)+'#mm-'+(i+1)+'"><div class="ph">'+img(f[0])+'</div><span>'+esc(f[1]||'')+(f[1]?' ▸':'')+'</span></a>';}).join('')+'</div></div><div class="perf"></div></div></section>';}
+// cinta del mucho más en la portada: de extremo a extremo y en movimiento continuo (se duplica para el bucle; se para con el ratón o el teclado)
+function cintaMM(){[].forEach.call(document.querySelectorAll('[data-cinta]'),function(v){var r=v.querySelector('.cn-r');if(!r||v.dataset.ok)return;v.dataset.ok=1;
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches||r.scrollWidth<=v.parentNode.clientWidth){v.classList.add('quieta');return;}
+ var c=r.cloneNode(true);c.setAttribute('aria-hidden','true');[].forEach.call(c.querySelectorAll('a'),function(z){z.tabIndex=-1;});v.appendChild(c);
+ v.style.setProperty('--cn',Math.max(30,r.scrollWidth/40)+'s');v.classList.add('gira');});}
 
 // especial web (etiqueta «especial web»): banda blanca a todo el ancho con el GIF en un navegador y una tira de contactos
 function webSec(p,W){var AJp=(typeof AJ!=='undefined'&&AJ[p.id]&&AJ[p.id].pies)||{};
@@ -303,7 +308,7 @@ function portada(meta,cat){
    hoySec(EF[hoyISO().slice(8)])+'</section>'+tm.html+mediosSec(P,cat)+'</div></div>';
   // el menú de siempre pasa a la barra superior
   var hr=document.querySelector('.page>.head .hd-right');if(hr)home.querySelector('.hd-slot').appendChild(hr);
-  tm.init();avisos(A);
+  tm.init();avisos(A);setTimeout(cintaMM,60);
   home.addEventListener('click',function(e){var o=e.target.closest('[data-open]');if(o){var d=document.getElementById(o.dataset.open);if(d.showModal)d.showModal();else d.setAttribute('open','');}
    var c=e.target.closest('[data-close]');if(c){var dl=c.closest('dialog');dl.close?dl.close():dl.removeAttribute('open');}
    if(e.target.tagName==='DIALOG')e.target.close();});

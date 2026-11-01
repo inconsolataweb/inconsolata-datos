@@ -67,8 +67,10 @@ def _mm_css():
 .tk-t.tk-e{background:var(--accent);color:#fff}
 .tk-t.tk-e small{font-size:12px;opacity:.85}
 .tk-t.tk-e:hover{background:var(--ink)}
-.v-mm .item .txt .ico-esp{display:inline-block;color:var(--ink)}
-.v-mm .item .txt .ico-esp .m{color:var(--accent)}
+.item .txt .ico-esp{display:inline-block;color:var(--ink)}
+.item .txt .md-l{display:flex;flex-wrap:wrap;align-items:center;row-gap:6px}
+.item .txt .supl{display:inline-block;margin-left:12px;padding-left:10px;border-left:2px solid currentColor;font:800 13px 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--muted);vertical-align:middle}
+.item .txt .ico-esp .m{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){.filters.tk{overflow-x:auto}}
 """
 

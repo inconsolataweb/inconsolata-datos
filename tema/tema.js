@@ -195,7 +195,7 @@ function vMM(o){
   var al=(TN[r.tipo]||'Imagen')+(r.md?' de '+(r.mo?r.mo.n:r.md):'')+(r.tr?': '+r.tr:'');
   var y=r.fe?anioDe(r.fe.split(' de ')[1],d):'';
   return '<article class="item'+(i%2?' alt':'')+'" id="mm-'+(i+1)+'" data-tipo="'+r.tipo+'" data-etq="'+esc((r.etq||[]).map(fold).join('|'))+'"><button type="button" class="img" data-lb="'+i+'" aria-label="Ampliar: '+esc(r.tr||('imagen '+(i+1)))+'"><span class="tape" aria-hidden="true"></span><img loading="lazy" src="'+esc(r.im.src)+'" alt="'+esc(al)+'" onerror="this.remove()"><span class="zoom">Ampliar \u00bb</span></button>'+
-   '<div class="txt">'+(r.es?'<a class="ico-esp" href="/especiales#'+esc(r.es)+'"><svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Especial: '+esc(espNom(r.es))+'" style="overflow:visible"><title>Especial: '+esc(espNom(r.es))+'</title><use href="#'+espSym(r.es)+'" class="k"/><use href="#'+espSym(r.es)+'" class="m" x="3" y="2.5"/></svg></a>':ico(r.tipo,'ico'))+(r.md?(r.mo&&r.mo.ficha?'<a href="'+fichaMedio(r.mo)+'" class="medio">':'<span class="medio">')+(r.mo&&r.mo.av?'<span class="av" aria-hidden="true"><img src="'+r.mo.av+'" alt=""></span>':'')+esc(r.mo?r.mo.n:r.md)+(r.mo&&r.mo.ficha?'</a>':'</span>'):'')+
+   '<div class="txt">'+(r.es?'<a class="ico-esp" href="/especiales#'+esc(r.es)+'"><svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Especial: '+esc(espNom(r.es))+'" style="overflow:visible"><title>Especial: '+esc(espNom(r.es))+'</title><use href="#'+espSym(r.es)+'" class="k"/><use href="#'+espSym(r.es)+'" class="m" x="3" y="2.5"/></svg></a>':ico(r.tipo,'ico'))+(r.md?'<span class="md-l">'+(r.mo&&r.mo.ficha?'<a href="'+fichaMedio(r.mo)+'" class="medio">':'<span class="medio">')+(r.mo&&r.mo.av?'<span class="av" aria-hidden="true"><img src="'+r.mo.av+'" alt=""></span>':'')+esc(r.mo?r.mo.n:r.md)+(r.mo&&r.mo.ficha?'</a>':'</span>')+(r.mo&&fold(r.md)!==fold(r.mo.n)&&/\(.+\)|#\s*\d|n\.?\u00ba\s*\d/i.test(r.md)?'<span class="supl">'+esc(r.md)+'</span>':'')+'</span>':'')+
    (r.tr?'<h2>'+esc(r.tr)+'</h2>':'')+(r.desc?'<p class="desc">'+r.desc+'</p>':'')+(r.au.length?'<span class="by">por '+r.au.map(function(a){return '<a href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(' y ')+'</span>':'')+
    (r.fe?'<span class="when">'+esc(r.fe)+' de '+y+'</span>':'')+'</div></article>';}).join('');
  var cu={todas:n};it.forEach(function(r){cu[r.tipo]=(cu[r.tipo]||0)+1;});
@@ -423,7 +423,12 @@ function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)(?![A
   (lab?'<span class="caps mm-hoy">'+lab+'</span>':'')+'<span class="caps" style="font-size:15px;letter-spacing:3px">La semana en infograf\u00edas</span><span class="mm-title soft">mucho m\u00e1s \u00bb</span></div>'+
   '<a href="'+esc(m.u)+'" class="btn-yellow">Ver '+(fr.length>1?'las '+fr.length:'el post')+' \u00bb</a></div>'+
   (num?'<div class="mm-num" aria-hidden="true">'+num.toUpperCase()+'</div>':'')+
-  '<div class="film"><div class="perf"></div><div class="frames">'+fr.slice(0,7).map(function(f,i){return '<a class="frame" href="'+esc(m.u)+'#mm-'+(i+1)+'"><div class="ph">'+img(f[0])+'</div><span>'+esc(f[1]||'')+(f[1]?' \u25b8':'')+'</span></a>';}).join('')+'</div><div class="perf"></div></div></div></section>';}
+  '</div><div class="film cinta"><div class="perf"></div><div class="cn-v" data-cinta><div class="frames cn-r">'+fr.map(function(f,i){return '<a class="frame" href="'+esc(m.u)+'#mm-'+(i+1)+'"><div class="ph">'+img(f[0])+'</div><span>'+esc(f[1]||'')+(f[1]?' \u25b8':'')+'</span></a>';}).join('')+'</div></div><div class="perf"></div></div></section>';}
+// cinta del mucho m\u00e1s en la portada: de extremo a extremo y en movimiento continuo (se duplica para el bucle; se para con el rat\u00f3n o el teclado)
+function cintaMM(){[].forEach.call(document.querySelectorAll('[data-cinta]'),function(v){var r=v.querySelector('.cn-r');if(!r||v.dataset.ok)return;v.dataset.ok=1;
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches||r.scrollWidth<=v.parentNode.clientWidth){v.classList.add('quieta');return;}
+ var c=r.cloneNode(true);c.setAttribute('aria-hidden','true');[].forEach.call(c.querySelectorAll('a'),function(z){z.tabIndex=-1;});v.appendChild(c);
+ v.style.setProperty('--cn',Math.max(30,r.scrollWidth/40)+'s');v.classList.add('gira');});}
 
 // especial web (etiqueta \u00abespecial web\u00bb): banda blanca a todo el ancho con el GIF en un navegador y una tira de contactos
 function webSec(p,W){var AJp=(typeof AJ!=='undefined'&&AJ[p.id]&&AJ[p.id].pies)||{};
@@ -638,7 +643,7 @@ function portada(meta,cat){
    hoySec(EF[hoyISO().slice(8)])+'</section>'+tm.html+mediosSec(P,cat)+'</div></div>';
   // el men\u00fa de siempre pasa a la barra superior
   var hr=document.querySelector('.page>.head .hd-right');if(hr)home.querySelector('.hd-slot').appendChild(hr);
-  tm.init();avisos(A);
+  tm.init();avisos(A);setTimeout(cintaMM,60);
   home.addEventListener('click',function(e){var o=e.target.closest('[data-open]');if(o){var d=document.getElementById(o.dataset.open);if(d.showModal)d.showModal();else d.setAttribute('open','');}
    var c=e.target.closest('[data-close]');if(c){var dl=c.closest('dialog');dl.close?dl.close():dl.removeAttribute('open');}
    if(e.target.tagName==='DIALOG')e.target.close();});
