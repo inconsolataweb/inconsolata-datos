@@ -36,6 +36,16 @@ HEAD = (f'<header class="head"><a href="/" class="brand soft" aria-label="incons
         '<div class="mh-prog" aria-hidden="true"><span id="mh-bar"></span></div></div>')
 
 TCSS = """
+/* cortina de carga: hasta que la vista está montada solo se ve el logo; si algo fallase, a los 6 s se enseña lo que haya */
+html:not(.montado) body>*{visibility:hidden;animation:incVer 0s 6s forwards}
+html:not(.montado) body::before{content:'inc»';position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);font:italic 900 72px/1.1 'Fraunces',Georgia,serif;font-variation-settings:'SOFT' 100,'WONK' 1,'opsz' 144;background:linear-gradient(90deg,#16140F 0 70%,#D1006F 70%);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 6px;z-index:9999;pointer-events:none;animation:incFuera 0s 6s forwards}
+html:not(.montado) body::after{content:'';position:fixed;left:50%;top:calc(42% + 56px);width:140px;height:6px;margin-left:-70px;background:linear-gradient(90deg,#00A0DC 0 25%,#D1006F 25% 50%,#FFD400 50% 75%,#16140F 75%);z-index:9999;pointer-events:none;animation:incBarra 1s ease-in-out infinite alternate,incFuera 0s 6s forwards}
+@keyframes incVer{to{visibility:visible}}
+@keyframes incFuera{to{visibility:hidden}}
+@keyframes incBarra{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+html.montado body{animation:incEntra .25s ease-out}
+@keyframes incEntra{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){html:not(.montado) body::after{animation:incFuera 0s 6s forwards}html.montado body{animation:none}}
 .crumbs .k-esp{color:var(--accent)}
 .ficha .esps{margin-top:14px}
 .ficha dd{line-height:1.5}
@@ -274,7 +284,20 @@ var LANZAMIENTO='2026-11-01';
 var TN=__TN__, TS=__TS__, SECN={m:'mucho más',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic',w:'especial web'};
 var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-function get(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'null');if(c)return Promise.resolve(c);}catch(e){}
+// la cortina de carga (tema.css) se retira cuando la vista ya está montada
+function monta(){var h=document.documentElement;if(h.classList.contains('montado'))return;requestAnimationFrame(function(){h.classList.add('montado');});}
+// datos: fijados al commit (jsDelivr @commit no cambia nunca), así se pueden guardar en el navegador entre visitas sin quedarse viejos;
+// los que el arranque ya pidió en paralelo (INC_PRE) se aprovechan
+function get(f){var v=((window.INC_BASE||'').split('@')[1]||'').replace(/\/$/,''),fijo=/^[0-9a-f]{7,40}$/.test(v)&&f.indexOf('/')<0;
+ if(fijo){try{if(localStorage.getItem('inc-dv:'+f)===v){var lc=JSON.parse(localStorage.getItem('inc-d:'+f)||'null');if(lc)return Promise.resolve(lc);}
+  var sc=JSON.parse(sessionStorage.getItem('inc-s:'+f)||'null');if(sc&&sc.v===v)return Promise.resolve(sc.d);}catch(e){}}
+ var pre=window.INC_PRE&&INC_PRE[f],red=function(){return fetch(CDN+f+'.json').then(function(r){if(!r.ok)throw new Error(f+' '+r.status);return r.json();});};
+ if(fijo||pre)return (pre?pre.catch(red):red()).then(function(j){
+  if(fijo){var s=JSON.stringify(j),ok=false;if(s.length<1.5e6){try{localStorage.setItem('inc-d:'+f,s);localStorage.setItem('inc-dv:'+f,v);ok=true;}catch(e){try{localStorage.removeItem('inc-d:'+f);localStorage.removeItem('inc-dv:'+f);}catch(x){}}}
+   if(!ok){try{sessionStorage.setItem('inc-s:'+f,JSON.stringify({v:v,d:j}));}catch(e){}}}
+  return j;});
+ return getS(f);}
+function getS(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'null');if(c)return Promise.resolve(c);}catch(e){}
  return fetch(CDN+f+'.json').then(function(r){return r.json();}).then(function(j){try{sessionStorage.setItem(k,JSON.stringify(j));}catch(e){}return j;});}
 function fecha(d){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+' de '+d.slice(0,4);}
 function ico(k,cls){return '<svg class="'+(cls||'')+'" viewBox="0 0 64 64" role="img" aria-label="'+esc(TN[k])+'" style="overflow:visible"><title>'+esc(TN[k])+'</title><use href="#i-'+k+'" class="k"/><use href="#i-'+k+'" class="m" x="3" y="2.5"/></svg>';}
@@ -475,8 +498,8 @@ Promise.all([get('meta'),get('catalogo'),get('titulos').catch(function(){return 
  // logos y avatares fijados al mismo commit que el código (así no se quedan versiones viejas en caché)
  if(window.INC_BASE)r[1].medios.forEach(function(m){['av','avw','logo'].forEach(function(k){if(m[k])m[k]=m[k].replace('https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/',INC_BASE);});});
  autocompleta(r[1]);META0=r[0]||{};cat0=r[1];prepEspIcos(r[1]);
- var art=document.querySelector('article.post'); if(RUTA)pagina(r[0],r[1]); else if(art)post(art,r[0],r[1]); else if(document.body.classList.contains('es-portada'))portada(r[0],r[1]); else listado(r[0],r[1]);
-}).catch(function(e){console.error('inconsolata»: no se pudieron cargar los datos',e);});
+ var art=document.querySelector('article.post'); if(RUTA){pagina(r[0],r[1]);monta();} else if(art){post(art,r[0],r[1]);monta();} else if(document.body.classList.contains('es-portada'))portada(r[0],r[1]); else {listado(r[0],r[1]);monta();}
+}).catch(function(e){console.error('inconsolata»: no se pudieron cargar los datos',e);monta();});
 document.addEventListener('click',function(e){var b=e.target.closest('.share .cp');if(!b)return;var u=b.dataset.u||location.href;
  var fin=function(){b.classList.add('done');b.setAttribute('aria-label','Enlace copiado');setTimeout(function(){b.classList.remove('done');b.setAttribute('aria-label','Copiar enlace');},1800);};
  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(fin,fin);else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(x){}t.remove();fin();}});
@@ -543,7 +566,7 @@ _TEM = [t['n'] for t in json.load(open(_CAT))['temas']]
 BIENVENIDA = r'''
 // /bienvenida: la página de presentación ocupa toda la ventana (se sirve desde los datos, igual que el resto del código)
 window.INC_BV=/\/bienvenida(\.html)?\/?$/.test(location.pathname);
-(function(){if(!window.INC_BV)return;var h=document.documentElement;h.style.visibility='hidden';
+(function(){if(!window.INC_BV)return;var h=document.documentElement;h.classList.add('montado');h.style.visibility='hidden';
  fetch((window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/bienvenida/index.html').then(function(r){if(!r.ok)throw new Error(r.status);return r.text();})
  .then(function(t){window.INC_BIENVENIDA=1;document.open();document.write(t);document.close();})
  .catch(function(e){console.error('inconsolata»: bienvenida',e);h.style.visibility='';});})();

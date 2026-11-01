@@ -18,14 +18,19 @@ assert not re.search(r'\{(?:block:|[A-Z][A-Za-z0-9-]*\})', ''.join(js) + css), '
 tema_js = ('(function(){function arranca(){\n' + '\n'.join(js) + '\nwindow.initLB=window.initLB||(typeof initLB!=="undefined"?initLB:null);\n}'
            'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",arranca);else arranca();})();\n')
 LOADER = """<style>html.cargando body{opacity:0}</style><script>
-(function(){var H=document.documentElement;H.classList.add('cargando');function ve(){H.classList.remove('cargando');}var R='https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@',K='inc-commit',v=null;
-try{var c=JSON.parse(localStorage.getItem(K)||'null');if(c&&Date.now()-c.t<6e5)v=c.v;}catch(e){}
-function go(v){window.INC_BASE=R+v+'/';var l=document.createElement('link');l.rel='stylesheet';l.href=INC_BASE+'tema/tema.css';
-l.onload=ve;l.onerror=ve;document.head.appendChild(l);var x=document.createElement('script');x.src=INC_BASE+'tema/tema.js';document.head.appendChild(x);
-setTimeout(ve,4000);}
-if(v)go(v);else{var t=setTimeout(function(){t=0;go('main');},2500);
+(function(){var H=document.documentElement;H.classList.add('cargando');function ve(){H.classList.remove('cargando');}
+var R='https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@',K='inc-commit',c=null,ya=0;
+try{c=JSON.parse(localStorage.getItem(K)||'null');}catch(e){}
+function go(v){if(ya)return;ya=1;window.INC_BASE=R+v+'/';
+var P=window.INC_PRE={},F=['meta','catalogo','titulos','ajustes_posts'];if(/(^[/]$|[/]index[.]html$)/.test(location.pathname))F.push('portada','avisos','portada_manual');
+F.forEach(function(f){var dv=null;try{dv=localStorage.getItem('inc-dv:'+f);}catch(e){}if(dv===v)return;P[f]=fetch(INC_BASE+'datos/'+f+'.json').then(function(r){if(!r.ok)throw 0;return r.json();});P[f].catch(function(){});});
+var l=document.createElement('link');l.rel='stylesheet';l.href=INC_BASE+'tema/tema.css';l.onload=ve;l.onerror=ve;document.head.appendChild(l);
+var x=document.createElement('script');x.src=INC_BASE+'tema/tema.js';document.head.appendChild(x);setTimeout(ve,4000);}
+if(c&&c.v&&Date.now()-c.t<6e5){go(c.v);return;}
+var t=setTimeout(function(){go(c&&c.v||'main');},c&&c.v?700:1500);
 fetch('https://api.github.com/repos/inconsolataweb/inconsolata-datos/commits/main',{headers:{Accept:'application/vnd.github.sha'}}).then(function(r){if(!r.ok)throw 0;return r.text();})
-.then(function(h){if(!t)return;clearTimeout(t);h=h.trim();try{localStorage.setItem(K,JSON.stringify({v:h,t:Date.now()}));}catch(e){}go(h);}).catch(function(){if(t){clearTimeout(t);go('main');}});}
+.then(function(h){h=h.trim();try{localStorage.setItem(K,JSON.stringify({v:h,t:Date.now()}));}catch(e){}clearTimeout(t);go(h);})
+.catch(function(){clearTimeout(t);go(c&&c.v||'main');});
 })();
 </script>"""
 s = s.replace('</head>', LOADER + '\n</head>', 1)

@@ -317,5 +317,6 @@ function portada(meta,cat){
   document.addEventListener('click',function(e){var a=e.target.closest('a[href="/#temas"]');if(a&&abreT()){e.preventDefault();var lm=document.getElementById('lite-menu');if(lm&&!lm.hidden){var bm=document.querySelector('[data-lite="menu"]');if(bm)bm.click();}}});
   if(location.hash==='#temas'){abreT();history.replaceState(null,'',location.pathname+location.search);}
   var q=document.getElementById('md-q');if(q)q.addEventListener('input',function(){var v=fold(this.value.trim());[].forEach.call(document.querySelectorAll('#md-grid .mdc'),function(c){c.hidden=v&&c.dataset.n.indexOf(v)<0;});});
- }).catch(function(e){console.error('inconsolata»: portada',e);document.body.classList.remove('es-portada');listado(meta,cat);});
+ monta();
+ }).catch(function(e){console.error('inconsolata»: portada',e);document.body.classList.remove('es-portada');listado(meta,cat);monta();});
 }

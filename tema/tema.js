@@ -43,7 +43,7 @@ function initLB(list){
 
 // /bienvenida: la p\u00e1gina de presentaci\u00f3n ocupa toda la ventana (se sirve desde los datos, igual que el resto del c\u00f3digo)
 window.INC_BV=/\/bienvenida(\.html)?\/?$/.test(location.pathname);
-(function(){if(!window.INC_BV)return;var h=document.documentElement;h.style.visibility='hidden';
+(function(){if(!window.INC_BV)return;var h=document.documentElement;h.classList.add('montado');h.style.visibility='hidden';
  fetch((window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/bienvenida/index.html').then(function(r){if(!r.ok)throw new Error(r.status);return r.text();})
  .then(function(t){window.INC_BIENVENIDA=1;document.open();document.write(t);document.close();})
  .catch(function(e){console.error('inconsolata\u00bb: bienvenida',e);h.style.visibility='';});})();
@@ -63,7 +63,20 @@ var LANZAMIENTO='2026-11-01';
 var TN={"info": "Infograf\u00eda", "carto": "Cartograf\u00eda", "port": "Portada", "graf": "Gr\u00e1fico", "ilus": "Ilustraci\u00f3n", "foto": "Fotograf\u00eda", "video": "V\u00eddeo", "publi": "Publicidad", "online": "Online"}, TS=["t-elecciones", "t-elecciones-en-eeuu", "t-guerras-y-conflictos", "t-guerra-en-ucrania", "t-conflicto-palestino-israeli", "t-guerra-en-siria", "t-guerra-en-iran", "t-terrorismo-y-atentados", "t-catastrofes-y-accidentes", "t-covid-19", "t-salud", "t-economia", "t-europa", "t-monarquia-y-realeza", "t-el-papa-y-el-vaticano", "t-cataluna-y-el-proces", "t-necrologicas", "t-historia", "t-resumenes-del-ano", "t-ciencia-y-espacio", "t-clima-y-medio-ambiente", "t-biodiversidad", "t-viajes", "t-tecnologia", "t-otros-deportes", "t-futbol", "t-juegos-olimpicos", "t-mundiales-y-eurocopas", "t-motor-y-ciclismo", "t-tenis", "t-cine", "t-musica", "t-television-y-series", "t-libros-y-literatura", "t-arte-y-arquitectura", "t-gastronomia", "t-redisenos", "t-tipografia", "t-humor-grafico", "t-titulares", "t-industria-y-crisis-de-medios", "t-datos-y-visualizacion", "t-politica-espanola", "t-migraciones"], SECN={m:'mucho m\u00e1s',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic',w:'especial web'};
 var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-function get(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'null');if(c)return Promise.resolve(c);}catch(e){}
+// la cortina de carga (tema.css) se retira cuando la vista ya est\u00e1 montada
+function monta(){var h=document.documentElement;if(h.classList.contains('montado'))return;requestAnimationFrame(function(){h.classList.add('montado');});}
+// datos: fijados al commit (jsDelivr @commit no cambia nunca), as\u00ed se pueden guardar en el navegador entre visitas sin quedarse viejos;
+// los que el arranque ya pidi\u00f3 en paralelo (INC_PRE) se aprovechan
+function get(f){var v=((window.INC_BASE||'').split('@')[1]||'').replace(/\/$/,''),fijo=/^[0-9a-f]{7,40}$/.test(v)&&f.indexOf('/')<0;
+ if(fijo){try{if(localStorage.getItem('inc-dv:'+f)===v){var lc=JSON.parse(localStorage.getItem('inc-d:'+f)||'null');if(lc)return Promise.resolve(lc);}
+  var sc=JSON.parse(sessionStorage.getItem('inc-s:'+f)||'null');if(sc&&sc.v===v)return Promise.resolve(sc.d);}catch(e){}}
+ var pre=window.INC_PRE&&INC_PRE[f],red=function(){return fetch(CDN+f+'.json').then(function(r){if(!r.ok)throw new Error(f+' '+r.status);return r.json();});};
+ if(fijo||pre)return (pre?pre.catch(red):red()).then(function(j){
+  if(fijo){var s=JSON.stringify(j),ok=false;if(s.length<1.5e6){try{localStorage.setItem('inc-d:'+f,s);localStorage.setItem('inc-dv:'+f,v);ok=true;}catch(e){try{localStorage.removeItem('inc-d:'+f);localStorage.removeItem('inc-dv:'+f);}catch(x){}}}
+   if(!ok){try{sessionStorage.setItem('inc-s:'+f,JSON.stringify({v:v,d:j}));}catch(e){}}}
+  return j;});
+ return getS(f);}
+function getS(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'null');if(c)return Promise.resolve(c);}catch(e){}
  return fetch(CDN+f+'.json').then(function(r){return r.json();}).then(function(j){try{sessionStorage.setItem(k,JSON.stringify(j));}catch(e){}return j;});}
 function fecha(d){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+' de '+d.slice(0,4);}
 function ico(k,cls){return '<svg class="'+(cls||'')+'" viewBox="0 0 64 64" role="img" aria-label="'+esc(TN[k])+'" style="overflow:visible"><title>'+esc(TN[k])+'</title><use href="#i-'+k+'" class="k"/><use href="#i-'+k+'" class="m" x="3" y="2.5"/></svg>';}
@@ -652,7 +665,8 @@ function portada(meta,cat){
   document.addEventListener('click',function(e){var a=e.target.closest('a[href="/#temas"]');if(a&&abreT()){e.preventDefault();var lm=document.getElementById('lite-menu');if(lm&&!lm.hidden){var bm=document.querySelector('[data-lite="menu"]');if(bm)bm.click();}}});
   if(location.hash==='#temas'){abreT();history.replaceState(null,'',location.pathname+location.search);}
   var q=document.getElementById('md-q');if(q)q.addEventListener('input',function(){var v=fold(this.value.trim());[].forEach.call(document.querySelectorAll('#md-grid .mdc'),function(c){c.hidden=v&&c.dataset.n.indexOf(v)<0;});});
- }).catch(function(e){console.error('inconsolata\u00bb: portada',e);document.body.classList.remove('es-portada');listado(meta,cat);});
+ monta();
+ }).catch(function(e){console.error('inconsolata\u00bb: portada',e);document.body.classList.remove('es-portada');listado(meta,cat);monta();});
 }
 
 // ------------------------------------------------------------------ p\u00e1ginas propias
@@ -1534,8 +1548,8 @@ Promise.all([get('meta'),get('catalogo'),get('titulos').catch(function(){return 
  // logos y avatares fijados al mismo commit que el c\u00f3digo (as\u00ed no se quedan versiones viejas en cach\u00e9)
  if(window.INC_BASE)r[1].medios.forEach(function(m){['av','avw','logo'].forEach(function(k){if(m[k])m[k]=m[k].replace('https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/',INC_BASE);});});
  autocompleta(r[1]);META0=r[0]||{};cat0=r[1];prepEspIcos(r[1]);
- var art=document.querySelector('article.post'); if(RUTA)pagina(r[0],r[1]); else if(art)post(art,r[0],r[1]); else if(document.body.classList.contains('es-portada'))portada(r[0],r[1]); else listado(r[0],r[1]);
-}).catch(function(e){console.error('inconsolata\u00bb: no se pudieron cargar los datos',e);});
+ var art=document.querySelector('article.post'); if(RUTA){pagina(r[0],r[1]);monta();} else if(art){post(art,r[0],r[1]);monta();} else if(document.body.classList.contains('es-portada'))portada(r[0],r[1]); else {listado(r[0],r[1]);monta();}
+}).catch(function(e){console.error('inconsolata\u00bb: no se pudieron cargar los datos',e);monta();});
 document.addEventListener('click',function(e){var b=e.target.closest('.share .cp');if(!b)return;var u=b.dataset.u||location.href;
  var fin=function(){b.classList.add('done');b.setAttribute('aria-label','Enlace copiado');setTimeout(function(){b.classList.remove('done');b.setAttribute('aria-label','Copiar enlace');},1800);};
  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(fin,fin);else{var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(x){}t.remove();fin();}});
