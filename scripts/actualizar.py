@@ -256,6 +256,20 @@ def clasificar(p):
     if EXCLUIR & set(tl):
         return None
     cuerpo = (p.get('body') or '') + (p.get('caption') or '') + (p.get('description') or '')
+    # piezas con tipo y etiquetas delante: «cartografía | elecciones 29-N, encuestas | Trabajo: … | Autor: … | Medio: …»
+    tipos_pz, etq_pz = [], []
+    for para in re.findall(r'<p>(.*?)</p>', cuerpo, re.S):
+        pt = txt(para)
+        if not re.search(r'Trabajo\s*:', pt):
+            continue
+        segs = [x.strip(' .') for x in pt.split('Trabajo', 1)[0].split('|')]
+        segs = [x for x in segs if x and ':' not in x and len(x) < 120]
+        if segs:
+            tipos_pz.append(segs[0].lower())
+        if len(segs) > 1:
+            etq_pz += [e.strip().lower() for e in segs[1].split(',') if e.strip()]
+    if etq_pz:
+        tl = tl + [e for e in dict.fromkeys(etq_pz) if e not in tl]
     titulo_raw = (p.get('title') or '').strip()
     texto = txt(cuerpo.replace('[[MORE]]', ' '))
     texto = re.sub(r'<([^<>\s][^<>]{0,118})>', r'\1', texto)   # <palabras> subrayadas a mano
@@ -306,7 +320,7 @@ def clasificar(p):
     temas = {r['tema'] for r in REGLAS if (r['tg'] and any(r['tg'].match(t) for t in tl)) or any(r['kw'].search(x) for x in textos)}
     tipos = [c for c, rx in TIPO_TAG if any(re.search(rx, t) for t in tl)]
     # tipo indicado a mano en cada pieza de mucho más y EXTRA!: «Tipo: cartografía»
-    for w in re.findall(r'\bTipo\s*:\s*([A-Za-zÀ-ÿ ]+)', txt(cuerpo)):
+    for w in re.findall(r'\bTipo\s*:\s*([A-Za-zÀ-ÿ ]+)', txt(cuerpo)) + tipos_pz:
         w = w.strip().lower()
         for c, rx in TIPO_TAG:
             if re.search(rx.replace('$', ''), w) and c not in tipos:

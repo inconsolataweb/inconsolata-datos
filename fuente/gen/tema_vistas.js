@@ -88,7 +88,11 @@ function vMM(o){
    if(nx&&nx.tagName==='P'&&!nx.querySelector('img')&&nx.textContent.replace(/[\s…\.\u00a0]/g,'')){
     var tx=textoDe(nx),bb=nx.querySelector('b,strong');
     if(/Trabajo\s*:|Medio\s*:/.test(tx)){
-     tx.split('|').forEach(function(f){var m=f.match(/^\s*(Trabajo|Autor(?:a|es|as)?|Medio|Tipo)\s*:\s*(.*)$/i);if(!m)return;
+     // delante de «Trabajo:» pueden ir, sin nombre, el tipo y las etiquetas de la pieza: «cartografía | elecciones 29-N | Trabajo: …»
+     var sinN=0,antes=true;
+     tx.split('|').forEach(function(f){var m=f.match(/^\s*(Trabajo|Autor(?:a|es|as)?|Medio|Tipo)\s*:\s*(.*)$/i);
+      if(!m){var v=f.trim();if(antes&&v&&v.indexOf(':')<0){if(sinN===0&&!r.tp)r.tp=tipoExpl('Tipo: '+v);else if(sinN===1)r.etq=v.split(',').map(function(e){return e.trim();}).filter(Boolean);sinN++;}return;}
+      if(/^Trabajo/i.test(m[1]))antes=false;
       if(/^Tipo/i.test(m[1])){r.tp=tipoExpl('Tipo: '+m[2]);return;}
       if(/^Trabajo/i.test(m[1]))r.tr=m[2].trim().replace(/\.$/,'');
       else if(/^Autor/i.test(m[1]))r.au=m[2].split(/\s+y\s+|,\s*/).map(function(a){return a.trim().replace(/\.$/,'');}).filter(Boolean);
@@ -148,8 +152,10 @@ function vX(o){
    if(ns.length)m=[null,String(Math.min.apply(null,ns)),Math.max.apply(null,ns)>Math.min.apply(null,ns)?String(Math.max.apply(null,ns)):null];else{sec++;m=[null,String(sec),null];}}
   sec=+(m[2]||m[1]);
   var h=li.innerHTML.replace(/^\s*\[[^\]]*\]\s*/,'').replace(/\s*\|?\s*(<(i|em)>\s*)?Tipo(\s*<\/(i|em)>)?\s*:\s*[^|<]+/i,''),bb=li.querySelector('b,strong'),md=bb?bb.textContent.trim():'';
+  // tipo y etiquetas sin nombre al principio («portada | elecciones 29-N | <b>El País</b>…»): fuera del texto visible
+  var tpL='',pz=h.split('|');if(pz.length>1){var k0=0;while(k0<2&&k0<pz.length-1&&!/<(b|strong)\b|:/.test(pz[k0])&&pz[k0].replace(/<[^>]+>/g,'').trim().length<120){if(k0===0)tpL=tipoExpl('Tipo: '+pz[0].replace(/<[^>]+>/g,''));k0++;}if(k0)h=pz.slice(k0).join('|').replace(/^\s+/,'');}
   var fes=li.textContent.match(/\d{1,2}\s+de\s+[a-záéíóú]+/gi)||[],fe=(fes.length?fes[fes.length-1].match(/(\d{1,2})\s+de\s+([a-záéíóú]+)/i):[]);var fd=(li.textContent.match(/d[ií]a\s+(\d{1,2})/i)||[])[1];
-  items.push({t:li.textContent.replace(/^\s*\[[^\]]*\]\s*/,'').trim(),a:+m[1],z:+(m[2]||m[1]),lab:'['+m[1]+(m[2]?'–'+m[2]:'')+']',bs:[].map.call(li.querySelectorAll('b,strong'),function(z){return z.textContent.trim();}),h:h,md:md,mo:medioPor(cat,md),fe:fe[1]&&MESES.indexOf(fe[2].toLowerCase())>=0?fe[1]+' de '+fe[2].toLowerCase():(fd&&mes?fd+' de '+mes:''),tipo:tipoExpl(li.textContent)||tipoDe(li.textContent,'info')});});
+  items.push({t:li.textContent.replace(/^\s*\[[^\]]*\]\s*/,'').trim(),a:+m[1],z:+(m[2]||m[1]),lab:'['+m[1]+(m[2]?'–'+m[2]:'')+']',bs:[].map.call(li.querySelectorAll('b,strong'),function(z){return z.textContent.trim();}),h:h,md:md,mo:medioPor(cat,md),fe:fe[1]&&MESES.indexOf(fe[2].toLowerCase())>=0?fe[1]+' de '+fe[2].toLowerCase():(fd&&mes?fd+' de '+mes:''),tipo:tpL||tipoExpl(li.textContent)||tipoDe(li.textContent,'info')});});
  var deI=function(i){return items.find(function(x){return i+1>=x.a&&i+1<=x.z;});};
  var lb=ims.map(function(im,i){var x=deI(i);return {src:im.src,txt:x?x.t:'',cap:(x?x.lab+' '+(x.mo?x.mo.n:x.md)+' · ':'')+'imagen '+(i+1)+' de '+n};});
  var fr=ims.map(function(im,i){var x=deI(i),l=x?'<span style="color:var(--accent)">'+esc(x.lab)+'</span> '+esc(x.mo?x.mo.n:x.md):'imagen '+(i+1);
