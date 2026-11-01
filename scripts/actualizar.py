@@ -216,6 +216,10 @@ PEND.setdefault('autores', {}); PEND.setdefault('medios', {})
 MED = [m['n'] for m in IDX['medios']]
 AUT = [a['n'] for a in IDX['autores']]
 TEM = [t['n'] for t in IDX['temas']]
+# temas nuevos de temas_reglas.json que aún no están en el índice
+for r in REGLAS:
+    if r['tema'] not in TEM:
+        IDX['temas'].append({'n': r['tema'], 'b': r.get('bloque', ''), 'p': 0, 'h': True}); TEM.append(r['tema'])
 for r in REGLAS:
     r['tg'] = re.compile(r'^(?:' + r['etiquetas'] + r')$') if r['etiquetas'] else None
     r['kw'] = re.compile(r['texto'], re.I)
@@ -320,6 +324,7 @@ def clasificar(p):
     # temas
     textos = [i[0] for i in items] if sec in ('muchomas', 'extra') else [titulo_raw + ' ' + texto]
     temas = {r['tema'] for r in REGLAS if (r['tg'] and any(r['tg'].match(t) for t in tl)) or any(r['kw'].search(x) for x in textos)}
+    temas |= {n for n in TEM if nz(n) in {nz(t) for t in tl}}
     tipos = [c for c, rx in TIPO_TAG if any(re.search(rx, t) for t in tl)]
     # tipo indicado a mano en cada pieza de mucho más y EXTRA!: «Tipo: cartografía»
     for w in re.findall(r'\bTipo\s*:\s*([A-Za-zÀ-ÿ ]+)', txt(cuerpo)) + tipos_pz:
@@ -329,6 +334,38 @@ def clasificar(p):
                 tipos.append(c)
                 break
     th = next((im for im in ims if not im['cover']), ims[0] if ims else None)
+    # piezas de mucho más y EXTRA!: imagen, tipo, medios, autores y etiquetas de cada trabajo (para las fichas y los especiales)
+    piezas = []
+    if sec in ('muchomas', 'extra'):
+        por_url = {im['url']: im for im in ims}
+        ult = None
+        for mt_ in re.finditer(r'<img\b[^>]*>|<p>(.*?)</p>', cuerpo, re.S):
+            if mt_.group(0).startswith('<img'):
+                u = attr(mt_.group(0), 'src')
+                if u in por_url and not por_url[u].get('cover'):
+                    ult = ult or por_url[u]
+                continue
+            para = mt_.group(1)
+            pt = txt(para)
+            if not re.search(r'Trabajo\s*:', pt):
+                continue
+            segs = [x.strip(' .') for x in pt.split('Trabajo', 1)[0].split('|')]
+            segs = [x for x in segs if x and ':' not in x and len(x) < 120]
+            tp = ''
+            if segs:
+                for c, rx in TIPO_TAG:
+                    if re.search(rx.replace('$', ''), segs[0].lower()):
+                        tp = c; break
+            et = [e.strip().lower() for e in segs[1].split(',') if e.strip()] if len(segs) > 1 else []
+            pm = sorted({MED.index(m) for m in (medio_de(txt(b).strip(' »,.:'), fecha, []) for _, b in BOLD_RE.findall(para)) if m in MED})
+            pa = set()
+            for m in AUTOR_RE.finditer(pt):
+                for n in nombres(m.group(1)):
+                    a_ = ALIAS['autores'].get(nz(n))
+                    if a_ in AUT and a_ not in NO_AUTORES:
+                        pa.add(AUT.index(a_))
+            piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et])
+            ult = None
     post = {
         'i': str(p['id']), 'u': p['post_url'].split('/post/', 1)[-1], 'd': fecha, 's': SEC[sec], 'k': tipos,
         't': titulo, 'b': primera_frase(texto),
@@ -340,6 +377,7 @@ def clasificar(p):
         'im': miniatura(th) if th else '', 'r': round(th['w'] / th['h'], 2) if th and th.get('w') and th.get('h') else 1.3,
         'n': len(ims),
         '_res': resumen(texto),
+        '_pz': piezas or None,
         '_tags': tl,
         '_fr': [[miniatura(im), (items[k][1] if k < len(items) else '')] for k, im in enumerate([im for im in ims if not im['cover']][:40])] if sec in ('muchomas', 'extra') else None,
     }
@@ -418,8 +456,9 @@ def main():
     frames = {q['i']: q.pop('_fr') for q in posts if q.get('_fr')}
     webs = {q['i']: q.pop('_web') for q in posts if q.get('_web')}
     RES.update({q['i']: q.pop('_res') for q in posts if q.get('_res')})
+    PZ.update({q['i']: q.pop('_pz') for q in posts if q.get('_pz')})
     for q in posts:
-        q.pop('_tags', None); q.pop('_fr', None); q.pop('_res', None)
+        q.pop('_tags', None); q.pop('_fr', None); q.pop('_res', None); q.pop('_pz', None)
     aplicar_estructura(posts)
     recontar(posts)
     IDX['posts'] = posts
@@ -552,6 +591,7 @@ def iconos_especiales():
     return out
 
 RES = {}
+PZ = {}
 def escribir_portada(idx, frames, webs=None):
     """Datos ligeros de la portada: lo último, el último mucho más y EXTRA! con sus fotogramas, el escaparate de temas,
     los medios del año y las efemérides («tal día como hoy», un archivo por mes)."""
@@ -619,7 +659,17 @@ def escribir_portada(idx, frames, webs=None):
     out['man'] = [corto(q) for q in posts if q['i'] in ids and q['i'] not in rec]
     json.dump(out, open(D('portada.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     # archivo ligero para las fichas de medios y autores y los especiales (el índice sin el texto de búsqueda)
-    arch = {'posts': [{k: v for k, v in q.items() if k not in ('x', 'b', 'r')} for q in posts],
+    try:
+        viejo = {q['i']: q['pz'] for q in json.load(open(D('archivo.json')))['posts'] if q.get('pz')}
+    except Exception:
+        viejo = {}
+    def con_pz(q):
+        o = {k: v for k, v in q.items() if k not in ('x', 'b', 'r')}
+        pz = PZ.get(q['i']) or viejo.get(q['i'])
+        if pz:
+            o['pz'] = pz
+        return o
+    arch = {'posts': [con_pz(q) for q in posts],
             'medios': idx['medios'], 'autores': idx['autores'], 'temas': idx['temas']}
     json.dump(arch, open(D('archivo.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
     # efemérides: hasta tres posts de años distintos para cada día del año

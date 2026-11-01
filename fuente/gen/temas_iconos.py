@@ -16,6 +16,7 @@ TI = {
  'Guerra en Irán': g(f'<path d="M32 4 C40 12 42 24 42 34 V46 H22 V34 C22 24 24 12 32 4 Z"/><path d="M22 38 L12 50 V54 H22 M42 38 L52 50 V54 H42"/><path d="M26 50 L32 60 L38 50 Z" {F}/><circle cx="32" cy="24" r="4" {F}/>'),
  'Terrorismo y atentados': g(f'<path d="M32 4 L37 22 L54 14 L44 30 L60 36 L42 40 L48 58 L32 46 L16 58 L22 40 L4 36 L20 30 L10 14 L27 22 Z"/><circle cx="32" cy="32" r="6" {F}/>'),
  'Catástrofes y accidentes': g('<path d="M4 34 H16 L22 14 L30 54 L38 20 L44 34 H60"/><path d="M8 58 H56" stroke-dasharray="2 8"/>'),
+ 'Migraciones': g(f'<path d="M6 38 H58 L50 50 H14 Z"/><circle cx="22" cy="30" r="4" {F}/><circle cx="32" cy="28" r="4" {F}/><circle cx="42" cy="30" r="4" {F}/><path d="M4 58 C10 54 16 54 22 58 C28 62 34 62 40 58 C46 54 52 54 60 58"/><path d="M32 6 V20" stroke-dasharray="3 4"/><path d="M26 14 L32 8 L38 14"/>'),
  'COVID-19': g(f'<circle cx="32" cy="32" r="14"/><circle cx="27" cy="29" r="3.5" {F}/><circle cx="37" cy="36" r="3" {F}/><path d="M32 18 V8 M32 46 V56 M18 32 H8 M46 32 H56 M22 22 L15 15 M42 42 L49 49 M42 22 L49 15 M22 42 L15 49"/><circle cx="32" cy="6" r="3" {F}/><circle cx="32" cy="58" r="3" {F}/><circle cx="6" cy="32" r="3" {F}/><circle cx="58" cy="32" r="3" {F}/>'),
  'Salud': g(f'<path d="M24 8 H40 V24 H56 V40 H40 V56 H24 V40 H8 V24 H24 Z"/><path d="M14 32 H24 L28 24 L34 40 L38 32 H50"/>'),
  'Economía': g(f'<circle cx="32" cy="32" r="24"/><path d="M42 20 C38 16 34 15 30 16 C22 18 18 25 18 32 C18 39 22 46 30 48 C34 49 38 48 42 44"/><path d="M12 28 H34 M12 36 H34" stroke-width="5"/>'),

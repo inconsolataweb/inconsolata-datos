@@ -54,6 +54,12 @@
   "texto": "\\bterremotos?\\b|\\bse[ií]smo\\b|\\btsunami\\b|\\bhurac[aá]n\\b|\\btif[oó]n\\b|\\binundaci\\w+|\\bDANA\\b|\\bvolc[aá]n\\b|\\berupci[oó]n\\b|\\baccidente (a[eé]reo|ferroviario)\\b|\\bnaufragio\\b|\\bincendios? forestal|\\bcat[aá]strofe\\b|\\bapag[oó]n\\b"
  },
  {
+  "tema": "Migraciones",
+  "bloque": "Actualidad",
+  "etiquetas": "migraciones|migraci[oó]n|inmigraci[oó]n|refugiados|pateras|migrantes|crisis migratoria",
+  "texto": "\\binmigra\\w*|\\bmigrantes?\\b|\\bmigratori[oa]s?\\b|\\brefugiad[oa]s\\b|\\bpateras?\\b|\\bcayucos?\\b|solicitantes de asilo"
+ },
+ {
   "tema": "COVID-19",
   "bloque": "Actualidad",
   "etiquetas": "coronavirus",
