@@ -286,7 +286,7 @@ def clasificar(p):
     # título
     titulo = re.sub(r'^\{(?:y mucho \+|a fondo|aquí·allí)\}:\s*', '', titulo_raw)
     if sec == 'muchomas':
-        m = re.search(r'semana\s+([IVXLCDM]+)', titulo_raw + ' ' + texto[:80], re.I)
+        m = re.search(r'semana\s+([IVXLCDM]+)(?![A-Za-zÁÉÍÓÚáéíóúÑñ])', titulo_raw + ' ' + texto[:200])
         titulo = 'Mucho más · semana ' + m.group(1).upper() if m else 'Mucho más'
     elif sec == 'web' and not titulo:
         m = re.search(r'<h[12][^>]*>(.*?)</h[12]>', cuerpo, re.S)

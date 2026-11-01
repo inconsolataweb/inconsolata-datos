@@ -141,7 +141,7 @@ function serieHTML(sr){
 function vMM(o){
  document.body.classList.add('v-mm');
  var b=o.body,id=o.id,d=o.d,cat=o.cat,ims=o.ims,n=ims.length;
- var num=((TIT[id]||'')+' '+b.textContent).replace(/\u00a0/g,' ').match(/semana\s+([IVXLCDM]+)/i);num=num?num[1].toUpperCase():'';
+ var num=((TIT[id]||'')+' '+b.textContent).replace(/\u00a0/g,' ').match(/semana\s+([IVXLCDM]+)(?![A-Za-z\u00c1\u00c9\u00cd\u00d3\u00da\u00e1\u00e9\u00ed\u00f3\u00fa\u00d1\u00f1])/);num=num?num[1].toUpperCase():'';
  // sin n\u00famero en el t\u00edtulo: el \u00abmucho m\u00e1s\u00bb sale cada domingo desde el 30 de octubre de 2011, as\u00ed que se cuenta por semanas
  if(!num&&d){var sem=Math.round((new Date(d+'T12:00:00')-new Date('2011-10-30T12:00:00'))/(7*864e5))+1;if(sem>0)num=romano(sem);}
  var p1=[].find.call(b.querySelectorAll('p'),function(p){var t=p.textContent.trim();return t.length>60&&!/Trabajo\s*:/.test(t)&&!/^[\u2026\.]+$/.test(t);});
@@ -189,7 +189,7 @@ function vMM(o){
    (r.fe?'<span class="when">'+esc(r.fe)+' de '+y+'</span>':'')+'</div></article>';}).join('');
  var cu={todas:n};it.forEach(function(r){cu[r.tipo]=(cu[r.tipo]||0)+1;});
  var prev=vecino(id,/^Mucho m\u00e1s/i,true),nextw=vecino(id,/^Mucho m\u00e1s/i,false);
- var pn=function(k,lab){if(!k)return '';var t=(TIT[k].match(/semana\s+([IVXLCDM]+)/i)||[])[1]||'';return '<a href="/post/'+k+'" class="pn"><span class="caps">'+lab+'</span><span class="big soft">'+t+'</span></a>';};
+ var pn=function(k,lab){if(!k)return '';var t=(TIT[k].match(/semana\s+([IVXLCDM]+)(?![A-Za-z\u00c1\u00c9\u00cd\u00d3\u00da\u00e1\u00e9\u00ed\u00f3\u00fa\u00d1\u00f1])/)||[])[1]||'';return '<a href="/post/'+k+'" class="pn"><span class="caps">'+lab+'</span><span class="big soft">'+t+'</span></a>';};
  var x=nuevoTop('mm-top');
  x.top.innerHTML=(d<LANZAMIENTO?'<div class="wrap">'+LEG+'</div>':'')+hero+(n?th:'')+(Object.keys(cu).length>2?'<div class="filters"><div class="wrap" id="filters"><span class="caps" style="margin-right:6px">Ver \u00bb</span></div></div>':'');
  x.main.innerHTML='<div id="items">'+items+'</div><section class="close">'+pn(prev,'\u00ab Semana anterior')+pn(nextw,'Semana siguiente \u00bb')+(o.art.querySelector('.support')?o.art.querySelector('.support').outerHTML:'')+'</section>';
@@ -391,7 +391,7 @@ function colocar(L){var out=[],R=[-1.5,1,-2.5,.6,1.4,-2,-1,2,-.8],H=[400,320,360
   out.push({c:'1/'+(1+wa),mt:MA[f%6],r:R[i%9],h:h(a,i)});out.push({c:(2+wa)+'/13',mt:MB[f%6],r:R[(i+1)%9],h:h(b,i+1)});}
  return out;}
 
-function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)/i)||[])[1]||'';
+function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)(?![A-Za-z\u00c1\u00c9\u00cd\u00d3\u00da\u00e1\u00e9\u00ed\u00f3\u00fa\u00d1\u00f1])/)||[])[1]||'';
  var lab=(top||m.d===hoyISO())?(m.d===hoyISO()?'Hoy, '+DIAS[new Date().getDay()]+' \u00bb':'Reci\u00e9n salido \u00bb'):'';
  return '<section class="mm"'+(top?' style="margin-top:44px"':'')+'><div class="wrap inner"><div class="mm-top"><div style="display:flex;flex-direction:column;gap:4px">'+
   (lab?'<span class="caps mm-hoy">'+lab+'</span>':'')+'<span class="caps" style="font-size:15px;letter-spacing:3px">La semana en infograf\u00edas</span><span class="mm-title soft">mucho m\u00e1s \u00bb</span></div>'+
@@ -1325,7 +1325,10 @@ function ajustes(body,aj,s){if(!aj)return;
    if(i>=0&&!x.parentNode.closest('mark,a,.fuente')){var r=x.splitText(i);r.splitText(f.length);var m=document.createElement('mark');m.className='subr';r.parentNode.replaceChild(m,r);m.appendChild(r);break;}}});
 }
 function post(art,meta,cat,medido){
- var id=rid(art), d=art.dataset.date, mt=meta[id]||['',[],[],[],[]];
+ var id=rid(art), d=art.dataset.date, mt=meta[id];
+ // post reci\u00e9n publicado que a\u00fan no est\u00e1 en los datos (se actualizan cada hora): la secci\u00f3n sale de sus etiquetas
+ if(!mt){var tg0=(art.dataset.tags||'').toLowerCase().split('|');var has=function(r){return tg0.some(function(t){return r.test(t);});};
+  mt=[has(/^especial ?web$/)?'w':has(/^mucho ?m[a\u00e1]s$/)?'m':has(/^extra!?$/)?'x':has(/^detallitos$/)?'d':has(/^metablog$/)?'b':has(/^offtopic$/)?'o':'',[],[],[],[]];}
  var s=mt[0], tipos=mt[1], meds=mt[2].map(function(i){return cat.medios[i];}), auts=mt[3].map(function(i){return cat.autores[i];}), tems=mt[4];
  var esp=mt[5]&&cat.esp&&cat.esp[mt[5]]?{slug:mt[5],n:cat.esp[mt[5]]}:null;
  var body=art.querySelector('.body'), raw=art.querySelector('.post-raw'); unwrap(body);
@@ -1348,7 +1351,7 @@ function post(art,meta,cat,medido){
  // t\u00edtulo: el de Tumblr, o el primer H1 del cuerpo, o la primera frase
  var h1=art.querySelector('.title h1'), t=TIT[id]||h1.textContent.trim();
  var bh=body.querySelector('h1'); if(!t&&bh){t=bh.textContent.trim();}
- if(s==='m'){var mm=(t+' '+body.textContent).replace(/&nbsp;/g,' ').match(/semana\s+([IVXLCDM]+)/i);t='mucho m\u00e1s \u00bb semana '+(mm?mm[1].toUpperCase():'');}
+ if(s==='m'){var mm=(t+' '+body.textContent).replace(/&nbsp;/g,' ').match(/semana\s+([IVXLCDM]+)(?![A-Za-z\u00c1\u00c9\u00cd\u00d3\u00da\u00e1\u00e9\u00ed\u00f3\u00fa\u00d1\u00f1])/);t='mucho m\u00e1s \u00bb semana '+(mm?mm[1].toUpperCase():'');}
  if(!t){var tx=body.textContent.replace(/^[\s\u2a54]+/,'').trim(),f=tx.match(/^(.{20,140}?[.!?:])(\s|$)/);t=f?f[1]:tx.slice(0,110).replace(/\s\S*$/,'\u2026');h1.classList.add('auto');}
  tems=tems.filter(function(i){var q=cat.temas[i];return q&&(!q.x||(q.x==='sub'&&q.e));});
  var tm=tems.length?'<div class="temas"><span class="caps">Temas \u00bb</span>'+tems.map(function(i){var q=cat.temas[i];return '<a href="'+(q.x==='sub'?'/especiales#'+q.e:'/buscador#h='+i)+'"'+(q.x==='sub'?' class="esp"':'')+'><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+(q.x==='sub'&&ESPI[q.e]||TS[i])+'"/></svg>'+esc(q.n)+'</a>';}).join('')+'</div>':'';
@@ -1460,7 +1463,7 @@ function listado(meta,cat){
   if(mt[0]&&SECN[mt[0]])c.insertAdjacentHTML('afterbegin','<span class="sec">'+SECN[mt[0]]+'</span>');
   if(m)k.innerHTML=medsK(mt[2].map(function(i){return cat.medios[i];}))+' \u00b7 '+k.textContent.replace(/^\u00bb\s*/,'');
   var tt=c.querySelector('.tt'),tid=TIT[cid]; if(tid&&mt[0]!=='m')tt.textContent=quita(tid); if(!tt.textContent.trim()){var tx=(c.dataset.txt||'').replace(/<([^<>]{1,120})>/g,'$1').replace(/^[\s\u2a54]+/,'');var f=tx.match(/^(.{20,120}?[.!?:])(\s|$)/);tt.textContent=f?f[1]:tx.slice(0,100)+'\u2026';}
-  if(mt[0]==='m'){var mm=((tid||'')+' '+(c.dataset.txt||'')).replace(/&nbsp;/g,' ').match(/semana\s+([IVXLCDM]+)/i);tt.textContent='mucho m\u00e1s \u00bb semana '+(mm?mm[1].toUpperCase():'');}
+  if(mt[0]==='m'){var mm=((tid||'')+' '+(c.dataset.txt||'')).replace(/&nbsp;/g,' ').match(/semana\s+([IVXLCDM]+)(?![A-Za-z\u00c1\u00c9\u00cd\u00d3\u00da\u00e1\u00e9\u00ed\u00f3\u00fa\u00d1\u00f1])/);tt.textContent='mucho m\u00e1s \u00bb semana '+(mm?mm[1].toUpperCase():'');}
   var ph=c.querySelector('.ph img'); if(ph&&!ph.getAttribute('src')){var u=(c.dataset.img||'').trim().split(/\s+/)[0];
    if(!u){var tp=c.querySelector('template.lb-body');if(tp){var ims=[].map.call(tp.content.querySelectorAll('img'),function(i){return {u:srcDe(i,600),w:+(i.getAttribute('data-orig-width')||0),h:+(i.getAttribute('data-orig-height')||0)};});
     var ok=ims.filter(function(im,k){return !esPortadilla(mt[0],k,im,'2099');});u=(ok[0]||ims[0]||{}).u;}}

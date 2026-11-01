@@ -82,7 +82,7 @@ function colocar(L){var out=[],R=[-1.5,1,-2.5,.6,1.4,-2,-1,2,-.8],H=[400,320,360
   out.push({c:'1/'+(1+wa),mt:MA[f%6],r:R[i%9],h:h(a,i)});out.push({c:(2+wa)+'/13',mt:MB[f%6],r:R[(i+1)%9],h:h(b,i+1)});}
  return out;}
 
-function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)/i)||[])[1]||'';
+function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)(?![A-Za-zÁÉÍÓÚáéíóúÑñ])/)||[])[1]||'';
  var lab=(top||m.d===hoyISO())?(m.d===hoyISO()?'Hoy, '+DIAS[new Date().getDay()]+' »':'Recién salido »'):'';
  return '<section class="mm"'+(top?' style="margin-top:44px"':'')+'><div class="wrap inner"><div class="mm-top"><div style="display:flex;flex-direction:column;gap:4px">'+
   (lab?'<span class="caps mm-hoy">'+lab+'</span>':'')+'<span class="caps" style="font-size:15px;letter-spacing:3px">La semana en infografías</span><span class="mm-title soft">mucho más »</span></div>'+

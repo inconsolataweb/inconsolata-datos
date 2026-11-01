@@ -74,7 +74,7 @@ function serieHTML(sr){
 function vMM(o){
  document.body.classList.add('v-mm');
  var b=o.body,id=o.id,d=o.d,cat=o.cat,ims=o.ims,n=ims.length;
- var num=((TIT[id]||'')+' '+b.textContent).replace(/ /g,' ').match(/semana\s+([IVXLCDM]+)/i);num=num?num[1].toUpperCase():'';
+ var num=((TIT[id]||'')+' '+b.textContent).replace(/ /g,' ').match(/semana\s+([IVXLCDM]+)(?![A-Za-zÁÉÍÓÚáéíóúÑñ])/);num=num?num[1].toUpperCase():'';
  // sin número en el título: el «mucho más» sale cada domingo desde el 30 de octubre de 2011, así que se cuenta por semanas
  if(!num&&d){var sem=Math.round((new Date(d+'T12:00:00')-new Date('2011-10-30T12:00:00'))/(7*864e5))+1;if(sem>0)num=romano(sem);}
  var p1=[].find.call(b.querySelectorAll('p'),function(p){var t=p.textContent.trim();return t.length>60&&!/Trabajo\s*:/.test(t)&&!/^[…\.]+$/.test(t);});
@@ -122,7 +122,7 @@ function vMM(o){
    (r.fe?'<span class="when">'+esc(r.fe)+' de '+y+'</span>':'')+'</div></article>';}).join('');
  var cu={todas:n};it.forEach(function(r){cu[r.tipo]=(cu[r.tipo]||0)+1;});
  var prev=vecino(id,/^Mucho más/i,true),nextw=vecino(id,/^Mucho más/i,false);
- var pn=function(k,lab){if(!k)return '';var t=(TIT[k].match(/semana\s+([IVXLCDM]+)/i)||[])[1]||'';return '<a href="/post/'+k+'" class="pn"><span class="caps">'+lab+'</span><span class="big soft">'+t+'</span></a>';};
+ var pn=function(k,lab){if(!k)return '';var t=(TIT[k].match(/semana\s+([IVXLCDM]+)(?![A-Za-zÁÉÍÓÚáéíóúÑñ])/)||[])[1]||'';return '<a href="/post/'+k+'" class="pn"><span class="caps">'+lab+'</span><span class="big soft">'+t+'</span></a>';};
  var x=nuevoTop('mm-top');
  x.top.innerHTML=(d<LANZAMIENTO?'<div class="wrap">'+LEG+'</div>':'')+hero+(n?th:'')+(Object.keys(cu).length>2?'<div class="filters"><div class="wrap" id="filters"><span class="caps" style="margin-right:6px">Ver »</span></div></div>':'');
  x.main.innerHTML='<div id="items">'+items+'</div><section class="close">'+pn(prev,'« Semana anterior')+pn(nextw,'Semana siguiente »')+(o.art.querySelector('.support')?o.art.querySelector('.support').outerHTML:'')+'</section>';
