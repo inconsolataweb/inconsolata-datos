@@ -284,8 +284,11 @@ function portada(meta,cat){
    if(!mm.fr)mm.fr=mmP.ims.map(function(im){return [im.sm,''];});usados[mmP.id]=1;}
   // especial web: manda en la portada mientras sea lo último publicado (un «mucho más» posterior no lo desplaza; va en su sitio de siempre)
   var wP=aper?null:L.find(function(p){return p.s!=='m';});
-  if(wP&&wP.s==='w'){arriba=webSec(wP,P.w);usados[wP.id]=1;var sinHero=true;}
-  else if(top&&top.s==='m'&&mm){arriba=mmSec(mm,true);mm.arriba=true;}
+  // el mucho más manda arriba desde que sale (domingo) hasta el día siguiente a las 16:00, aunque se publique algo después
+  var ayer=new Date(Date.now()-864e5),ayerISO=ayer.getFullYear()+'-'+('0'+(ayer.getMonth()+1)).slice(-2)+'-'+('0'+ayer.getDate()).slice(-2);
+  var mmFresco=mm&&(mm.d===hoy||(mm.d===ayerISO&&new Date().getHours()<16));
+  if(wP&&wP.s==='w'){arriba=webSec(wP,P.w);usados[wP.id]=1;var sinHero=true;if(mmFresco){arriba+=mmSec(mm,true);mm.arriba=true;}}
+  else if(mm&&(mmFresco||(top&&top.s==='m'))){arriba=mmSec(mm,true);mm.arriba=true;if(top&&top.s==='x'){arriba+=xdaySec(top);usados[top.id]=1;}}
   else if(top&&top.s==='x'){arriba=xdaySec(top);usados[top.id]=1;}
   var resto=L.filter(function(p){return !usados[p.id];});
   var h=sinHero?null:aper||resto.find(function(p){return p.s!=='d'&&p.s!=='x'&&p.ims.length;})||resto[0];
@@ -300,7 +303,7 @@ function portada(meta,cat){
   if(f&&f.especial){var e=P.esp.find(function(x){return x[1]===f.especial;});if(e){var ti=cat.temas.findIndex(function(t){return t.n===e[2];});
    var tt=ti>=0?P.temas.find(function(t){return t[0]===ti;}):null;esp={t:e[0],slug:e[1],n:e[3],im:f.img||(tt&&tt[4][0])||'',ic:ti>=0?TS[ti]:''};}}
   var tm=temasSec(P,cat,esp),LITE=document.documentElement.classList.contains('lite');
-  if(LITE)home.innerHTML=liteHome({P:P,cat:cat,mm:mm,mmTop:!!(mm&&mm.arriba),web:wP&&wP.s==='w'?wP:null,h:h,ult:ult,f:f,tm:tm,dd:dd,hoy:EF[hoyISO().slice(8)]});
+  if(LITE)home.innerHTML=liteHome({P:P,cat:cat,mm:mm,mmTop:!!(mm&&mm.arriba&&!(wP&&wP.s==='w')),web:wP&&wP.s==='w'?wP:null,h:h,ult:ult,f:f,tm:tm,dd:dd,hoy:EF[hoyISO().slice(8)]});
   else home.innerHTML='<div class="v-home">'+cabecera()+faldon(f,cat)+arriba+'<div class="wrap">'+(h?hero(h):'')+
    '<section><div class="sec-head"><h2 class="serif">lo <em class="soft">último</em></h2><a href="/archive" class="underline">Todo el archivo »</a></div>'+
    (document.documentElement.classList.contains('lite')?'<div class="lite-lista">'+ult.map(liteFila).join('')+'</div>':'<div class="scatter">'+ult.map(function(p,i){return hoja(p,i,pos[i]);}).join('')+'</div>')+'<div class="mas"><a href="/page/2" class="btn-ink">Más entradas »</a></div></section></div>'+
@@ -351,7 +354,7 @@ function liteHome(o){var P=o.P,cat=o.cat,mm=o.mm,COL=['c-mag','c-cya','c-ink','c
  var top=o.web?ltWeb(o.web,P.w):(o.mmTop&&mm?ltMM(mm):(o.h?ltHero(o.h,'Lo último »'):''));
  return '<div class="v-home lt"><aside class="tira" id="tira" aria-label="Aviso" hidden></aside>'+(o.f?faldon(o.f,cat):'')+top+'<aside class="colav" id="prueba" aria-label="Aviso" hidden></aside>'+
   (mm&&!o.mmTop?ltMM(mm):'')+
-  ltSec('Lo <em>último</em>','Archivo »','/archive')+'<div class="lt-sw lt-car">'+(o.web&&o.h?[o.h]:[]).concat(o.ult).map(ltCarta).join('')+'<a class="lt-fin" href="/page/2"><b>+</b>Más entradas »</a></div>'+
+  ltSec('Lo <em>último</em>','Archivo »','/archive')+'<div class="lt-sw lt-car">'+(o.h&&(o.web||o.mmTop)?[o.h]:[]).concat(o.ult).map(ltCarta).join('')+'<a class="lt-fin" href="/page/2"><b>+</b>Más entradas »</a></div>'+
   ltSec('Especiales','Todos »','#es-dlg')+'<div class="lt-sw lt-esp">'+esps.map(function(e,i){return '<a class="'+COL[i%4]+'" href="/especiales#'+esc(e[1])+'">'+icoDe(e)+'<b>'+esc(e[0])+'</b><small>'+e[3]+' '+(e[3]===1?'post':'posts')+'</small></a>';}).join('')+'</div>'+
   ltSec('Temas','Los '+PT.length+' »','#tm-dlg')+'<div class="lt-tm">'+TT.map(function(t){return '<a href="/buscador#h='+t[0]+'"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[t[0]]+'"/></svg>'+esc(t[1])+'</a>';}).join('')+'</div>'+
   (hoy.length?ltSec('Tal día <em>como hoy</em>')+'<div class="lt-sw lt-hoy">'+hoy.map(function(r){return '<a href="/post/'+esc(r[1])+'"><span class="lt-fi">'+(r[4]?'<img loading="lazy" src="'+esc(r[4])+'" alt="" onerror="this.remove()">':'')+'</span><b>'+r[0]+'</b><span>'+esc(quita(r[2]))+'</span></a>';}).join('')+'</div>':'')+
