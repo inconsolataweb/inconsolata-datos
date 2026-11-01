@@ -256,6 +256,8 @@ def clasificar(p):
     if EXCLUIR & set(tl):
         return None
     cuerpo = (p.get('body') or '') + (p.get('caption') or '') + (p.get('description') or '')
+    if str(p['id']) == os.environ.get('DEPURA', '832088177990860800'):
+        print('DEPURA', p.get('type'), p.get('title'), re.sub(r'<figure.*?</figure>', '[fig]', cuerpo, flags=re.S)[:6000].replace('\n', ' '))
     # piezas con tipo y etiquetas delante: «cartografía | elecciones 29-N, encuestas | Trabajo: … | Autor: … | Medio: …»
     tipos_pz, etq_pz = [], []
     for para in re.findall(r'<p>(.*?)</p>', cuerpo, re.S):
