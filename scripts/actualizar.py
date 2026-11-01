@@ -153,8 +153,8 @@ def resumen(t, n=230):
         else:
             break
     r = r or t
-    if len(r) > n:
-        r = re.sub(r'[,;:\s]+$', '', re.sub(r'\s+\S*$', '', r[:n])) + '…'
+    if len(r) > n * 1.45:
+        r = re.sub(r'[,;:\s]+$', '', re.sub(r'\s+\S*$', '', r[:int(n * 1.45)])) + '…'
     return r
 
 DATE_PAT = r'(?:\d{1,2}(?: (?:y|al|-|–) \d{1,2})? de [a-záéíóú]+(?: de \d{4})?|[a-záéíóú]+ de \d{4}|\d{4})'
