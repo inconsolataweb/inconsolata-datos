@@ -136,6 +136,27 @@ def primera_frase(t):
     m = re.match(r'(.{30,160}?[.!?])(\s|$)', t)
     return (m.group(1) if m else t[:150].rsplit(' ', 1)[0] + '…') if t else ''
 
+def resumen(t, n=230):
+    """Entradilla de portada: frases enteras hasta unos n caracteres (como hace la portada con los posts de la página)."""
+    t = re.sub(r'\s+', ' ', re.sub(r'^[⩔\s]+', '', t or '')).strip()
+    fr = re.findall(r'[^.!?]+[.!?]+(?=\s|$)', t)
+    r = ''
+    for x in fr:
+        x = x.strip()
+        if not r:
+            r = x
+            if len(r) >= 70:
+                break
+        elif len(r) + 1 + len(x) <= n:
+            r += ' ' + x
+            break
+        else:
+            break
+    r = r or t
+    if len(r) > n:
+        r = re.sub(r'[,;:\s]+$', '', re.sub(r'\s+\S*$', '', r[:n])) + '…'
+    return r
+
 DATE_PAT = r'(?:\d{1,2}(?: (?:y|al|-|–) \d{1,2})? de [a-záéíóú]+(?: de \d{4})?|[a-záéíóú]+ de \d{4}|\d{4})'
 BOLD_RE = re.compile(r'<(b|strong)>(.*?)</\1>', re.S | re.I)
 ITEM_RE = re.compile(r'<i>\s*Trabajo\s*</i>\s*:\s*(.*?)\|\s*<i>\s*Medio\s*</i>\s*:\s*<b>(.*?)</b>', re.S)
@@ -273,6 +294,7 @@ def clasificar(p):
         'g': [s for s in SERIES if s in tl],
         'im': miniatura(th) if th else '', 'r': round(th['w'] / th['h'], 2) if th and th.get('w') and th.get('h') else 1.3,
         'n': len(ims),
+        '_res': resumen(texto),
         '_tags': tl,
         '_fr': [[miniatura(im), (items[k][1] if k < len(items) else '')] for k, im in enumerate([im for im in ims if not im['cover']][:40])] if sec in ('muchomas', 'extra') else None,
     }
@@ -345,8 +367,9 @@ def main():
             e['desde'], e['hasta'] = fechas[0], fechas[-1]
     frames = {q['i']: q.pop('_fr') for q in posts if q.get('_fr')}
     webs = {q['i']: q.pop('_web') for q in posts if q.get('_web')}
+    RES.update({q['i']: q.pop('_res') for q in posts if q.get('_res')})
     for q in posts:
-        q.pop('_tags', None); q.pop('_fr', None)
+        q.pop('_tags', None); q.pop('_fr', None); q.pop('_res', None)
     aplicar_estructura(posts)
     recontar(posts)
     IDX['posts'] = posts
@@ -478,6 +501,7 @@ def iconos_especiales():
             out[e['slug']] = [o['i'], str(o.get('t', ''))[:6]]
     return out
 
+RES = {}
 def escribir_portada(idx, frames, webs=None):
     """Datos ligeros de la portada: lo último, el último mucho más y EXTRA! con sus fotogramas, el escaparate de temas,
     los medios del año y las efemérides («tal día como hoy», un archivo por mes)."""
@@ -493,8 +517,9 @@ def escribir_portada(idx, frames, webs=None):
     MN = [m['n'] for m in idx['medios']]
     def titulo(q):
         return TIT.get(q['i']) or q['t'] or q['b']
+    viejos = {r[0]: r[6] for r in (old.get('rec') or []) + (old.get('man') or [])}
     def corto(q):
-        return [q['i'], q['u'], q['d'], q['s'], q['k'], titulo(q), q['b'], [MN[i] for i in q['m'][:3]], q['im']]
+        return [q['i'], q['u'], q['d'], q['s'], q['k'], titulo(q), RES.get(q['i']) or viejos.get(q['i']) or q['b'], [MN[i] for i in q['m'][:3]], q['im']]
     out = {'rec': [corto(q) for q in posts[:40]]}
     for sec in ('m', 'x'):
         q = next((q for q in posts if q['s'] == sec), None)
