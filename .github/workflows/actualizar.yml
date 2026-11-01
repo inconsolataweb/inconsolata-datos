@@ -43,6 +43,7 @@ jobs:
           git config user.email "inconsolataweb@gmail.com"
           git add datos
           git commit -m "Actualización automática $(date -u +%F)"
+          git pull --rebase -q || true
           git push
       - name: Refrescar la caché de jsDelivr
         run: |
