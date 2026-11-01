@@ -773,7 +773,10 @@ function autorFicha(A,cat,FM,AX,ai){var a=A.autores[ai],ps=A.posts.filter(functi
  var otros=md?A.autores.map(function(o,i){return {i:i,n:o.n,p:o.p,m:o.m||[]};}).filter(function(o){return o.i!==ai&&o.m.indexOf(md)>=0&&o.p>0;}).sort(function(p,q){return q.p-p.p;}).slice(0,8):[];
  var ys=ps.map(function(p){return +p.d.slice(0,4);}),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),ny=new Set(ys).size;
  // piezas de muestra: solo posts propios (no los recopilatorios de mucho m\u00e1s ni EXTRA!)
- var W=ps.filter(function(p){return p.im&&p.a.length<=6&&p.s!=='m'&&p.s!=='x';}).slice().reverse();
+ var W0=ps.filter(function(p){return p.im&&p.a.length<=6&&p.s!=='m'&&p.s!=='x';}).slice().reverse();
+ // prioridad: piezas firmadas solo por este autor y de un solo medio; despu\u00e9s, solo por \u00e9l; despu\u00e9s, de un solo medio; al final, el resto (solo si faltan)
+ var T=[[],[],[],[]];W0.forEach(function(p){var solo=p.a.length===1,um=p.m.length<=1;T[solo&&um?0:solo?1:um?2:3].push(p);});
+ var W=[];T.forEach(function(t){if(W.length<3)W=W.concat(t);});
  var vis=W.length?'<div class="fvis"><figure class="work"><span class="tape" aria-hidden="true"></span><a class="wph" id="work-a" href="#" aria-label="Abrir esta pieza en inconsolata\u00bb"><img id="work-img" alt="" src=""></a>'+
   (W.length>1?'<button type="button" class="wnext" id="work-next" aria-label="Ver otra pieza al azar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h11l-3-3M20 17H9l3 3M15 4l3 3-3 3M9 20l-3-3 3-3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>otra</span></button>':'')+
   '<figcaption><span class="wn">Pieza <b id="work-n"></b> de <b>'+W.length+'</b> en el archivo</span><span class="wm" id="work-m"></span><span class="wa" id="work-au" hidden></span></figcaption></figure></div>':'';
