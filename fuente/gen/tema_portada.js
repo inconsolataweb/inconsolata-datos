@@ -86,7 +86,7 @@ function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)/i)||
  var lab=(top||m.d===hoyISO())?(m.d===hoyISO()?'Hoy, '+DIAS[new Date().getDay()]+' »':'Recién salido »'):'';
  return '<section class="mm"'+(top?' style="margin-top:44px"':'')+'><div class="wrap inner"><div class="mm-top"><div style="display:flex;flex-direction:column;gap:4px">'+
   (lab?'<span class="caps mm-hoy">'+lab+'</span>':'')+'<span class="caps" style="font-size:15px;letter-spacing:3px">La semana en infografías</span><span class="mm-title soft">mucho más »</span></div>'+
-  '<a href="'+esc(m.u)+'" class="btn-yellow">Ver '+(fr.length>1?'las '+(m.n&&m.n>fr.length?fr.length:fr.length):'el post')+' »</a></div>'+
+  '<a href="'+esc(m.u)+'" class="btn-yellow">Ver '+(fr.length>1?'las '+fr.length:'el post')+' »</a></div>'+
   (num?'<div class="mm-num" aria-hidden="true">'+num.toUpperCase()+'</div>':'')+
   '<div class="film"><div class="perf"></div><div class="frames">'+fr.slice(0,7).map(function(f,i){return '<a class="frame" href="'+esc(m.u)+'#mm-'+(i+1)+'"><div class="ph">'+img(f[0])+'</div><span>'+esc(f[1]||'')+(f[1]?' ▸':'')+'</span></a>';}).join('')+'</div><div class="perf"></div></div></div></section>';}
 

@@ -274,7 +274,7 @@ def clasificar(p):
         'im': miniatura(th) if th else '', 'r': round(th['w'] / th['h'], 2) if th and th.get('w') and th.get('h') else 1.3,
         'n': len(ims),
         '_tags': tl,
-        '_fr': [[miniatura(im), (items[k][1] if k < len(items) else '')] for k, im in enumerate([im for im in ims if not im['cover']][:10])] if sec in ('muchomas', 'extra') else None,
+        '_fr': [[miniatura(im), (items[k][1] if k < len(items) else '')] for k, im in enumerate([im for im in ims if not im['cover']][:40])] if sec in ('muchomas', 'extra') else None,
     }
     if sec == 'web':
         # especial web: enlace, imagen principal a tamaño grande (un GIF sigue animado) y el resto para la tira, con los pies del panel

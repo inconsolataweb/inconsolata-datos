@@ -75,6 +75,8 @@ function vMM(o){
  document.body.classList.add('v-mm');
  var b=o.body,id=o.id,d=o.d,cat=o.cat,ims=o.ims,n=ims.length;
  var num=((TIT[id]||'')+' '+b.textContent).replace(/ /g,' ').match(/semana\s+([IVXLCDM]+)/i);num=num?num[1].toUpperCase():'';
+ // sin número en el título: el «mucho más» sale cada domingo desde el 30 de octubre de 2011, así que se cuenta por semanas
+ if(!num&&d){var sem=Math.round((new Date(d+'T12:00:00')-new Date('2011-10-30T12:00:00'))/(7*864e5))+1;if(sem>0)num=romano(sem);}
  var p1=[].find.call(b.querySelectorAll('p'),function(p){var t=p.textContent.trim();return t.length>60&&!/Trabajo\s*:/.test(t)&&!/^[…\.]+$/.test(t);});
  var intro=p1?p1.textContent.replace(/ /g,' ').trim().replace(/\s*[^.!?]*(tras el salto|salto de rigor)[^.!?]*[.!?:]?\s*$/i,'').trim():'';
  var def=o.tipos.length===1?o.tipos[0]:'info';

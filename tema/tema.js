@@ -142,6 +142,8 @@ function vMM(o){
  document.body.classList.add('v-mm');
  var b=o.body,id=o.id,d=o.d,cat=o.cat,ims=o.ims,n=ims.length;
  var num=((TIT[id]||'')+' '+b.textContent).replace(/\u00a0/g,' ').match(/semana\s+([IVXLCDM]+)/i);num=num?num[1].toUpperCase():'';
+ // sin n\u00famero en el t\u00edtulo: el \u00abmucho m\u00e1s\u00bb sale cada domingo desde el 30 de octubre de 2011, as\u00ed que se cuenta por semanas
+ if(!num&&d){var sem=Math.round((new Date(d+'T12:00:00')-new Date('2011-10-30T12:00:00'))/(7*864e5))+1;if(sem>0)num=romano(sem);}
  var p1=[].find.call(b.querySelectorAll('p'),function(p){var t=p.textContent.trim();return t.length>60&&!/Trabajo\s*:/.test(t)&&!/^[\u2026\.]+$/.test(t);});
  var intro=p1?p1.textContent.replace(/\u00a0/g,' ').trim().replace(/\s*[^.!?]*(tras el salto|salto de rigor)[^.!?]*[.!?:]?\s*$/i,'').trim():'';
  var def=o.tipos.length===1?o.tipos[0]:'info';
@@ -387,7 +389,7 @@ function mmSec(m,top){var fr=m.fr||[],num=(m.t.match(/semana\s+([IVXLCDM]+)/i)||
  var lab=(top||m.d===hoyISO())?(m.d===hoyISO()?'Hoy, '+DIAS[new Date().getDay()]+' \u00bb':'Reci\u00e9n salido \u00bb'):'';
  return '<section class="mm"'+(top?' style="margin-top:44px"':'')+'><div class="wrap inner"><div class="mm-top"><div style="display:flex;flex-direction:column;gap:4px">'+
   (lab?'<span class="caps mm-hoy">'+lab+'</span>':'')+'<span class="caps" style="font-size:15px;letter-spacing:3px">La semana en infograf\u00edas</span><span class="mm-title soft">mucho m\u00e1s \u00bb</span></div>'+
-  '<a href="'+esc(m.u)+'" class="btn-yellow">Ver '+(fr.length>1?'las '+(m.n&&m.n>fr.length?fr.length:fr.length):'el post')+' \u00bb</a></div>'+
+  '<a href="'+esc(m.u)+'" class="btn-yellow">Ver '+(fr.length>1?'las '+fr.length:'el post')+' \u00bb</a></div>'+
   (num?'<div class="mm-num" aria-hidden="true">'+num.toUpperCase()+'</div>':'')+
   '<div class="film"><div class="perf"></div><div class="frames">'+fr.slice(0,7).map(function(f,i){return '<a class="frame" href="'+esc(m.u)+'#mm-'+(i+1)+'"><div class="ph">'+img(f[0])+'</div><span>'+esc(f[1]||'')+(f[1]?' \u25b8':'')+'</span></a>';}).join('')+'</div><div class="perf"></div></div></div></section>';}
 
