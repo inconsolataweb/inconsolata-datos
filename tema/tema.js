@@ -772,10 +772,11 @@ function autorFicha(A,cat,FM,AX,ai){var a=A.autores[ai],ps=A.posts.filter(functi
  var pais=x.pais||fm.pais||'',cc=x.cc||fm.cc||'';
  var otros=md?A.autores.map(function(o,i){return {i:i,n:o.n,p:o.p,m:o.m||[]};}).filter(function(o){return o.i!==ai&&o.m.indexOf(md)>=0&&o.p>0;}).sort(function(p,q){return q.p-p.p;}).slice(0,8):[];
  var ys=ps.map(function(p){return +p.d.slice(0,4);}),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),ny=new Set(ys).size;
- var W=ps.filter(function(p){return p.im&&p.a.length<=6;}).slice().reverse();
+ // piezas de muestra: solo posts propios (no los recopilatorios de mucho m\u00e1s ni EXTRA!)
+ var W=ps.filter(function(p){return p.im&&p.a.length<=6&&p.s!=='m'&&p.s!=='x';}).slice().reverse();
  var vis=W.length?'<div class="fvis"><figure class="work"><span class="tape" aria-hidden="true"></span><a class="wph" id="work-a" href="#" aria-label="Abrir esta pieza en inconsolata\u00bb"><img id="work-img" alt="" src=""></a>'+
   (W.length>1?'<button type="button" class="wnext" id="work-next" aria-label="Ver otra pieza al azar"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h11l-3-3M20 17H9l3 3M15 4l3 3-3 3M9 20l-3-3 3-3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>otra</span></button>':'')+
-  '<figcaption><span class="wn">Pieza <b id="work-n"></b> de <b>'+W.length+'</b> en el archivo</span><span class="wm" id="work-m"></span></figcaption></figure></div>':'';
+  '<figcaption><span class="wn">Pieza <b id="work-n"></b> de <b>'+W.length+'</b> en el archivo</span><span class="wm" id="work-m"></span><span class="wa" id="work-au" hidden></span></figcaption></figure></div>':'';
  var L=redes(x);
  var html='<div class="wrap">'+crumbs([['Autores','/autores'],[a.n]])+'<section class="fhero'+(vis?'':' novis')+'">'+vis+'<div class="finfo"><span class="caps ante" style="color:var(--accent)">'+(x.genero==='autora'?'Autora':x.genero==='autor'?'Autor':'Periodista')+(a.m&&a.m.length?' \u00bb '+esc(a.m.slice(0,3).join(' \u00b7 ')):'')+'</span>'+
   '<div class="name-row"><h1 class="soft autor">'+esc(a.n)+'</h1>'+(mc?'<a class="av-medio" href="'+fichaMedio(mc)+'" aria-label="Trabaja en '+esc(md)+'">'+(mc.av?'<span class="av-slot" aria-hidden="true"><img src="'+esc(mc.av)+'" alt=""></span>':'')+'<span>'+esc(md)+' \u00bb</span></a>':'')+'</div>'+(pais||x.oficio?'<p class="nac">'+bandera(cc)+'<span>'+esc(pais)+(pais&&x.oficio?' \u00b7 ':'')+esc(oficioG(x.oficio,x.genero))+'</span></p>':'')+
@@ -789,7 +790,10 @@ function autorFicha(A,cat,FM,AX,ai){var a=A.autores[ai],ps=A.posts.filter(functi
   '<div class="wrap">'+barrasAnios(ps)+entradas(A,ps)+'</div>';
  return {html:html,init:function(){activaEntradas(A,ps);if(!W.length)return;var i=Math.floor(Math.random()*W.length);
   function show(){var w=W[i%W.length];document.getElementById('work-a').href='/post/'+w.u;document.getElementById('work-img').setAttribute('s'+'rc',w.im);
-   document.getElementById('work-n').textContent=(i%W.length)+1;document.getElementById('work-m').innerHTML=medsI(w.m)+' \u00b7 '+fcorta(w.d);}
+   document.getElementById('work-n').textContent=(i%W.length)+1;document.getElementById('work-m').innerHTML=medsI(w.m)+' \u00b7 '+fcorta(w.d);
+   // pieza a varias manos: firman todos, porque el post no dice de qui\u00e9n es cada parte
+   var wa=document.getElementById('work-au'),au=w.a.map(function(j){return A.autores[j]&&A.autores[j].n;}).filter(Boolean);
+   if(au.length>1){wa.innerHTML='por '+au.map(function(n){return '<a href="/autores#'+encodeURIComponent(n)+'">'+esc(n)+'</a>';}).join(', ').replace(/, (<a [^>]*>[^<]*<\/a>)$/,' y $1');wa.hidden=false;}else{wa.hidden=true;}}
   show();var nb=document.getElementById('work-next');if(nb)nb.addEventListener('click',function(){i+=1+Math.floor(Math.random()*(W.length-1));show();});}};}
 
 // ---------- especiales

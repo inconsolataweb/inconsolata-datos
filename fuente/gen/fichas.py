@@ -156,6 +156,9 @@ FCSS = """
 .wn{font-family:'Fraunces',serif;font-style:italic;font-size:18px;line-height:1.2}
 .wn b{font-weight:900;color:var(--accent)}
 .wm{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.wa{display:block;font-family:'Fraunces',serif;font-style:italic;font-size:15px;margin-top:4px;color:var(--ink)}
+.wa[hidden]{display:none}
+.wa a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px}
 .wnext{position:absolute;right:-16px;bottom:22px;width:76px;height:76px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;box-shadow:4px 4px 0 var(--ink);transform:rotate(8deg);transition:transform .25s;font-family:'Fraunces',serif;font-style:italic;font-weight:900;font-size:17px}
 .wnext:hover{transform:rotate(-12deg) scale(1.06)}
 .wnext:active{transform:rotate(-200deg)}
