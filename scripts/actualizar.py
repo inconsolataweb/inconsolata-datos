@@ -220,6 +220,10 @@ TEM = [t['n'] for t in IDX['temas']]
 for r in REGLAS:
     if r['tema'] not in TEM:
         IDX['temas'].append({'n': r['tema'], 'b': r.get('bloque', ''), 'p': 0, 'h': True}); TEM.append(r['tema'])
+# el bloque de cada tema manda desde temas_reglas.json
+_BQ = {r['tema']: r.get('bloque', '') for r in REGLAS}
+for t in IDX['temas']:
+    if _BQ.get(t['n']): t['b'] = _BQ[t['n']]
 for r in REGLAS:
     r['tg'] = re.compile(r'^(?:' + r['etiquetas'] + r')$') if r['etiquetas'] else None
     r['kw'] = re.compile(r['texto'], re.I)

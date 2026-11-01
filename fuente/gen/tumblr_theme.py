@@ -17,21 +17,21 @@ from common import ESPIRAL_COLOR
 OUT = sys.argv[1]
 APOYA = 'https://buymeacoffee.com/saulcastillo'
 
-NAV = (f'<nav aria-label="Secciones"><a href="https://saulcastillo.es/#sobre-mi">Sobre mí</a><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a>'
+NAV = (f'<nav aria-label="Secciones"><a href="https://saulcastillo.es/#sobre-mi">Sobre mí</a><a href="/medios">Medios</a><a href="/#temas">Temas</a>'
        f'<div class="dd"><button type="button" class="dd-b" aria-expanded="false" aria-haspopup="true">Archivo <i aria-hidden="true">▾</i></button><div class="dd-m" hidden><a href="/archive">Ver el archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a></div></div>{SEARCH}<a href="{APOYA}" class="btn-ink">Apóyanos »</a></nav>')
 LITE = (f'<div class="lite-bar"><a class="lb-brand soft" href="/" aria-label="inconsolata», ir a la portada">inc<span>»</span></a><div class="lb-acc">'
         '<a class="lb-nov" href="/novedades" aria-label="Novedades de la web"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="20" cy="20" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M20 3v34M3 20h34" stroke="currentColor" stroke-width="2.4"/></svg><b class="lb-n" id="lb-n" hidden></b></a>'
         '<button type="button" class="lb-btn" data-lite="buscar" aria-label="Buscar"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>'
         '<button type="button" class="lb-menu" data-lite="menu" aria-expanded="false" aria-controls="lite-menu"><span class="lb-h" aria-hidden="true"><i></i><i></i><i></i></span>Menú</button></div></div>'
         '<div class="lite-menu" id="lite-menu" hidden>' + SEARCH.replace('q-top', 'q-lite') +
-        '<nav class="lm-nav" aria-label="Secciones"><a href="/">Portada</a><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a><a href="/autores">Autores</a><a href="/especiales">Especiales</a>'
+        '<nav class="lm-nav" aria-label="Secciones"><a href="/">Portada</a><a href="/medios">Medios</a><a href="/#temas">Temas</a><a href="/autores">Autores</a><a href="/especiales">Especiales</a>'
         '<a href="/archive">Archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a><a href="/novedades">Novedades</a><a href="https://saulcastillo.es/#sobre-mi">Sobre mí</a></nav>'
         f'<a class="lm-apoya" href="{APOYA}">Apóyanos »</a>{SOCIAL}<button type="button" class="lm-ver" data-version="completa">Ver la versión completa de la web</button></div>')
 HEAD = (f'<header class="head"><a href="/" class="brand soft" aria-label="inconsolata», ir a la portada">inc<span>»</span></a>'
         f'<div class="hd-right">{NAV}<div class="hd-row2">{SOCIAL}</div></div></header>'
         '<div class="mini-head" id="mini-head"><div class="mh-in">'
         '<a class="mh-brand soft" href="/" aria-label="inconsolata», ir a la portada">inc<span>»</span></a>'
-        '<nav class="mh-nav" aria-label="Secciones"><a href="/buscador#k=info">Infografía</a><a href="/medios">Medios</a><div class="dd"><button type="button" class="dd-b" aria-expanded="false" aria-haspopup="true">Archivo <i aria-hidden="true">▾</i></button><div class="dd-m" hidden><a href="/archive">Ver el archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a></div></div></nav>'
+        '<nav class="mh-nav" aria-label="Secciones"><a href="/medios">Medios</a><a href="/#temas">Temas</a><div class="dd"><button type="button" class="dd-b" aria-expanded="false" aria-haspopup="true">Archivo <i aria-hidden="true">▾</i></button><div class="dd-m" hidden><a href="/archive">Ver el archivo</a><a href="/estadisticas">Estadísticas</a><a href="/cronologia">Cronología</a></div></div></nav>'
         + SEARCH.replace('q-top', 'q-mini') + f'<a class="mh-apoya" href="{APOYA}">Apóyanos »</a></div>'
         '<div class="mh-prog" aria-hidden="true"><span id="mh-bar"></span></div></div>')
 
@@ -262,6 +262,9 @@ mark.subr{background:none;color:inherit;padding:.06em .24em;margin:0 -.08em;back
 JS = r"""
 (function(){
 // iconos: los del código mandan sobre los que lleve pegados el tema (así un icono nuevo no obliga a volver a pegarlo)
+(function(){/* menú de la cabecera para temas pegados antes del 1-11-2026: fuera «Infografía», «Temas» detrás de «Medios» */
+ [].forEach.call(document.querySelectorAll('a[href="/buscador#k=info"]'),function(a){var n=a.parentNode;if(!n||!n.matches('nav'))return;var m=n.querySelector('a[href="/medios"]');a.remove();
+  if(m&&!n.querySelector('a[href="/#temas"]')){var t=document.createElement('a');t.href='/#temas';t.textContent='Temas';m.after(t);}});})();
 (function(){var d=document.createElement('div');d.innerHTML=__SYMS__;var sv=d.querySelector('svg');if(!sv)return;[].forEach.call(sv.querySelectorAll('symbol'),function(x){var o=document.getElementById(x.id);if(o)o.remove();});(document.body||document.documentElement).insertBefore(sv,(document.body||document.documentElement).firstChild);})();
 (function(){var B=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/marca/';if(!document.querySelector('link[href*="assets/marca/"]')){[].forEach.call(document.querySelectorAll('link[rel~="icon"],link[rel="apple-touch-icon"]'),function(l){l.remove();});document.head.insertAdjacentHTML('beforeend','<link rel="icon" href="'+B+'favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="'+B+'favicon-32.png"><link rel="apple-touch-icon" href="'+B+'apple-touch-icon.png">');}})();
 (function(){if(!document.querySelector('link[href*="Instrument+Sans"]'))document.head.insertAdjacentHTML('beforeend','<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap">');})();

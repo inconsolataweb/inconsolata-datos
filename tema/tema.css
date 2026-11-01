@@ -1056,6 +1056,13 @@ mark.subr{background:none;color:inherit;padding:.06em .24em;margin:0 -.08em;back
 .v-home .masthead.choca .prueba{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;max-width:460px;margin:10px 0 34px}
 .v-home .masthead.choca{flex-wrap:wrap}
 .v-home .rbtn.new.visto svg{animation:none}
+.v-home .tdl-pl{margin-top:12px}
+.v-home .tdl-pl summary{cursor:pointer;display:inline-flex;align-items:center;gap:8px;font:800 12px 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase;border:2px solid var(--ink);padding:8px 14px;min-height:40px;background:var(--paper);list-style:none}
+.v-home .tdl-pl summary::-webkit-details-marker{display:none}
+.v-home .tdl-pl summary::after{content:'\25be ';font-size:14px}
+.v-home .tdl-pl[open] summary::after{content:'\25b4 '}
+.v-home .tdl-pl summary:hover{background:var(--yellow)}
+.v-home .tdl-pl[open] summary{margin-bottom:12px}
 @media (max-width:820px){.v-home .masthead{min-height:0}
 .v-home .topbar .hd-right nav a:not(.btn-ink){display:none}}
 .v-home .prueba{position:absolute;z-index:5;left:calc(var(--mw,600px) + 44px);bottom:34px;width:410px}

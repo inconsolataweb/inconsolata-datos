@@ -112,6 +112,13 @@ EXTRA = """
 .masthead.choca .prueba{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto;max-width:460px;margin:10px 0 34px}
 .masthead.choca{flex-wrap:wrap}
 .rbtn.new.visto svg{animation:none}
+.tdl-pl{margin-top:12px}
+.tdl-pl summary{cursor:pointer;display:inline-flex;align-items:center;gap:8px;font:800 12px 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase;border:2px solid var(--ink);padding:8px 14px;min-height:40px;background:var(--paper);list-style:none}
+.tdl-pl summary::-webkit-details-marker{display:none}
+.tdl-pl summary::after{content:'▾';font-size:14px}
+.tdl-pl[open] summary::after{content:'▴'}
+.tdl-pl summary:hover{background:var(--yellow)}
+.tdl-pl[open] summary{margin-bottom:12px}
 @media (max-width:820px){.masthead{min-height:0}.topbar .hd-right nav a:not(.btn-ink){display:none}}
 """
 

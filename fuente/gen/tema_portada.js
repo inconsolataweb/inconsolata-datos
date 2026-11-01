@@ -123,8 +123,16 @@ function temasSec(P,cat,esp){
  var bloques={};PT.forEach(function(t){(bloques[t[3]]=bloques[t[3]]||[]).push(t);});
  var dlg='<dialog class="tdl" id="tm-dlg" aria-labelledby="tdl-h"><div class="tdl-top"><h2 id="tdl-h" class="soft">Todos los <em>temas</em></h2><button type="button" class="tdl-x" data-close aria-label="Cerrar">×</button></div>'+
   '<p class="tdl-sub">'+PT.length+' temas en '+(new Date().getFullYear()-(+P.anios))+' años de archivo. Pulsa uno para ver todas sus entradas.</p>'+
-  (P.esp.length?'<div class="tdl-b tdl-esp"><h3>Especiales <span>· acontecimientos e historias concretas, cada uno dentro de su tema</span></h3><div class="tdl-c">'+P.esp.filter(function(e){return !e[6];}).sort(function(a,b){return (b[4]||'').localeCompare(a[4]||'');}).map(function(e){var ti=cat.temas.findIndex(function(t){return t.n===e[2];});
-   return '<a href="/especiales#'+esc(e[1])+'">'+(ti>=0?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[ti]+'"/></svg>':'')+esc(e[0])+'<small>'+e[3]+'</small></a>';}).join('')+'</div></div>':'')+
+  (P.esp.length?(function(){
+   // especiales: a la vista solo los que tienen algún post en el último mes; el resto, plegados
+   var hace=new Date(Date.now()-31*864e5).toISOString().slice(0,10);
+   var L=P.esp.filter(function(e){return !e[6];}).sort(function(a,b){return (b[4]||'').localeCompare(a[4]||'');});
+   var ch=function(e){var ti=cat.temas.findIndex(function(t){return t.n===e[2];});
+    return '<a href="/especiales#'+esc(e[1])+'">'+(ti>=0?'<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[ti]+'"/></svg>':'')+esc(e[0])+'<small>'+e[3]+'</small></a>';};
+   var vivos=L.filter(function(e){return (e[4]||'')>=hace;}),resto=L.filter(function(e){return (e[4]||'')<hace;});
+   return '<div class="tdl-b tdl-esp"><h3>Especiales <span>· acontecimientos e historias concretas, cada uno dentro de su tema</span></h3>'+
+    (vivos.length?'<div class="tdl-c">'+vivos.map(ch).join('')+'</div>':'')+
+    (resto.length?'<details class="tdl-pl"><summary>'+(vivos.length?'Ver los otros '+resto.length+' especiales':'Ver los '+resto.length+' especiales')+'</summary><div class="tdl-c">'+resto.map(ch).join('')+'</div></details>':'')+'</div>';})():'')+
   Object.keys(bloques).map(function(b){return '<div class="tdl-b"><h3>'+esc(b)+'</h3><div class="tdl-c">'+bloques[b].map(function(t){return '<a href="/buscador#h='+t[0]+'"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+TS[t[0]]+'"/></svg>'+esc(t[1])+'<small>'+t[2]+'</small></a>';}).join('')+'</div></div>';}).join('')+'</dialog>';
  var EG={};P.esp.filter(function(e){return !e[6];}).forEach(function(e){(EG[e[5]]=EG[e[5]]||[]).push(e);});
  var nCap=function(sl){return P.esp.filter(function(e){return e[6]===sl;}).length;};
@@ -299,6 +307,10 @@ function portada(meta,cat){
   home.addEventListener('click',function(e){var o=e.target.closest('[data-open]');if(o){var d=document.getElementById(o.dataset.open);if(d.showModal)d.showModal();else d.setAttribute('open','');}
    var c=e.target.closest('[data-close]');if(c){var dl=c.closest('dialog');dl.close?dl.close():dl.removeAttribute('open');}
    if(e.target.tagName==='DIALOG')e.target.close();});
+  // «Temas» de la cabecera: en la portada abre «Todos los temas»; desde otras páginas llega con #temas
+  var abreT=function(){var d=document.getElementById('tm-dlg');if(!d)return false;if(d.showModal){if(!d.open)d.showModal();}else d.setAttribute('open','');return true;};
+  document.addEventListener('click',function(e){var a=e.target.closest('a[href="/#temas"]');if(a&&abreT()){e.preventDefault();var lm=document.getElementById('lite-menu');if(lm&&!lm.hidden){var bm=document.querySelector('[data-lite="menu"]');if(bm)bm.click();}}});
+  if(location.hash==='#temas'){abreT();history.replaceState(null,'',location.pathname+location.search);}
   var q=document.getElementById('md-q');if(q)q.addEventListener('input',function(){var v=fold(this.value.trim());[].forEach.call(document.querySelectorAll('#md-grid .mdc'),function(c){c.hidden=v&&c.dataset.n.indexOf(v)<0;});});
  }).catch(function(e){console.error('inconsolata»: portada',e);document.body.classList.remove('es-portada');listado(meta,cat);});
 }

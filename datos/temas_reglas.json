@@ -61,13 +61,13 @@
  },
  {
   "tema": "COVID-19",
-  "bloque": "Actualidad",
+  "bloque": "Ciencia y sociedad",
   "etiquetas": "coronavirus",
   "texto": "\\bcoronavirus\\b|\\bcovid\\w*|\\bpandemia\\b|\\bconfinamiento\\b|\\bSARS-CoV"
  },
  {
   "tema": "Salud",
-  "bloque": "Actualidad",
+  "bloque": "Ciencia y sociedad",
   "etiquetas": "brote de ébola|hantavirus",
   "texto": "\\b[eé]bola\\b|\\bvacunas?\\b|\\bc[aá]ncer\\b|\\bgripe\\b|\\bepidemia\\b|\\bsanidad\\b|\\bsalud\\b"
  },
