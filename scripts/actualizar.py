@@ -256,7 +256,7 @@ def clasificar(p):
     if EXCLUIR & set(tl):
         return None
     cuerpo = (p.get('body') or '') + (p.get('caption') or '') + (p.get('description') or '')
-    if str(p['id']) == os.environ.get('DEPURA', '832088177990860800'):
+    if os.environ.get('DEPURA') and str(p['id']) == os.environ['DEPURA']:
         print('DEPURA_JSON', json.dumps(p, ensure_ascii=False))
     # piezas con tipo y etiquetas delante: «cartografía | elecciones 29-N, encuestas | Trabajo: … | Autor: … | Medio: …»
     tipos_pz, etq_pz = [], []
