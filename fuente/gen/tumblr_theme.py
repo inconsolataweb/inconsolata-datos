@@ -43,6 +43,8 @@ TCSS = """
 .ficha .esps{display:flex;justify-content:center}
 /* las comillas de los logos, enteras (Safari recortaba su cola izquierda) */
 .brand span,.mh-brand span,.lb-brand span{display:inline-block;padding:0 .06em 0 .14em;margin:0 -.06em 0 -.14em}
+/* botones de Tumblr (Seguir, Únete a Tumblr…): abajo a la derecha, para no tapar la cabecera */
+iframe.tmblr-iframe,iframe[class*="tmblr-iframe"]{top:auto!important;bottom:10px!important;right:10px!important;left:auto!important;position:fixed!important}
 /* especial web: banda blanca de borde a borde */
 .v-home .ew{background:#fff;color:var(--ink);margin:64px 0 0;padding:60px 0 0;border-top:6px solid var(--ink);border-bottom:6px solid var(--ink);position:relative;z-index:1}
 .v-home .ew-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:56px;align-items:center}
