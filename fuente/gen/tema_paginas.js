@@ -10,7 +10,7 @@ function contar(ps,f){var c={};ps.forEach(function(p){f(p).forEach(function(v){c
 // piezas de mucho más y EXTRA! (archivo.posts[].pz = [imagen, tipo, medios, autores, etiquetas]): en una ficha o un especial
 // se muestra la pieza de ese medio, autor o etiqueta, no la primera del post
 var CTXP=null;
-function vistaP(p){var z=p.pz,c=CTXP,base={im:p.im,m:p.m,a:p.a};if(!z||!c)return base;
+function vistaP(p){if(p._pz)return {im:p._pz[0]||p.im,m:p._pz[2].length?p._pz[2]:p.m,a:p._pz[3]};var z=p.pz,c=CTXP,base={im:p.im,m:p.m,a:p.a};if(!z||!c)return base;
  var f=function(x){if(c.m!=null)return x[2].indexOf(c.m)>=0;if(c.a!=null)return x[3].indexOf(c.a)>=0;if(c.e)return (x[4]||[]).some(function(t){return c.e.indexOf(fold(t))>=0;});return false;};
  var x=z.find(function(x){return f(x)&&x[0];})||z.find(f);if(!x)return base;
  return {im:x[0]||p.im,m:x[2].length?x[2]:p.m,a:x[3]};}
@@ -216,15 +216,19 @@ function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p
  document.title=x.titulo+' · especial · inconsolata»';
  var pi=cat.temas.findIndex(function(t){return t.n===x.padre;}),ic=icoE(cat,x),madre=x.cap_de?by[x.cap_de]:null;
  CTXP={e:[].concat.apply(x.tags||[],(x.capitulos||[]).map(function(c){return (by[c]&&by[c].tags)||[];})).map(fold)};
+ // los recopilatorios (mucho más, EXTRA!) entran pieza a pieza: una tarjeta por cada pieza con la etiqueta del especial
+ var trozos=function(L){var o=[];L.forEach(function(p){var c=CTXP.e,zs=(p.pz||[]).map(function(z,k){return [z,k];}).filter(function(q){return (q[0][4]||[]).some(function(t){return c.indexOf(fold(t))>=0;});});
+  if(zs.length<1)o.push(p);else zs.forEach(function(q){var y=Object.create(p);y._pz=q[0];y._k=q[1];y.m=q[0][2].length?q[0][2]:[];y.a=q[0][3];y.k=[q[0][1]];o.push(y);});});return o;};
+ ps=trozos(ps);
  var carta=function(p){var v=vistaP(p),ie=icoEsp(espSl(p.i),'',false),auts=v.a.slice(0,3).map(function(i){return A.autores[i].n;});
-  return '<a class="ec" href="/post/'+esc(p.u)+'"><div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt=""" onerror="this.remove()">':'')+(p.s?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+
+  return '<a class="ec" href="/post/'+esc(p.u)+(p._pz?'#mm-'+(p._k+1):'')+'"><div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt=""" onerror="this.remove()">':'')+(p.s?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+
    '<span class="ico">'+(ie?'<span>'+ie+'</span>':p.k.slice(0,3).map(function(k){return '<span title="'+esc(TN[k])+'"><svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#i-'+k+'"/></svg></span>';}).join(''))+'</span></div>'+
    '<span class="meta"><b>'+(+p.d.slice(8,10))+' '+MES3[+p.d.slice(5,7)-1]+'</b>'+(v.m.length?' · '+medsI(v.m):'')+'</span><span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};
  var meses=function(L){var gr={};L.forEach(function(p){(gr[p.d.slice(0,7)]=gr[p.d.slice(0,7)]||[]).push(p);});
   return Object.keys(gr).map(function(k){var v=gr[k];return '<section class="mo"><h3>'+MESES[+k.slice(5,7)-1].replace(/^./,function(c){return c.toUpperCase();})+'<small>'+k.slice(0,4)+' · '+v.length+' '+(v.length===1?'entrada':'entradas')+'</small></h3><div class="g">'+v.map(carta).join('')+'</div></section>';}).join('');};
  var caps=(x.capitulos||[]).map(function(c){return by[c];}).filter(Boolean).sort(function(a,b){return (b.hasta||'').localeCompare(a.hasta||'');}),tl='';
  if(caps.length){var usados={};
-  tl=caps.map(function(c){var L=c.posts.map(function(i){return byId[i];}).filter(Boolean).sort(function(a,b){return b.d.localeCompare(a.d);});L.forEach(function(p){usados[p.i]=1;});
+  tl=caps.map(function(c){var L=trozos(c.posts.map(function(i){return byId[i];}).filter(Boolean)).sort(function(a,b){return b.d.localeCompare(a.d);});L.forEach(function(p){usados[p.i]=1;});
    return '<div class="cap"><div class="cap-h"><h2 class="soft"><a href="/especiales#'+esc(c.slug)+'">'+esc(c.titulo)+'</a></h2><span>'+L.length+' '+(L.length===1?'entrada':'entradas')+(c.desde?' · '+rangoE(c.desde,c.hasta||c.desde):'')+'</span></div>'+meses(L)+'</div>';}).join('');
   var resto=ps.filter(function(p){return !usados[p.i];});
   if(resto.length)tl+='<div class="cap"><div class="cap-h"><h2 class="soft">Otras entradas</h2><span>'+resto.length+' '+(resto.length===1?'entrada':'entradas')+'</span></div>'+meses(resto)+'</div>';}

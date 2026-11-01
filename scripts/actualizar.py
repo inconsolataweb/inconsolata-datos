@@ -234,7 +234,16 @@ def idx_de(lista, catalogo, n, nuevo):
     return lista.index(n)
 
 def medio_de(nombre, fecha, tags):
+    # fuera el número de la edición: «Negocios (El País) #2.139», «… nº 45»
+    nombre = re.sub(r'\s*(?:#|n\.?º\s*|núm\.?\s*)[\d.,]+\s*$', '', nombre or '', flags=re.I)
     k = nz(nombre)
+    if k not in ALIAS['medios']:
+        # «Suplemento (Medio)»: si lo de dentro del paréntesis es un medio conocido, cuenta como ese medio
+        m_ = re.search(r'\(([^()]+)\)\s*$', nombre)
+        if m_ and nz(m_.group(1)) in ALIAS['medios'] and nz(re.sub(r'\([^()]*\)', ' ', nombre) + ' ' + m_.group(1)) in ALIAS['medios']:
+            k = nz(re.sub(r'\([^()]*\)', ' ', nombre) + ' ' + m_.group(1))
+        elif m_ and nz(m_.group(1)) in ALIAS['medios']:
+            k = nz(m_.group(1))
     if k == 'publico':
         return 'Público (España)' if fecha[:4] <= '2012' else 'Público (Portugal)'
     if k in ('la razon',) and any(nz(t) == 'la razon mex' for t in tags):
@@ -573,6 +582,8 @@ def escribir_meta(idx):
     cat = {'medios': med, 'autores': [a['n'] for a in idx['autores']], 'am': [MI.get((a.get('m') or [''])[0], -1) for a in idx['autores']],
            'esp': {e['slug']: e['titulo'] for e in ESP},
            'espi': iconos_especiales(),
+           # etiquetas de cada especial (para reconocer las piezas sueltas de los mucho más/EXTRA!): {slug: [tema, etiqueta, …]}
+           'espt': {e['slug']: [e.get('padre') or e.get('tema', '')] + [nz(t) for t in e.get('tags', [])] for e in ESP if e.get('tags')},
            'temas': [dict({'n': t['n'], 'b': t['b']}, **({'x': t['x']} if t.get('x') else {}), **({'e': ESP_DE_TEMA[t['n']]} if t['n'] in ESP_DE_TEMA else {})) for t in idx['temas']]}
     json.dump(cat, open(D('catalogo.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
 

@@ -64,6 +64,11 @@ def _mm_css():
 .tk-t{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font:700 14px Archivo,sans-serif;color:var(--ink);background:var(--yellow);border:2px solid var(--ink);padding:8px 14px;min-height:44px;text-decoration:none}
 .tk-t svg{width:24px;height:24px;overflow:visible}
 .tk-t:hover{background:var(--ink);color:var(--paper)}
+.tk-t.tk-e{background:var(--accent);color:#fff}
+.tk-t.tk-e small{font-size:12px;opacity:.85}
+.tk-t.tk-e:hover{background:var(--ink)}
+.v-mm .item .txt .ico-esp{display:inline-block;color:var(--ink)}
+.v-mm .item .txt .ico-esp .m{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){.filters.tk{overflow-x:auto}}
 """
 

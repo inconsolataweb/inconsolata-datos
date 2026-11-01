@@ -487,6 +487,11 @@ mark.subr{background:none;color:inherit;padding:.06em .24em;margin:0 -.08em;back
 .v-mm .tk-t{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font:700 14px Archivo,sans-serif;color:var(--ink);background:var(--yellow);border:2px solid var(--ink);padding:8px 14px;min-height:44px;text-decoration:none}
 .v-mm .tk-t svg{width:24px;height:24px;overflow:visible}
 .v-mm .tk-t:hover{background:var(--ink);color:var(--paper)}
+.v-mm .tk-t.tk-e{background:var(--accent);color:#fff}
+.v-mm .tk-t.tk-e small{font-size:12px;opacity:.85}
+.v-mm .tk-t.tk-e:hover{background:var(--ink)}
+.v-mm .v-mm .item .txt .ico-esp{display:inline-block;color:var(--ink)}
+.v-mm .v-mm .item .txt .ico-esp .m{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){.v-mm .filters.tk{overflow-x:auto}}.v-x .xhero{background:var(--accent);color:#fff;position:relative;overflow:hidden}
 .v-x .xhero::before{content:"";position:absolute;left:-25%;top:-120%;width:150%;aspect-ratio:1;background:repeating-conic-gradient(rgba(255,212,0,.17) 0 5deg,transparent 5deg 15deg);animation:rays 90s linear infinite;pointer-events:none}
 .v-x .xhero .inner{position:relative}
