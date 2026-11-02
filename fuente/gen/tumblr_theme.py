@@ -507,7 +507,7 @@ function post(art,meta,cat,medido){
  var FTR=fechasTr([].map.call(art.querySelectorAll('.fuente .f-tx'),function(x){return x.textContent;}).join(' '),d);
  dl+='<dt>Fecha</dt><dd>'+(FTR.length?fechaRango(FTR):fecha(d))+'</dd>';
  // la fecha de publicación del post, en pequeño antes del cuerpo (la de los trabajos va en el cuadro negro y en la ficha)
- if(d&&!art.querySelector('.pub-f')){var pf=document.createElement('p');pf.className='pub-f';pf.innerHTML='Publicado el <time datetime="'+d+'">'+fecha(d)+'</time>';body.parentNode.insertBefore(pf,body);}
+ if(d&&!art.querySelector('.pub-f')){var pf=document.createElement('div');pf.className='pub-f';pf.innerHTML='Publicado el <time datetime="'+d+'">'+fecha(d)+'</time>';body.insertBefore(pf,body.firstChild);}
  if(tipos.length)dl+='<dt>Tipo</dt><dd>'+tipos.map(function(k){return esc(TN[k]);}).join(', ')+'</dd>';
  if(auts.length&&s!=='m'&&s!=='x')dl+='<dt>Créditos</dt><dd>'+auts.map(function(a){return '<a class="credit" href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(', ')+'</dd>';
  var lgs=meds.filter(function(m){return m.logo;});
