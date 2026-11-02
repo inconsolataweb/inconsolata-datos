@@ -176,6 +176,7 @@ LEGACY = ('<div class="legacy" role="note"><span class="lg-i" aria-hidden="true"
           '<a href="mailto:inconsolataweb@gmail.com?subject=Algo%20roto%20en%20un%20post">¿Ves algo roto? Avísame »</a></p></div>')
 LEGACY_CSS = """
 .legacy{display:flex;align-items:center;gap:14px;background:var(--yellow);padding:12px 18px;margin:4px 0 6px;box-shadow:4px 4px 0 var(--ink)}
+.legacy[hidden]{display:none!important}
 .legacy .lg-i{font-family:'Fraunces',serif;font-style:italic;font-weight:900;font-size:34px;line-height:1;color:var(--accent)}
 .legacy p{margin:0;font-family:'Archivo',sans-serif;font-size:15px;line-height:1.45}
 .legacy a{font-weight:800;border-bottom:2px solid var(--ink);white-space:nowrap}
