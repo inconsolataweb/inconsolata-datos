@@ -79,6 +79,15 @@ function get(f){var v=((window.INC_BASE||'').split('@')[1]||'').replace(/\/$/,''
 function getS(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'null');if(c)return Promise.resolve(c);}catch(e){}
  return fetch(CDN+f+'.json').then(function(r){return r.json();}).then(function(j){try{sessionStorage.setItem(k,JSON.stringify(j));}catch(e){}return j;});}
 function fecha(d){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+' de '+d.slice(0,4);}
+// fechas de los trabajos citadas en un texto (\u00abdel 1 de noviembre\u00bb, \u00abdel 30 de agosto; 6 y 13 de septiembre de 2026\u00bb), ordenadas;
+// sin a\u00f1o se entiende el del post (o el anterior si quedar\u00eda muy por delante de la publicaci\u00f3n)
+function fechasTr(t,d){var fp=new Date(d+'T12:00:00'),o={},re=/(\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?/gi,m;
+ while((m=re.exec(t||''))){var mes=MESES.indexOf(m[2].toLowerCase().replace('setiembre','septiembre')),y=m[3]?+m[3]:fp.getFullYear(),f=new Date(y,mes,+m[1],12);
+  if(!m[3]&&(f-fp)/864e5>20)f=new Date(y-1,mes,+m[1],12);if((f-fp)/864e5>20||(fp-f)/864e5>3660)continue;
+  o[f.getFullYear()+'-'+('0'+(f.getMonth()+1)).slice(-2)+'-'+('0'+f.getDate()).slice(-2)]=1;}
+ return Object.keys(o).sort();}
+function fechaRango(L){if(!L.length)return '';if(L.length===1)return fecha(L[0]);var a=L[0],b=L[L.length-1];
+ return (a.slice(0,4)===b.slice(0,4)?(+a.slice(8,10))+' de '+MESES[+a.slice(5,7)-1]:fecha(a))+' \u2013 '+fecha(b);}
 function ico(k,cls){return '<svg class="'+(cls||'')+'" viewBox="0 0 64 64" role="img" aria-label="'+esc(TN[k])+'" style="overflow:visible"><title>'+esc(TN[k])+'</title><use href="#i-'+k+'" class="k"/><use href="#i-'+k+'" class="m" x="3" y="2.5"/></svg>';}
 var TIT={},AJ={};
 // ------------------------------------------------------------------ vistas especiales (mucho m\u00e1s, EXTRA!, metablog)
@@ -743,15 +752,19 @@ function contar(ps,f){var c={};ps.forEach(function(p){f(p).forEach(function(v){c
 // piezas de mucho m\u00e1s y EXTRA! (archivo.posts[].pz = [imagen, tipo, medios, autores, etiquetas]): en una ficha o un especial
 // se muestra la pieza de ese medio, autor o etiqueta, no la primera del post
 var CTXP=null;
+// fechas: en fichas, especiales y estad\u00edsticas cuenta la del trabajo (cuadro negro, o la de la pieza en mucho m\u00e1s y EXTRA!), no la de publicaci\u00f3n
+function fT(p){var v=vistaP(p);return (v.z&&v.z[5])||p.f||p.d;}
+function fw(p){return p.fw||p.f||p.d;}
+function ordenaFT(ps){ps.forEach(function(p){p.fw=fT(p);});return ps.sort(function(a,b){return b.fw.localeCompare(a.fw);});}
 function vistaP(p){if(p._pz)return {im:p._pz[0]||p.im,m:p._pz[2].length?p._pz[2]:p.m,a:p._pz[3],z:p._pz};var z=p.pz,c=CTXP,base={im:p.im,m:p.m,a:p.a};if(!z||!c)return base;
  var f=function(x){if(c.m!=null)return x[2].indexOf(c.m)>=0;if(c.a!=null)return x[3].indexOf(c.a)>=0;if(c.e)return (x[4]||[]).some(function(t){return c.e.indexOf(fold(t))>=0;});return false;};
  var x=z.find(function(x){return f(x)&&x[0];})||z.find(f);if(!x)return base;
  return {im:x[0]||p.im,m:x[2].length?x[2]:p.m,a:x[3],z:x};}
 function cartaP(A,p,i){var v=vistaP(p),auts=v.a.slice(0,3).map(function(j){return A.autores[j].n;});
  return '<a href="/post/'+esc(p.u)+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
-  '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'\u00bb '+esc(SECN[p.s]||''))+' \u00b7 '+fcorta(p.d)+'</span>'+
+  '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'\u00bb '+esc(SECN[p.s]||''))+' \u00b7 '+fcorta(fw(p))+'</span>'+
   '<span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+(v.a.length>3?' y '+(v.a.length-3)+' m\u00e1s':'')+'</span>':'')+'</a>';}
-function barrasAnios(ps){var c={},mx=1,h='',ax='';ps.forEach(function(p){var y=+p.d.slice(0,4);c[y]=(c[y]||0)+1;});
+function barrasAnios(ps){var c={},mx=1,h='',ax='';ps.forEach(function(p){var y=+fw(p).slice(0,4);c[y]=(c[y]||0)+1;});
  for(var y=2011;y<=Y1;y++)mx=Math.max(mx,c[y]||0);var n=Y1-2010;
  for(y=2011;y<=Y1;y++){h+='<div class="bar real" style="height:'+Math.max(2,(c[y]||0)/mx*100)+'%" title="'+y+': '+(c[y]||0)+' entradas"><span>'+(c[y]||'')+'</span></div>';ax+='<span>'+String(y).slice(2)+'</span>';}
  return '<section class="years"><div class="caps" style="margin-bottom:14px">Entradas por a\u00f1o \u00bb</div><div class="chart" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+h+'</div><div class="yax" style="grid-template-columns:repeat('+n+',minmax(0,1fr))">'+ax+'</div></section>';}
@@ -768,13 +781,13 @@ function activaEntradas(A,ps){var f='',n=0,g=document.getElementById('e-grid'),m
 function tiposBanda(ps,q){var c={};ps.forEach(function(p){p.k.forEach(function(k){c[k]=(c[k]||0)+1;});});
  return '<div class="tipos">'+TIPOS_ORD.map(function(t){return '<a href="/buscador#'+q+'&k='+t+'"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-'+t+'" class="k"/></svg><b>'+(c[t]||0)+'</b><span>'+esc(TN[t])+'</span></a>';}).join('')+'</div>';}
 function fechasBanda(ps){if(!ps.length)return '';var a=ps[ps.length-1],b=ps[0];
- return '<div class="fl-dates"><span>Primera entrada en inconsolata\u00bb: <a href="/post/'+esc(a.u)+'">'+fcorta(a.d)+'</a></span><span>\u00daltima: <a href="/post/'+esc(b.u)+'">'+fcorta(b.d)+'</a></span></div>';}
+ return '<div class="fl-dates"><span>Primera entrada en inconsolata\u00bb: <a href="/post/'+esc(a.u)+'">'+fcorta(fw(a))+'</a></span><span>\u00daltima: <a href="/post/'+esc(b.u)+'">'+fcorta(fw(b))+'</a></span></div>';}
 function inicial(n){return '<span class="mdc-av ini" aria-hidden="true">'+esc((n||'?').replace(/^(the|el|la|le|les|los|las|il|die|der)\s+/i,'').charAt(0).toUpperCase())+'</span>';}
 
 // ---------- medios
 function medioIdx(A,cat){
  var y=String(Y1),L=A.medios.map(function(m,i){return {i:i,n:m.n,p:m.p,c:cat.medios[i]||{},y:0};});
- A.posts.forEach(function(p){if(p.d.slice(0,4)===y)p.m.forEach(function(i){L[i].y++;});});
+ A.posts.forEach(function(p){if((p.f||p.d).slice(0,4)===y)p.m.forEach(function(i){L[i].y++;});});
  L=L.filter(function(o){return o.p>0;});
  var html=crumbs([['Medios']])+'<div class="idx-top"><div><h1 class="soft">Todos los <em>medios</em></h1><p>'+L.length+' medios han pasado por inconsolata\u00bb desde 2011. Los que tienen ficha llevan su logo; el resto te lleva a sus entradas en el buscador.</p></div>'+
   '<div class="idx-tools"><label class="sr" for="mq">Buscar medio</label><input id="mq" type="search" placeholder="Buscar medio\u2026" autocomplete="off"><label class="sr" for="mo">Ordenar</label><select id="mo"><option value="p">M\u00e1s entradas</option><option value="y">M\u00e1s entradas en '+y+'</option><option value="n">A\u2013Z</option></select>'+
@@ -860,13 +873,13 @@ function coronas(ST,n){if(!ST||!ST.years)return '';var y1=String(new Date().getF
  return '<div class="coronas">'+out.map(function(o){var tx=T[o[1]]+' medio m\u00e1s presente en inconsolata\u00bb en '+o[0]+(o[0]===y1?' (provisional: el a\u00f1o no ha terminado)':'');return '<span class="cor '+C[o[1]]+(o[0]===y1?' prov':'')+'" tabindex="0" aria-label="'+tx+'" data-tip="'+tx+'"><svg viewBox="0 0 64 44" aria-hidden="true"><path d="M4 40 L2 8 L18 22 L32 2 L46 22 L62 8 L60 40 Z"/></svg><b>'+o[0]+'</b></span>';}).join('')+'</div>';}
 
 function medioFicha(A,cat,FM,mi,ST){CTXP={m:mi};
- var m=A.medios[mi],c=cat.medios[mi]||{},f=FM[m.n]||{},ps=A.posts.filter(function(p){return p.m.indexOf(mi)>=0;});
+ var m=A.medios[mi],c=cat.medios[mi]||{},f=FM[m.n]||{},ps=ordenaFT(A.posts.filter(function(p){return p.m.indexOf(mi)>=0;}));
  document.title=m.n+' \u00b7 inconsolata\u00bb';
  var auts=contar(ps,function(p){return p.a.filter(function(a){return (A.autores[a].m||[]).indexOf(m.n)>=0;});}).slice(0,8);
  var fund=+f.fundacion||0,cierre=+f.cierre||0;
  var tieneFmt=!!(f.formato),vis=(c.logo||tieneFmt)?'<div class="fvis">'+(c.logo?'<div class="logo-big logo-wk"><img src="'+esc(c.logo)+'" alt="Logo de '+esc(m.n)+'" onerror="var v=this.closest(\'.fvis\');this.closest(\'.logo-big\').remove();if(!v.querySelector(\'.fmt-box *\')){v.closest(\'.fhero\').classList.add(\'novis\');v.remove();}"></div>':'')+'<div class="fmt-box" id="m-fmt"></div></div>':'';
  var big2=fund?'<div class="stat"><b>'+((cierre||Y1)-fund)+'</b><span>'+(cierre?'a\u00f1os public\u00e1ndose \u00b7 de '+fund+' a '+cierre:'a\u00f1os public\u00e1ndose \u00b7 desde '+fund)+'</span></div>':
-  '<div class="stat"><b>'+(new Set(ps.map(function(p){return p.d.slice(0,4);})).size)+'</b><span>a\u00f1os apareciendo en inconsolata\u00bb</span></div>';
+  '<div class="stat"><b>'+(new Set(ps.map(function(p){return fw(p).slice(0,4);})).size)+'</b><span>a\u00f1os apareciendo en inconsolata\u00bb</span></div>';
  var html=crumbs([['Medios','/medios'],[m.n]])+'<section class="fhero'+(vis?'':' novis')+'">'+vis+'<div class="finfo"><span class="caps ante" style="color:var(--accent)">Medio \u00bb '+bandera(f.cc)+esc(f.pais||'')+'<span id="m-tipo"></span>'+(f.desaparecido||cierre?' \u00b7 ya no se publica':'')+'</span>'+
   '<h1 class="soft">'+esc(m.n)+'</h1>'+
   '<div class="wk" id="wk"><div class="wk-h"><span class="caps">Datos \u00bb</span><a class="wk-src" id="wk-src" href="'+esc(f.wikipedia||'#')+'" target="_blank" rel="noopener"'+(f.wikipedia?'':' hidden')+'>Fuente: Wikidata y Wikipedia \u00b7 CC BY-SA \u00bb</a></div>'+
@@ -898,12 +911,12 @@ function medioFicha(A,cat,FM,mi,ST){CTXP={m:mi};
 
 function chipMedio(cat,n){var c=cat.medios.find(function(x){return x.n===n;}),i=cat.medios.indexOf(c);
  return '<a class="ch-av" href="'+(c&&c.ficha?fichaMedio(c):'/buscador#m='+i)+'">'+(c&&c.avw?'<img src="'+esc(c.avw)+'" alt="">':'')+esc(n)+'</a>';}
-function autorFicha(A,cat,FM,AX,ai){CTXP={a:ai};var a=A.autores[ai],ps=A.posts.filter(function(p){return p.a.indexOf(ai)>=0;}),x=AX[a.n]||{};
+function autorFicha(A,cat,FM,AX,ai){CTXP={a:ai};var a=A.autores[ai],ps=ordenaFT(A.posts.filter(function(p){return p.a.indexOf(ai)>=0;})),x=AX[a.n]||{};
  document.title=a.n+' \u00b7 inconsolata\u00bb';
  var md=x.medio||(a.m||[])[0],mc=md?cat.medios.find(function(m){return m.n===md;}):null,fm=FM[md]||{};
  var pais=x.pais||fm.pais||'',cc=x.cc||fm.cc||'';
  var otros=md?A.autores.map(function(o,i){return {i:i,n:o.n,p:o.p,m:o.m||[]};}).filter(function(o){return o.i!==ai&&o.m.indexOf(md)>=0&&o.p>0;}).sort(function(p,q){return q.p-p.p;}).slice(0,8):[];
- var ys=ps.map(function(p){return +p.d.slice(0,4);}),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),ny=new Set(ys).size;
+ var ys=ps.map(function(p){return +fw(p).slice(0,4);}),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),ny=new Set(ys).size;
  // piezas de muestra: solo posts propios (no los recopilatorios de mucho m\u00e1s ni EXTRA!)
  var W0=ps.filter(function(p){return p.im&&p.a.length<=6&&p.s!=='m'&&p.s!=='x';}).slice().reverse();
  // prioridad: piezas firmadas solo por este autor y de un solo medio; despu\u00e9s, solo por \u00e9l; despu\u00e9s, de un solo medio; al final, el resto (solo si faltan)
@@ -925,7 +938,7 @@ function autorFicha(A,cat,FM,AX,ai){CTXP={a:ai};var a=A.autores[ai],ps=A.posts.f
   '<div class="wrap">'+barrasAnios(ps)+entradas(A,ps)+'</div>';
  return {html:html,init:function(){activaEntradas(A,ps);if(!W.length)return;var i=Math.floor(Math.random()*W.length);
   function show(){var w=W[i%W.length];document.getElementById('work-a').href='/post/'+w.u;document.getElementById('work-img').setAttribute('s'+'rc',w.im);
-   document.getElementById('work-n').textContent=(i%W.length)+1;document.getElementById('work-m').innerHTML=medsI(w.m)+' \u00b7 '+fcorta(w.d);
+   document.getElementById('work-n').textContent=(i%W.length)+1;document.getElementById('work-m').innerHTML=medsI(w.m)+' \u00b7 '+fcorta(fw(w));
    // pieza a varias manos: firman todos, porque el post no dice de qui\u00e9n es cada parte
    var wa=document.getElementById('work-au'),au=w.a.map(function(j){return A.autores[j]&&A.autores[j].n;}).filter(Boolean);
    if(au.length>1){wa.innerHTML='por '+au.map(function(n){return '<a href="/autores#'+encodeURIComponent(n)+'">'+esc(n)+'</a>';}).join(', ').replace(/, (<a [^>]*>[^<]*<\/a>)$/,' y $1');wa.hidden=false;}else{wa.hidden=true;}}
@@ -952,16 +965,16 @@ function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p
  // los recopilatorios (mucho m\u00e1s, EXTRA!) entran pieza a pieza: una tarjeta por cada pieza con la etiqueta del especial
  var trozos=function(L){var o=[];L.forEach(function(p){var c=CTXP.e,zs=(p.pz||[]).map(function(z,k){return [z,k];}).filter(function(q){return (q[0][4]||[]).some(function(t){return c.indexOf(fold(t))>=0;});});
   if(zs.length<1)o.push(p);else zs.forEach(function(q){var y=Object.create(p);y._pz=q[0];y._k=q[1];y.m=q[0][2].length?q[0][2]:[];y.a=q[0][3];y.k=[q[0][1]];o.push(y);});});return o;};
- ps=trozos(ps);
+ ps=ordenaFT(trozos(ps));
  var carta=function(p){var v=vistaP(p),ie=v.z?icoEsp(espDeEtq(v.z[4]),'',false):icoEsp(espSlI(p.i),'',false),auts=v.a.slice(0,3).map(function(i){return A.autores[i].n;});
   return '<a class="ec" href="/post/'+esc(p.u)+(p._pz?'#mm-'+(p._k+1):'')+'"><div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt=""" onerror="this.remove()">':'')+(p.s?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+
    '<span class="ico">'+(ie?'<span>'+ie+'</span>':p.k.slice(0,3).map(function(k){return '<span title="'+esc(TN[k])+'"><svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#i-'+k+'"/></svg></span>';}).join(''))+'</span></div>'+
-   '<span class="meta"><b>'+(+p.d.slice(8,10))+' '+MES3[+p.d.slice(5,7)-1]+'</b>'+(v.m.length?' \u00b7 '+medsI(v.m):'')+'</span><span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};
- var meses=function(L){var gr={};L.forEach(function(p){(gr[p.d.slice(0,7)]=gr[p.d.slice(0,7)]||[]).push(p);});
+   '<span class="meta"><b>'+(+fw(p).slice(8,10))+' '+MES3[+fw(p).slice(5,7)-1]+'</b>'+(v.m.length?' \u00b7 '+medsI(v.m):'')+'</span><span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};
+ var meses=function(L){var gr={};L.forEach(function(p){(gr[fw(p).slice(0,7)]=gr[fw(p).slice(0,7)]||[]).push(p);});
   return Object.keys(gr).map(function(k){var v=gr[k];return '<section class="mo"><h3>'+MESES[+k.slice(5,7)-1].replace(/^./,function(c){return c.toUpperCase();})+'<small>'+k.slice(0,4)+' \u00b7 '+v.length+' '+(v.length===1?'entrada':'entradas')+'</small></h3><div class="g">'+v.map(carta).join('')+'</div></section>';}).join('');};
  var caps=(x.capitulos||[]).map(function(c){return by[c];}).filter(Boolean).sort(function(a,b){return (b.hasta||'').localeCompare(a.hasta||'');}),tl='';
  if(caps.length){var usados={};
-  tl=caps.map(function(c){var L=trozos(c.posts.map(function(i){return byId[i];}).filter(Boolean)).sort(function(a,b){return b.d.localeCompare(a.d);});L.forEach(function(p){usados[p.i]=1;});
+  tl=caps.map(function(c){var L=ordenaFT(trozos(c.posts.map(function(i){return byId[i];}).filter(Boolean)));L.forEach(function(p){usados[p.i]=1;});
    return '<div class="cap"><div class="cap-h"><h2 class="soft"><a href="/especiales#'+esc(c.slug)+'">'+esc(c.titulo)+'</a></h2><span>'+L.length+' '+(L.length===1?'entrada':'entradas')+(c.desde?' \u00b7 '+rangoE(c.desde,c.hasta||c.desde):'')+'</span></div>'+meses(L)+'</div>';}).join('');
   var resto=ps.filter(function(p){return !usados[p.i];});
   if(resto.length)tl+='<div class="cap"><div class="cap-h"><h2 class="soft">Otras entradas</h2><span>'+resto.length+' '+(resto.length===1?'entrada':'entradas')+'</span></div>'+meses(resto)+'</div>';}
@@ -1579,7 +1592,10 @@ function post(art,meta,cat,medido){
  // ficha
  var dl='';
  if(meds.length)dl+='<dt>Medio'+(meds.length>1?'s':'')+'</dt><dd>'+meds.map(function(m){return '<a href="'+fichaMedio(m)+'">'+esc(m.n)+'</a>'+(m.pais?' \u00b7 '+esc(m.pais):'');}).join('<br>')+'</dd>';
- dl+='<dt>Fecha</dt><dd>'+fecha(d)+'</dd>';
+ var FTR=fechasTr([].map.call(art.querySelectorAll('.fuente .f-tx'),function(x){return x.textContent;}).join(' '),d);
+ dl+='<dt>Fecha</dt><dd>'+(FTR.length?fechaRango(FTR):fecha(d))+'</dd>';
+ // la fecha de publicaci\u00f3n del post, en peque\u00f1o antes del cuerpo (la de los trabajos va en el cuadro negro y en la ficha)
+ if(d&&!art.querySelector('.pub-f')){var pf=document.createElement('p');pf.className='pub-f';pf.innerHTML='Publicado el <time datetime="'+d+'">'+fecha(d)+'</time>';body.parentNode.insertBefore(pf,body);}
  if(tipos.length)dl+='<dt>Tipo</dt><dd>'+tipos.map(function(k){return esc(TN[k]);}).join(', ')+'</dd>';
  if(auts.length&&s!=='m'&&s!=='x')dl+='<dt>Cr\u00e9ditos</dt><dd>'+auts.map(function(a){return '<a class="credit" href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(', ')+'</dd>';
  var lgs=meds.filter(function(m){return m.logo;});

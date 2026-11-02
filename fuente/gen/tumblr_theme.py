@@ -182,6 +182,8 @@ html.lite .v-home .frames{display:flex!important;overflow-x:auto;scroll-snap-typ
 html.lite .v-home .frames .frame{flex:0 0 42%;scroll-snap-align:start}
 html.lite .v-home .proj h3{font-size:38px!important;overflow-wrap:anywhere}
 html.lite .legacy{font-size:13px}
+.pub-f{margin:0 0 14px;font:800 11px/1.3 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.pub-f time{color:var(--ink)}
 /* ===== móvil: reglas comunes (tamaños con techo, sin giros, imágenes dentro de su caja) ===== */
 html.lite h1.soft,html.lite .title h1,html.lite .eh h1{font-size:clamp(30px,9vw,38px)!important;line-height:1.02!important;letter-spacing:-.01em!important;overflow-wrap:break-word}
 html.lite .idx-top h1,html.lite .nov-top h1,html.lite .cr-top h1{font-size:clamp(32px,10vw,40px)!important}
@@ -326,6 +328,15 @@ function get(f){var v=((window.INC_BASE||'').split('@')[1]||'').replace(/\/$/,''
 function getS(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'null');if(c)return Promise.resolve(c);}catch(e){}
  return fetch(CDN+f+'.json').then(function(r){return r.json();}).then(function(j){try{sessionStorage.setItem(k,JSON.stringify(j));}catch(e){}return j;});}
 function fecha(d){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+' de '+d.slice(0,4);}
+// fechas de los trabajos citadas en un texto («del 1 de noviembre», «del 30 de agosto; 6 y 13 de septiembre de 2026»), ordenadas;
+// sin año se entiende el del post (o el anterior si quedaría muy por delante de la publicación)
+function fechasTr(t,d){var fp=new Date(d+'T12:00:00'),o={},re=/(\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?/gi,m;
+ while((m=re.exec(t||''))){var mes=MESES.indexOf(m[2].toLowerCase().replace('setiembre','septiembre')),y=m[3]?+m[3]:fp.getFullYear(),f=new Date(y,mes,+m[1],12);
+  if(!m[3]&&(f-fp)/864e5>20)f=new Date(y-1,mes,+m[1],12);if((f-fp)/864e5>20||(fp-f)/864e5>3660)continue;
+  o[f.getFullYear()+'-'+('0'+(f.getMonth()+1)).slice(-2)+'-'+('0'+f.getDate()).slice(-2)]=1;}
+ return Object.keys(o).sort();}
+function fechaRango(L){if(!L.length)return '';if(L.length===1)return fecha(L[0]);var a=L[0],b=L[L.length-1];
+ return (a.slice(0,4)===b.slice(0,4)?(+a.slice(8,10))+' de '+MESES[+a.slice(5,7)-1]:fecha(a))+' – '+fecha(b);}
 function ico(k,cls){return '<svg class="'+(cls||'')+'" viewBox="0 0 64 64" role="img" aria-label="'+esc(TN[k])+'" style="overflow:visible"><title>'+esc(TN[k])+'</title><use href="#i-'+k+'" class="k"/><use href="#i-'+k+'" class="m" x="3" y="2.5"/></svg>';}
 var TIT={},AJ={};
 __VJS__
@@ -493,7 +504,10 @@ function post(art,meta,cat,medido){
  // ficha
  var dl='';
  if(meds.length)dl+='<dt>Medio'+(meds.length>1?'s':'')+'</dt><dd>'+meds.map(function(m){return '<a href="'+fichaMedio(m)+'">'+esc(m.n)+'</a>'+(m.pais?' · '+esc(m.pais):'');}).join('<br>')+'</dd>';
- dl+='<dt>Fecha</dt><dd>'+fecha(d)+'</dd>';
+ var FTR=fechasTr([].map.call(art.querySelectorAll('.fuente .f-tx'),function(x){return x.textContent;}).join(' '),d);
+ dl+='<dt>Fecha</dt><dd>'+(FTR.length?fechaRango(FTR):fecha(d))+'</dd>';
+ // la fecha de publicación del post, en pequeño antes del cuerpo (la de los trabajos va en el cuadro negro y en la ficha)
+ if(d&&!art.querySelector('.pub-f')){var pf=document.createElement('p');pf.className='pub-f';pf.innerHTML='Publicado el <time datetime="'+d+'">'+fecha(d)+'</time>';body.parentNode.insertBefore(pf,body);}
  if(tipos.length)dl+='<dt>Tipo</dt><dd>'+tipos.map(function(k){return esc(TN[k]);}).join(', ')+'</dd>';
  if(auts.length&&s!=='m'&&s!=='x')dl+='<dt>Créditos</dt><dd>'+auts.map(function(a){return '<a class="credit" href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(', ')+'</dd>';
  var lgs=meds.filter(function(m){return m.logo;});

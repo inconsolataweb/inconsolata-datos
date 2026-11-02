@@ -332,6 +332,8 @@ html.lite .v-home .frames{display:flex!important;overflow-x:auto;scroll-snap-typ
 html.lite .v-home .frames .frame{flex:0 0 42%;scroll-snap-align:start}
 html.lite .v-home .proj h3{font-size:38px!important;overflow-wrap:anywhere}
 html.lite .legacy{font-size:13px}
+.pub-f{margin:0 0 14px;font:800 11px/1.3 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.pub-f time{color:var(--ink)}
 /* ===== m\f3 vil: reglas comunes (tama\f1 os con techo, sin giros, im\e1 genes dentro de su caja) ===== */
 html.lite h1.soft,html.lite .title h1,html.lite .eh h1{font-size:clamp(30px,9vw,38px)!important;line-height:1.02!important;letter-spacing:-.01em!important;overflow-wrap:break-word}
 html.lite .idx-top h1,html.lite .nov-top h1,html.lite .cr-top h1{font-size:clamp(32px,10vw,40px)!important}

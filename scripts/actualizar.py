@@ -233,6 +233,35 @@ def idx_de(lista, catalogo, n, nuevo):
         lista.append(n); catalogo.append(nuevo(n))
     return lista.index(n)
 
+MES_N = {m: i + 1 for i, m in enumerate(['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'])}
+FECHA_RE = re.compile(r'(\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?', re.I)
+
+def fecha_trabajo(texto, fecha_post):
+    """Fecha de la pieza («Medio, del 1 de noviembre», «…del 30 de agosto; 6 y 13 de septiembre de 2026»): la más reciente
+    que se cita; sin año se entiende la del post (o la del año anterior si quedaría muy por delante). '' si no hay."""
+    from datetime import date
+    try:
+        fp = date.fromisoformat(fecha_post)
+    except Exception:
+        return ''
+    mejor = None
+    for d, mes, y in FECHA_RE.findall(texto or ''):
+        m = MES_N.get(mes.lower().replace('setiembre', 'septiembre'))
+        try:
+            if y:
+                f = date(int(y), m, int(d))
+            else:
+                f = date(fp.year, m, int(d))
+                if (f - fp).days > 20:
+                    f = date(fp.year - 1, m, int(d))
+        except Exception:
+            continue
+        if (f - fp).days > 20 or (fp - f).days > 3660:
+            continue
+        if not mejor or f > mejor:
+            mejor = f
+    return mejor.isoformat() if mejor else ''
+
 def medio_de(nombre, fecha, tags):
     # fuera el número de la edición: «Negocios (El País) #2.139», «… nº 45»
     nombre = re.sub(r'\s*(?:#|n\.?º\s*|núm\.?\s*)[\d.,]+\s*$', '', nombre or '', flags=re.I)
@@ -312,9 +341,11 @@ def clasificar(p):
         titulo = 'EXTRA! nº ' + str(1 + sum(1 for q in IDX['posts'] if q['s'] == 'x' and q['d'] < fecha))
     # medios: líneas de fuente en negrita, campos «Medio:» y etiquetas
     fuentes = []
+    lineas_fuente = []
     for para in re.findall(r'<p>(.*?)</p>', cuerpo, re.S):
         if re.search(DATE_PAT, txt(para).lower()) and BOLD_RE.search(para):
             fuentes += [txt(b).strip(' »,.:') for _, b in BOLD_RE.findall(para)]
+            lineas_fuente.append(txt(para))
     fuentes += [b for _, b in items] + tags
     medios = sorted({m for m in (medio_de(f, fecha, tags) for f in fuentes) if m})
     for f in fuentes[:len(fuentes) - len(tags)]:
@@ -377,8 +408,10 @@ def clasificar(p):
                     a_ = ALIAS['autores'].get(nz(n))
                     if a_ in AUT and a_ not in NO_AUTORES:
                         pa.add(AUT.index(a_))
-            piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et])
+            piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et, fecha_trabajo(pt.split('Trabajo', 1)[-1], fecha)])
             ult = None
+    # fecha del trabajo (la del cuadro negro); en mucho más y EXTRA!, la de la pieza más reciente
+    ftr = max([z[5] for z in piezas if z[5]] or ['']) if piezas else fecha_trabajo(' '.join(lineas_fuente), fecha)
     post = {
         'i': str(p['id']), 'u': p['post_url'].split('/post/', 1)[-1], 'd': fecha, 's': SEC[sec], 'k': tipos,
         't': titulo, 'b': primera_frase(texto),
@@ -389,6 +422,7 @@ def clasificar(p):
         'g': [s for s in SERIES if s in tl],
         'im': miniatura(th) if th else '', 'r': round(th['w'] / th['h'], 2) if th and th.get('w') and th.get('h') else 1.3,
         'n': len(ims),
+        **({'f': ftr} if ftr and ftr != fecha else {}),
         '_res': resumen(texto),
         '_im2': miniatura(th, 640) if th else '',
         '_pz': piezas or None,
@@ -549,7 +583,7 @@ def recontar(posts):
         ys = {}
         for q in posts:
             for i in q[key]:
-                y = int(q['d'][:4]); lo, hi = ys.get(i, (y, y)); ys[i] = (min(lo, y), max(hi, y))
+                y = int((q.get('f') or q['d'])[:4]); lo, hi = ys.get(i, (y, y)); ys[i] = (min(lo, y), max(hi, y))
         for i, it in enumerate(cat):
             it['p'] = c.get(i, 0)
             if 'y' in it and i in ys:
@@ -658,9 +692,9 @@ def escribir_portada(idx, frames, webs=None):
     out['esp'] = [[e['titulo'], e['slug'], e.get('tema', ''), len(e['posts']), e.get('hasta', ''), e.get('padre', ''), e.get('cap_de', '')] for e in ESP]
     # medios: los del año en curso (y los de siempre para el desplegable)
     y = str(datetime.now(timezone.utc).year)
-    cy = Counter(i for q in posts if q['d'].startswith(y) for i in q['m'])
+    cy = Counter(i for q in posts if (q.get('f') or q['d']).startswith(y) for i in q['m'])
     ct = Counter(i for q in posts for i in q['m'])
-    out['med'] = {'y': y, 'posts': sum(1 for q in posts if q['d'].startswith(y)),
+    out['med'] = {'y': y, 'posts': sum(1 for q in posts if (q.get('f') or q['d']).startswith(y)),
                   'l': [[MN[i], cy.get(i, 0), ct[i]] for i in sorted(ct, key=lambda i: (-cy.get(i, 0), -ct[i]))]}
     out['anios'] = sorted({q['d'][:4] for q in posts})[0]
     # posts elegidos a mano en portada_manual.json, aunque ya no estén entre los recientes
@@ -712,13 +746,15 @@ def escribir_portada(idx, frames, webs=None):
         json.dump(res, open(D('efemerides/%s.json' % mm), 'w'), ensure_ascii=False, separators=(',', ':'))
 
 def estadisticas(P):
+    # cuenta la fecha del trabajo (la del cuadro negro), no la de publicación
+    fd = lambda p: p.get('f') or p['d']
     M, A, T = MED, AUT, TEM
     global MEDIO_AUT     # medio principal de cada autor, para poner su avatar junto al nombre
     MEDIO_AUT = {i: M.index(a['m'][0]) for i, a in enumerate(IDX['autores']) if a.get('m') and a['m'][0] in M}
     first = {}
-    for p in sorted(P, key=lambda p: p['d']):
+    for p in sorted(P, key=fd):
         for i in p['m']:
-            first.setdefault(i, int(p['d'][:4]))
+            first.setdefault(i, int(fd(p)[:4]))
     def block(ps, year=None):
         cm, ca, ck, ct = Counter(), Counter(), Counter(), Counter()
         for p in ps:
@@ -727,15 +763,15 @@ def estadisticas(P):
                'medios': [[M[i], c, i] for i, c in cm.most_common(25)], 'autores': [[A[i], c, i, MEDIO_AUT.get(i)] for i, c in ca.most_common(15)],
                'tipos': dict(ck), 'temas': [[T[i], c, i] for i, c in ct.most_common(24)], 'imgs': sum(p['n'] for p in ps)}
         if year:
-            out['meses'] = [sum(1 for p in ps if p['d'][5:7] == '%02d' % m) for m in range(1, 13)]
+            out['meses'] = [sum(1 for p in ps if fd(p)[5:7] == '%02d' % m) for m in range(1, 13)]
             out['nuevos'] = sorted([[M[i], cm[i], i] for i in cm if first[i] == year], key=lambda x: -x[1])[:16]
         return out
     y1 = datetime.now(timezone.utc).year
-    years = {y: block([p for p in P if p['d'].startswith(str(y))], y) for y in range(2011, y1 + 1)}
+    years = {y: block([p for p in P if fd(p).startswith(str(y))], y) for y in range(2011, y1 + 1)}
     total = block(P)
     pres = Counter()
     for i in range(len(M)):
-        pres[i] = len({p['d'][:4] for p in P if i in p['m']})
+        pres[i] = len({fd(p)[:4] for p in P if i in p['m']})
     total['fieles'] = [[M[i], c, i] for i, c in pres.most_common(12)]
     total['per_year'] = {y: years[y]['posts'] for y in years}
     total['medios_year'] = {y: years[y]['n_medios'] for y in years}
