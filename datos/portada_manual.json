@@ -1,9 +1,7 @@
 {
 "apertura": null,
-"fijos": [
- {"id": "832076806134841344", "tam": "mediana"}
-],
-"ocultos": [],
+"fijos": [],
+"ocultos": ["832076806134841344"],
 "destacado": null,
 "colores": {"831740960853655552":"negro","831827785244868608":"negro","831918987644452864":"negro","832188237061685249":"negro"}
 }
