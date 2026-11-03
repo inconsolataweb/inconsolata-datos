@@ -342,7 +342,7 @@ def clasificar(p):
     # medios: líneas de fuente en negrita, campos «Medio:» y etiquetas
     fuentes = []
     lineas_fuente = []
-    for para in re.findall(r'<p>(.*?)</p>', cuerpo, re.S):
+    for para in re.findall(r'<(?:p|li)>(.*?)</(?:p|li)>', cuerpo, re.S):
         if re.search(DATE_PAT, txt(para).lower()) and BOLD_RE.search(para):
             fuentes += [txt(b).strip(' »,.:') for _, b in BOLD_RE.findall(para)]
             lineas_fuente.append(txt(para))
@@ -354,7 +354,7 @@ def clasificar(p):
             PEND['medios'].setdefault(f, []).append(p['post_url'])
     # autores: campos «Autor:» (se aceptan nombres nuevos) y nombres ya conocidos en el texto
     autores = set()
-    for para in re.findall(r'<p>(.*?)</p>', cuerpo, re.S):
+    for para in re.findall(r'<(?:p|li)>(.*?)</(?:p|li)>', cuerpo, re.S):
         for m in AUTOR_RE.finditer(txt(para)):
             for n in nombres(m.group(1)):
                 if nz(n) in ALIAS['autores']:
