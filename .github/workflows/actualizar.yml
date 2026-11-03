@@ -9,6 +9,10 @@ on:
         description: 'Cuántos posts recientes releer (99999 = todo el archivo)'
         required: false
         default: '40'
+      depura:
+        description: 'ID de un post para volcar sus datos crudos en el registro'
+        required: false
+        default: ''
       etiquetas:
         description: 'Leer las etiquetas de todo el archivo (para el panel)'
         type: boolean
@@ -35,6 +39,7 @@ jobs:
           TUMBLR_API_KEY: ${{ secrets.TUMBLR_API_KEY }}
           RELEER: ${{ inputs.releer || '40' }}
           ETIQUETAS_TODAS: ${{ inputs.etiquetas && '1' || '' }}
+          DEPURA: ${{ inputs.depura || '' }}
         run: python3 scripts/actualizar.py
       - name: Guardar cambios
         run: |
