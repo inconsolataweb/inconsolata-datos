@@ -919,7 +919,8 @@ function autorFicha(A,cat,FM,AX,ai){CTXP={a:ai};var a=A.autores[ai],ps=ordenaFT(
  var otros=md?A.autores.map(function(o,i){return {i:i,n:o.n,p:o.p,m:o.m||[]};}).filter(function(o){return o.i!==ai&&o.m.indexOf(md)>=0&&o.p>0;}).sort(function(p,q){return q.p-p.p;}).slice(0,8):[];
  var ys=ps.map(function(p){return +fw(p).slice(0,4);}),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),ny=new Set(ys).size;
  // piezas de muestra: solo posts propios (no los recopilatorios de mucho m\u00e1s ni EXTRA!)
- var W0=ps.filter(function(p){return p.im&&p.a.length<=6&&p.s!=='m'&&p.s!=='x';}).slice().reverse();
+ // muestras: la pieza concreta del autor (imagen, medio y coautores de esa pieza), tambi\u00e9n las de mucho m\u00e1s y EXTRA!
+ var W0=ps.map(function(p){var v=vistaP(p);return {u:p.u+(v.z&&(p.s==='m'||p.s==='x')?'#mm-'+((p.pz||[]).indexOf(v.z)+1):''),im:v.im,m:v.m,a:v.a,fw:p.fw,d:p.d,s:p.s,z:v.z};}).filter(function(w){return w.im&&w.a.length<=6&&((w.s!=='m'&&w.s!=='x')||w.z);}).reverse();
  // prioridad: piezas firmadas solo por este autor y de un solo medio; despu\u00e9s, solo por \u00e9l; despu\u00e9s, de un solo medio; al final, el resto (solo si faltan)
  var T=[[],[],[],[]];W0.forEach(function(p){var solo=p.a.length===1,um=p.m.length<=1;T[solo&&um?0:solo?1:um?2:3].push(p);});
  var W=[];T.forEach(function(t){if(W.length<3)W=W.concat(t);});

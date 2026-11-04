@@ -410,8 +410,45 @@ def clasificar(p):
                         pa.add(AUT.index(a_))
             piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et, fecha_trabajo(pt.split('Trabajo', 1)[-1], fecha)])
             ult = None
+    # posts normales con trabajos de varios medios: cada imagen es una pieza con su medio y sus autores. Sale del pie de la imagen
+    # puesto en el panel («Medio (Autor y Autor)») o, si no lo hay, de la lista de trabajos «Medio, del … | Autor: …» en el mismo orden
+    if sec not in ('muchomas', 'extra', 'web') and len(medios) > 1:
+        vis = [im for im in ims if not im.get('cover')] or ims
+        pies = {int(k): v for k, v in ((AJ.get(str(p['id'])) or {}).get('pies') or {}).items() if str(k).isdigit() and v}
+        lis = re.findall(r'<li>(.*?)</li>', cuerpo, re.S)
+        lis = [l for l in lis if BOLD_RE.search(l) and re.search(DATE_PAT, txt(l).lower())]
+        def pieza_de(md_txt, au_txt, fe_txt, im):
+            md = medio_de(md_txt.strip(' »,.:'), fecha, [])
+            pa = set()
+            for n in nombres(au_txt or ''):
+                a_ = ALIAS['autores'].get(nz(n))
+                if a_ in AUT and a_ not in NO_AUTORES:
+                    pa.add(AUT.index(a_))
+            return [miniatura(im, 640) if im else '', tipos[0] if tipos else '', [MED.index(md)] if md in MED else [], sorted(pa), [], fecha_trabajo(fe_txt, fecha)]
+        fecha_li = {}
+        for l in lis:
+            b = BOLD_RE.findall(l)
+            m_ = medio_de(txt(b[0][1]).strip(' »,.:'), fecha, []) if b else None
+            if m_:
+                fecha_li[m_] = txt(l).split('|')[0]
+        if pies:
+            for k, im in enumerate(vis, 1):
+                pie = pies.get(k)
+                if not pie:
+                    continue
+                mt = re.match(r'\s*([^()]+?)\s*(?:\((.*)\))?\s*$', pie)
+                if mt:
+                    md = medio_de(mt.group(1), fecha, [])
+                    piezas.append(pieza_de(mt.group(1), mt.group(2), fecha_li.get(md, ''), im))
+        elif lis and len(lis) == len(vis):
+            for l, im in zip(lis, vis):
+                t_ = txt(l); b = BOLD_RE.findall(l)
+                au = '|'.join(f.split(':', 1)[1] for f in t_.split('|')[1:] if re.match(r'\s*Autor', f) and ':' in f)
+                piezas.append(pieza_de(txt(b[0][1]) if b else t_.split(',')[0], au, t_.split('|')[0], im))
+        piezas = [z for z in piezas if z[2]]
     # fecha del trabajo (la del cuadro negro); en mucho más y EXTRA!, la de la pieza más reciente
-    ftr = max([z[5] for z in piezas if z[5]] or ['']) if piezas else fecha_trabajo(' '.join(lineas_fuente), fecha)
+    ftr = max([z[5] for z in piezas if z[5]] or ['']) if piezas else ''
+    ftr = ftr or fecha_trabajo(' '.join(lineas_fuente), fecha)
     post = {
         'i': str(p['id']), 'u': p['post_url'].split('/post/', 1)[-1], 'd': fecha, 's': SEC[sec], 'k': tipos,
         't': titulo, 'b': primera_frase(texto),
