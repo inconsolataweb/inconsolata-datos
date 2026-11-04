@@ -430,7 +430,7 @@ function hero(p){var im=p.ims[0];
  var ki=p.s==='b'?'metablog \u00bb':p.s==='o'?'offtopic \u00bb':p.k[0]?esc(TN[p.k[0]])+' \u00bb':'Lo \u00faltimo \u00bb';
  return '<section class="hero">'+(im?'<a href="'+esc(p.u)+'" class="hero-img"><div class="ph ht-k">'+img(im.big,(TN[p.k[0]]||'Imagen')+(p.meds[0]?' de '+p.meds[0].n:''))+'</div></a>':'')+
   '<div class="hero-card'+(im?'':' solo')+(p.col?' c-'+p.col:'')+'"><span class="caps" style="letter-spacing:3px">'+ki+(espDe(p)?' <a class="k-esp" href="/especiales#'+esc(espDe(p).slug)+'">'+esc(espDe(p).n)+' \u00bb</a>':'')+'</span><h1 class="soft"><a href="'+esc(p.u)+'">'+destaca(p.t)+'</a></h1>'+
-  (p.txt?'<p>'+esc(primeras(p.txt.indexOf(quita(p.t))===0?p.txt.slice(quita(p.t).length):p.txt,230))+'</p>':'')+
+  (p.txt?'<p>'+esc(p.entM?p.txt:primeras(p.txt.indexOf(quita(p.t))===0?p.txt.slice(quita(p.t).length):p.txt,230))+'</p>':'')+
   '<div class="hero-meta">'+(p.meds.length?'<span class="hm-avs">'+p.meds.map(function(m){return '<a href="'+fichaMedio(m)+'" title="'+esc(m.n)+'" aria-label="Ficha de '+esc(m.n)+'">'+(m.avw?'<img class="k-av" src="'+esc(m.avw)+'" alt="" onerror="this.parentNode.textContent=\''+esc(m.n.charAt(0))+'\'">':esc(m.n.charAt(0)))+'</a>';}).join('')+'</span><span class="hm-n">\u00bb '+(p.meds.length>3?p.meds.length+' medios':p.meds.map(function(m){return '<a href="'+fichaMedio(m)+'">'+esc(m.n)+'</a>';}).join(', ').replace(/, (<a [^>]*>[^<]*<\/a>)$/,' y $1'))+'</span>':'')+'<span>'+p.d.split('-').reverse().join('.')+'</span></div></div></section>';}
 
 // versi\u00f3n lite: \u00ablo \u00faltimo\u00bb como lista sencilla (miniatura, medio y t\u00edtulo)
@@ -444,7 +444,7 @@ function hoja(p,i,pos){
  if(p.s==='x'){return a+'class="xsheet"'+st+'>'+tape+'<div class="xs-top"><span class="xword" aria-label="EXTRA!">Extra!</span><span class="caps xs-n">'+(p.num?'N\u00ba '+p.num+'<br>':'')+(p.mes?'lo mejor de '+esc(p.mes):'')+'</span></div>'+
   '<div class="xfan" aria-hidden="true">'+p.ims.slice(0,3).map(function(im){return '<div class="ph ht-k">'+img(im.sm)+'</div>';}).join('')+'</div>'+
   '<span class="tt">'+(p.mes?'Lo mejor del dise\u00f1o de prensa de '+esc(p.mes):esc(quita(p.t)))+'</span>'+(p.meds.length?'<span class="xs-m">'+esc(p.meds.map(function(m){return m.n;}).join(', '))+'.</span>':'')+'</a>';}
- if(p.s==='b'||p.s==='o'){return a+'class="tsheet"'+st+'>'+tape+'<div class="ts-t"><span class="caps">'+SECN[p.s]+' \u00bb</span><h3 class="soft'+(quita(p.t).length>60?' largo':'')+'">'+destaca(p.t)+'</h3>'+(p.txt?'<p>'+esc(primeras(p.txt,170))+'</p>':'')+'<span class="caps" style="color:var(--accent)">Seguir leyendo \u00bb</span></div>'+
+ if(p.s==='b'||p.s==='o'){return a+'class="tsheet"'+st+'>'+tape+'<div class="ts-t"><span class="caps">'+SECN[p.s]+' \u00bb</span><h3 class="soft'+(quita(p.t).length>60?' largo':'')+'">'+destaca(p.t)+'</h3>'+(p.txt?'<p>'+esc(p.entM?p.txt:primeras(p.txt,170))+'</p>':'')+'<span class="caps" style="color:var(--accent)">Seguir leyendo \u00bb</span></div>'+
   (p.ims.length?'<div class="tcoll" aria-hidden="true">'+p.ims.slice(0,3).map(function(im){return '<div class="ph ht-k">'+img(im.sm)+'</div>';}).join('')+'</div>':'')+'</a>';}
  var dark=p.k.indexOf('port')>=0&&p.k.length===1;
  if(p.col==='negro')dark=true;return a+'class="sheet'+(dark?' dark':'')+(p.col&&p.col!=='negro'?' c-'+p.col:'')+'"'+st+'>'+tape+icoP(p.id,p.k[0],'ico '+(i%2?'tl':'tr'))+
@@ -643,6 +643,8 @@ function portada(meta,cat){
   var oc=M.ocultos||[];
   pag.concat(P.rec.concat(P.man||[]).map(function(x){return deDato(x,cat);})).filter(function(p){return oc.indexOf(p.id)<0;}).forEach(function(p){if(!vistos[p.id]){vistos[p.id]=1;L.push(p);}});
   L.sort(function(a,b){return (b.d||'').localeCompare(a.d||'');});
+  // entradilla escrita en el panel: manda sobre la que sale del texto del post, y se muestra entera
+  var ENT=P.ent||{};L.forEach(function(p){if(ENT[p.id]){p.txt=ENT[p.id];p.entM=1;}});
   var COLS=M.colores||{};L.forEach(function(p){p.col=COLS[p.id]||'';});
   // completa con los datos lo que falte en los posts de la p\u00e1gina (fotogramas de mucho m\u00e1s y EXTRA!, n\u00famero\u2026)
   L.forEach(function(p){

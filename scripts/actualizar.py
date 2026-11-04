@@ -731,6 +731,8 @@ def escribir_portada(idx, frames, webs=None):
     y = str(datetime.now(timezone.utc).year)
     cy = Counter(i for q in posts if (q.get('f') or q['d']).startswith(y) for i in q['m'])
     ct = Counter(i for q in posts for i in q['m'])
+    # entradillas escritas a mano en el panel (Posts › Entradilla del destacado)
+    out['ent'] = {k: v['entradilla'].strip() for k, v in AJ.items() if isinstance(v, dict) and str(v.get('entradilla') or '').strip()}
     out['med'] = {'y': y, 'posts': sum(1 for q in posts if (q.get('f') or q['d']).startswith(y)),
                   'l': [[MN[i], cy.get(i, 0), ct[i]] for i in sorted(ct, key=lambda i: (-cy.get(i, 0), -ct[i]))]}
     out['anios'] = sorted({q['d'][:4] for q in posts})[0]
