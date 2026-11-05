@@ -1547,13 +1547,17 @@ function post(art,meta,cat,medido){
   var w=tr.scrollWidth,c=document.createElement('span');c.className='f-dup';c.setAttribute('aria-hidden','true');c.innerHTML=tr.innerHTML;
   [].forEach.call(c.querySelectorAll('a'),function(a){a.tabIndex=-1;});tr.appendChild(c);tr.style.setProperty('--dur',Math.max(8,w/40)+'s');tr.classList.add('gira');}
  var ruedaT;addEventListener('resize',function(){clearTimeout(ruedaT);ruedaT=setTimeout(function(){[].forEach.call(document.querySelectorAll('.fuente'),rueda);},200);});
- // lista de trabajos (\u00abMedio, del 1 de noviembre | Autor: \u2026\u00bb): son datos para el cuadro negro, no texto del post
+ // lista de trabajos (\u00abMedio, del 1 de noviembre | Autor: \u2026\u00bb o \u00abtipo | Autores: \u2026 | Medio\u00bb): son datos para el cuadro negro, no texto del post.
+ // Se quitan tambi\u00e9n la frase que la presenta (\u00abHemos destacado los siguientes trabajos:\u00bb) y la l\u00ednea final \u00ab\u00bb Todos los trabajos\u2026\u00bb, que pasa al cuadro.
  [].forEach.call(body.querySelectorAll('ul,ol'),function(l){var li=[].filter.call(l.children,function(x){return x.tagName==='LI';});
-  if(!li.length||!li.every(function(x){return x.querySelector('b,strong')&&/,\s*del?\s+\d{1,2}/.test(x.textContent);}))return;
-  var pr=l.previousElementSibling;if(pr&&pr.tagName==='P'&&/:\s*$/.test(pr.textContent.trim())&&pr.textContent.trim().length<140)pr.remove();
-  var p=document.createElement('p');p.innerHTML='\u00bb '+li.map(function(x){var h=x.innerHTML.split('|'),md=h[0].trim().replace(/[\s,]+$/,''),
-    au=h.slice(1).map(function(f){return f.replace(/<[^>]+>/g,'').trim();}).filter(function(f){return /^Autor(a|es|as)?\s*:/i.test(f);}).map(function(f){return f.replace(/^[^:]*:\s*/,'');}).join(', ');
-   return md+(au?' <span class="f-au">('+esc(au)+')</span>':'');}).join('; ');
+  var pr=l.previousElementSibling,intro=pr&&pr.tagName==='P'&&/:\s*$/.test(pr.textContent.trim())&&pr.textContent.trim().length<140&&/trabajos|piezas|destacad|seleccion/i.test(pr.textContent);
+  if(!li.length||!li.every(function(x){return x.querySelector('b,strong')&&(/,\s*del?\s+\d{1,2}/.test(x.textContent)||x.textContent.indexOf('|')>=0);}))return;
+  if(pr&&pr.tagName==='P'&&/:\s*$/.test(pr.textContent.trim())&&pr.textContent.trim().length<140)pr.remove();
+  var it=li.map(function(x){var F=x.innerHTML.split('|'),md='',au='',fe='';
+   F.forEach(function(f){var t=f.replace(/<[^>]+>/g,'').trim();if(/<(b|strong)\b/i.test(f)){md=f.trim().replace(/[\s,]+$/,'');}else if(/^Autor(a|es|as)?\s*:/i.test(t)){au=t.replace(/^[^:]*:\s*/,'');}else if(/\bdel?\s+\d{1,2}\s+de\s/i.test(t))fe=t;});
+   return md+(fe&&md.indexOf(fe)<0?', '+esc(fe):'')+(au?' <span class="f-au">('+esc(au)+')</span>':'');});
+  var nx=l.nextElementSibling,cola='';if(nx&&nx.tagName==='P'&&/^[\s\xa0]*\u00bb/.test(nx.textContent)&&!nx.querySelector('b,strong')){cola=nx.innerHTML.replace(/^[\s\xa0]*(\u00bb|&raquo;)\s*/,'');nx.remove();}
+  var p=document.createElement('p');p.innerHTML='\u00bb '+it.join('; ')+(cola?'. '+cola:'');
   l.replaceWith(p);hazFuente(p);});
  [].forEach.call(body.querySelectorAll('p'),function(p){if(/^[\s\xa0]*\u00bb/.test(p.textContent)&&!p.closest('.fuente'))hazFuente(p);});
  if(!body.querySelector('.fuente')&&s!=='m'&&s!=='x'){

@@ -233,6 +233,7 @@ def idx_de(lista, catalogo, n, nuevo):
         lista.append(n); catalogo.append(nuevo(n))
     return lista.index(n)
 
+TIPO_N = {'infografia': 'info', 'cartografia': 'carto', 'mapa': 'carto', 'grafico': 'graf', 'ilustracion': 'ilus', 'portada': 'port', 'fotografia': 'foto', 'video': 'video', 'online': 'online'}
 MES_N = {m: i + 1 for i, m in enumerate(['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'])}
 FECHA_RE = re.compile(r'(\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?', re.I)
 
@@ -416,21 +417,25 @@ def clasificar(p):
         vis = [im for im in ims if not im.get('cover')] or ims
         pies = {int(k): v for k, v in ((AJ.get(str(p['id'])) or {}).get('pies') or {}).items() if str(k).isdigit() and v}
         lis = re.findall(r'<li>(.*?)</li>', cuerpo, re.S)
-        lis = [l for l in lis if BOLD_RE.search(l) and re.search(DATE_PAT, txt(l).lower())]
-        def pieza_de(md_txt, au_txt, fe_txt, im):
+        lis = [l for l in lis if BOLD_RE.search(l) and (re.search(DATE_PAT, txt(l).lower()) or '|' in l)]
+        # fecha común («» Todos los trabajos se han publicado el 4 de noviembre de 2026»)
+        fecha_comun = ' '.join(txt(x) for x in re.findall(r'<p>(.*?)</p>', cuerpo, re.S) if txt(x).lstrip().startswith('»') and not BOLD_RE.search(x))
+        def pieza_de(md_txt, au_txt, fe_txt, im, tp=''):
             md = medio_de(md_txt.strip(' »,.:'), fecha, [])
+            fe_txt = fe_txt if fecha_trabajo(fe_txt, fecha) else fecha_comun
             pa = set()
             for n in nombres(au_txt or ''):
                 a_ = ALIAS['autores'].get(nz(n))
                 if a_ in AUT and a_ not in NO_AUTORES:
                     pa.add(AUT.index(a_))
-            return [miniatura(im, 640) if im else '', tipos[0] if tipos else '', [MED.index(md)] if md in MED else [], sorted(pa), [], fecha_trabajo(fe_txt, fecha)]
-        fecha_li = {}
+            return [miniatura(im, 640) if im else '', tp or (tipos[0] if tipos else ''), [MED.index(md)] if md in MED else [], sorted(pa), [], fecha_trabajo(fe_txt, fecha)]
+        fecha_li, tipo_li = {}, {}
         for l in lis:
             b = BOLD_RE.findall(l)
             m_ = medio_de(txt(b[0][1]).strip(' »,.:'), fecha, []) if b else None
             if m_:
-                fecha_li[m_] = txt(l).split('|')[0]
+                fecha_li[m_] = ' '.join(f for f in txt(l).split('|') if re.search(DATE_PAT, f.lower()))
+                tipo_li[m_] = TIPO_N.get(nz(txt(l).split('|')[0]), '') if '|' in txt(l) else ''
         if pies:
             for k, im in enumerate(vis, 1):
                 pie = pies.get(k)
@@ -439,12 +444,14 @@ def clasificar(p):
                 mt = re.match(r'\s*([^()]+?)\s*(?:\((.*)\))?\s*$', pie)
                 if mt:
                     md = medio_de(mt.group(1), fecha, [])
-                    piezas.append(pieza_de(mt.group(1), mt.group(2), fecha_li.get(md, ''), im))
+                    piezas.append(pieza_de(mt.group(1), mt.group(2), fecha_li.get(md, ''), im, tipo_li.get(md, '')))
         elif lis and len(lis) == len(vis):
             for l, im in zip(lis, vis):
-                t_ = txt(l); b = BOLD_RE.findall(l)
-                au = '|'.join(f.split(':', 1)[1] for f in t_.split('|')[1:] if re.match(r'\s*Autor', f) and ':' in f)
-                piezas.append(pieza_de(txt(b[0][1]) if b else t_.split(',')[0], au, t_.split('|')[0], im))
+                t_ = txt(l); b = BOLD_RE.findall(l); F = t_.split('|')
+                au = ', '.join(f.split(':', 1)[1] for f in F if re.match(r'\s*Autor', f) and ':' in f)
+                fe = ' '.join(f for f in F if re.search(DATE_PAT, f.lower()))
+                tp = TIPO_N.get(nz(F[0]), '') if len(F) > 1 else ''
+                piezas.append(pieza_de(txt(b[0][1]) if b else t_.split(',')[0], au, fe, im, tp))
         piezas = [z for z in piezas if z[2]]
     # fecha del trabajo (la del cuadro negro); en mucho más y EXTRA!, la de la pieza más reciente
     ftr = max([z[5] for z in piezas if z[5]] or ['']) if piezas else ''
