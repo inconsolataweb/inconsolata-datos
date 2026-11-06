@@ -545,7 +545,7 @@ function masEntradas(cat){var N=pagN(),main=document.querySelector('main.wrap'),
  return get('archivo').then(function(A){
   var P=A.posts.slice().sort(function(a,b){return b.d.localeCompare(a.d)||(+b.i>+a.i?1:-1);}),fT=function(p){return p.f||p.d;};
   var ys=[];P.forEach(function(p){var y=fT(p).slice(0,4);if(ys.indexOf(y)<0)ys.push(y);});ys.sort().reverse();
-  var carta=function(p,trab){var d=trab?fT(p):p.d,t=TIT[p.i]||p.t||'';if(p.s==='m'){var mm=t.match(/semana\s+([IVXLCDM]+)/i);t='mucho más » semana '+(mm?mm[1].toUpperCase():'');}
+  var carta=function(p,trab){var d=trab?(p._fl||fT(p)):p.d,t=TIT[p.i]||p.t||'';if(p.s==='m'){var mm=t.match(/semana\s+([IVXLCDM]+)/i);t='mucho más » semana '+(mm?mm[1].toUpperCase():'');}
    return '<a class="lc" href="/post/'+esc(p.u)+'">'+(p.s&&SECN[p.s]?'<span class="sec">'+SECN[p.s]+'</span>':'')+'<div class="ph">'+(p.im?'<img loading="lazy" src="'+esc(p.im)+'" alt="" onerror="this.remove()">':'')+'</div>'+
     '<span class="kicker">'+(p.m.length?medsI(p.m)+' · ':'» ')+(+d.slice(8,10))+' '+MES3[+d.slice(5,7)-1]+' '+d.slice(0,4)+'</span><span class="tt">'+(p.s==='m'?esc(t):destaca(t))+'</span></a>';};
   var bar=document.createElement('div');bar.className='ls-bar';
@@ -556,7 +556,9 @@ function masEntradas(cat){var N=pagN(),main=document.querySelector('main.wrap'),
   var pinta=function(){var h=new URLSearchParams(location.hash.slice(1)),fm=h.get('m')||'',fy=h.get('y')||'';sm.value=fm;sy.value=fy;
    if(!fm&&!fy){var i0=EN_PORTADA+(Math.max(2,N)-2)*PORPAG,L0=P.slice(i0,i0+PORPAG);lst.innerHTML=L0.map(function(p){return carta(p,false);}).join('');mas.hidden=true;
     bar.querySelector('.ls-n').textContent='';if(pag){pag.hidden=false;pag.innerHTML=(N>2?'<a href="/page/'+(N-1)+'">« Más recientes</a>':'<a href="/">« Portada</a>')+'<span></span>'+(i0+PORPAG<P.length?'<a href="/page/'+(N+1)+'">Más antiguos »</a>':'');}return;}
-   L=P.filter(function(p){var f=fT(p);return (!fm||f.slice(5,7)===fm)&&(!fy||f.slice(0,4)===fy);}).sort(function(a,b){return fT(b).localeCompare(fT(a));});n=0;lst.innerHTML='';if(pag)pag.hidden=true;
+   // entra si cae en esas fechas por la de publicación o por la del trabajo (un EXTRA! de noviembre con páginas de septiembre sale en los dos meses)
+   var en=function(f){return (!fm||f.slice(5,7)===fm)&&(!fy||f.slice(0,4)===fy);};
+   L=P.filter(function(p){p._fl=en(p.d)?p.d:en(fT(p))?fT(p):'';return !!p._fl;}).sort(function(a,b){return b._fl.localeCompare(a._fl);});n=0;lst.innerHTML='';if(pag)pag.hidden=true;
    bar.querySelector('.ls-n').textContent=L.length+(L.length===1?' entrada':' entradas')+(fm?' de '+MESES[+fm-1]:'')+(fy?(fm?' de ':' en ')+fy:fm?' de todos los años':'');
    sigue();};
   var sigue=function(){lst.insertAdjacentHTML('beforeend',L.slice(n,n+24).map(function(p){return carta(p,true);}).join(''));n+=24;mas.hidden=n>=L.length;
