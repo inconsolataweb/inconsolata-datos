@@ -58,6 +58,12 @@ XCSS = """
 .masonry .fr:hover{transform:rotate(0) translateY(-3px);box-shadow:6px 6px 0 var(--accent)}
 .masonry img{display:block;width:100%;height:auto;min-height:160px;background:#DAD4C6 radial-gradient(#16140F 1.1px,transparent 1.3px) 0 0/7px 7px}
 .masonry .n{display:block;padding-top:8px;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.masonry.bento{columns:auto;display:flex;flex-wrap:wrap;gap:30px 22px;align-items:flex-start}
+.masonry.bento .fr{margin:0;min-height:0;flex:0 0 auto;width:auto;padding:8px}
+.masonry.bento .fr img{min-height:0;object-fit:cover;object-position:top;background:#fff}
+.masonry.bento .fr:nth-child(3n+1){transform:rotate(-.5deg)}.masonry.bento .fr:nth-child(3n+2){transform:rotate(.35deg)}.masonry.bento .fr:nth-child(3n){transform:rotate(.7deg)}
+.masonry.bento .fr:hover{transform:rotate(0) translateY(-3px)}
+.idx .md .au{font-weight:600;text-transform:none;letter-spacing:0}
 .idx{padding:40px 0 72px}
 .idx ol{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
 .idx li{display:grid;grid-template-columns:110px minmax(0,1fr) 84px;gap:24px;align-items:center;padding:26px 0;border-bottom:1px solid #C9C4B8}

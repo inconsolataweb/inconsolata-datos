@@ -199,6 +199,7 @@ html.lite .eh .in{padding-top:22px!important;padding-bottom:22px!important;gap:1
 html.lite .eh .meta{font-size:11px;gap:4px 12px}
 html.lite .card,html.lite .ec,html.lite .main-sheet,html.lite .frame,html.lite .sheet,html.lite .polaroid,html.lite .wk-sample,html.lite .wk-top>*{transform:none!important}
 html.lite .tape{display:none!important}
+html.lite .v-x .bento .fr{transform:none!important}
 html.lite img{max-width:100%}
 html.lite .who .chips,html.lite .others .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:6px;margin-right:-16px;padding-right:16px}
 html.lite .who .chips::-webkit-scrollbar,html.lite .others .chips::-webkit-scrollbar{display:none}

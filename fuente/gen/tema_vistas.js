@@ -26,6 +26,7 @@ function visorMM(n){var box=document.getElementById('items');if(!box)return;var 
  var irA=function(h){var el=h&&document.getElementById(h.slice(1));if(el&&el.classList.contains('item')&&box.classList.contains('visor')){bar.scrollIntoView(true);box.scrollLeft=el.offsetLeft-box.offsetLeft;cuenta();return true;}};
  document.addEventListener('click',function(e){var a=e.target.closest('a[href^="#mm-"]');if(a&&irA(a.getAttribute('href'))){e.preventDefault();}});
  window.mmVisor={cuenta:cuenta};pon(modo);if(/^#mm-\d+$/.test(location.hash))setTimeout(function(){irA(location.hash);},300);}
+function k0Medio(cat,n){var m=medioPor(cat,n);return m&&fold(m.n)===fold(n)?m:null;}
 function medioPor(cat,n){n=(n||'').replace(/\s*(?:#|n\.?º\s*|núm\.?\s*)[\d.,]+\s*$/i,'');var f=fold(n);if(!f)return null;var ex=function(f){return cat.medios.find(function(m){return fold(m.n)===f;});};
  // «Suplemento (Medio)»: cuenta como el medio del paréntesis si no hay un medio con el nombre entero («La Razón (México)»)
  var pa=n.match(/\(([^()]+)\)\s*$/);
@@ -179,6 +180,18 @@ function vMM(o){
  return lb;
 }
 
+// EXTRA!: filas justificadas. Cada fila reparte su ancho entre sus páginas en proporción a su forma, con la misma altura para todas, así que no
+// quedan huecos y los tamaños varían solos (las apaisadas salen anchas, las verticales estrechas). La altura objetivo alterna entre filas
+// altas y bajas para dar ritmo, y la primera fila es la más alta.
+function bentoX(){var g=document.querySelector('.v-x .bento');if(!g)return;var W=g.clientWidth-2-g.querySelectorAll('.fr').length*0.5,mov=W<700,gap=parseFloat(getComputedStyle(g).columnGap)||22,P=16;
+ var T=mov?[300,210]:[560,380,460,340],fs=[].slice.call(g.querySelectorAll('.fr')),R=function(f){return +f.dataset.r||.75;},filas=[],row=[];
+ fs.forEach(function(f){row.push(f);var sr=row.reduce(function(a,x){return a+R(x);},0),tg=T[filas.length%T.length];
+  if(sr*tg+gap*(row.length-1)+P*row.length>=W||(mov&&row.length===2)){filas.push(row);row=[];}});
+ // una página suelta al final se suma a la fila anterior, para no dejar una huérfana a medio ancho
+ if(row.length===1&&filas.length&&!mov)filas[filas.length-1]=filas[filas.length-1].concat(row);else if(row.length)filas.push(row);
+ filas.forEach(function(row,t){var sr=row.reduce(function(a,f){return a+R(f);},0),h=(W-gap*(row.length-1)-P*row.length)/sr,tg=T[t%T.length];
+  if(t===filas.length-1&&h>tg*1.25)h=tg*1.25;
+  row.forEach(function(f){var r=R(f),w=Math.floor(r*h);f.style.width=(w+P)+'px';var im=f.querySelector('img');if(im){im.style.height=Math.floor(h)+'px';im.style.width=w+'px';}});});}
 // ---------- EXTRA!
 function vX(o){
  document.body.classList.add('v-x');
@@ -191,7 +204,14 @@ function vX(o){
  var intro=pin?pin.textContent.trim():'EXTRA! es una sección mensual que recopila los mejores diseños en las páginas de la prensa nacional e internacional.';
  if(mes)intro=intro.replace(/\s*$/,'')+' Esta es la selección de '+mes+'.';
  var items=[];
- var sec=0;[].forEach.call(b.querySelectorAll('li'),function(li){var m=li.textContent.match(/^\s*\[(\d+)(?:\s*[-–]\s*(\d+))?\]/);
+ var sec=0;[].forEach.call(b.querySelectorAll('li'),function(li0){
+  // última línea de datos («infografía | historia | Autor: … | El Correo, del 13 de septiembre»): fuera del texto, solo para el pie, la ficha y el índice
+  var li=li0.cloneNode(true),pr=li.innerHTML.split(/<br\s*\/?>/i),dat=null;
+  if(pr.length>1&&pr[pr.length-1].indexOf('|')>=0){var F=pr.pop().split('|').map(function(f){return f.replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').trim();});li.innerHTML=pr.join('<br>');
+   dat={tp:'',md:'',fe:'',au:''};F.forEach(function(f,k){var mf=f.match(/^(.*?),?\s+del?\s+(\d{1,2}\s+de\s+[a-záéíóú]+(?:\s+de\s+\d{4})?)\s*$/i);
+    if(mf){dat.md=mf[1].trim();dat.fe=mf[2].toLowerCase();}else if(/^Autor(a|es|as)?\s*:/i.test(f))dat.au=f.replace(/^[^:]*:\s*/,'');else if(k===0)dat.tp=tipoExpl('Tipo: '+f);});
+   if(!dat.md){var ul=F[F.length-1];if(ul&&!/:/.test(ul)&&k0Medio(cat,ul))dat.md=ul;}}
+  var m=li.textContent.match(/^\s*\[(\d+)(?:\s*[-–]\s*(\d+))?\]/);
   if(!m){var ns=(li.textContent.match(/\((\d{1,2})\)/g)||[]).map(function(z){return +z.replace(/\D/g,'');});
    if(ns.length)m=[null,String(Math.min.apply(null,ns)),Math.max.apply(null,ns)>Math.min.apply(null,ns)?String(Math.max.apply(null,ns)):null];else{sec++;m=[null,String(sec),null];}}
   sec=+(m[2]||m[1]);
@@ -199,12 +219,14 @@ function vX(o){
   // tipo y etiquetas sin nombre al principio («portada | elecciones 29-N | <b>El País</b>…»): fuera del texto visible
   var tpL='',pz=h.split('|');if(pz.length>1){var k0=0;while(k0<2&&k0<pz.length-1&&!/<(b|strong)\b|:/.test(pz[k0])&&pz[k0].replace(/<[^>]+>/g,'').trim().length<120){if(k0===0)tpL=tipoExpl('Tipo: '+pz[0].replace(/<[^>]+>/g,''));k0++;}if(k0)h=pz.slice(k0).join('|').replace(/^\s+/,'');}
   var fes=li.textContent.match(/\d{1,2}\s+de\s+[a-záéíóú]+/gi)||[],fe=(fes.length?fes[fes.length-1].match(/(\d{1,2})\s+de\s+([a-záéíóú]+)/i):[]);var fd=(li.textContent.match(/d[ií]a\s+(\d{1,2})/i)||[])[1];
-  items.push({t:li.textContent.replace(/^\s*\[[^\]]*\]\s*/,'').trim(),a:+m[1],z:+(m[2]||m[1]),lab:'['+m[1]+(m[2]?'–'+m[2]:'')+']',bs:[].map.call(li.querySelectorAll('b,strong'),function(z){return z.textContent.trim();}),h:h,md:md,mo:medioPor(cat,md),fe:fe[1]&&MESES.indexOf(fe[2].toLowerCase())>=0?fe[1]+' de '+fe[2].toLowerCase():(fd&&mes?fd+' de '+mes:''),tipo:tpL||tipoExpl(li.textContent)||tipoDe(li.textContent,'info')});});
+  if(dat){if(dat.md){md=dat.md;}if(dat.fe)fe=[null].concat(dat.fe.match(/(\d{1,2})\s+de\s+([a-záéíóú]+)/i).slice(1));if(dat.tp)tpL=dat.tp;}
+  items.push({au:dat?dat.au:'',t:li.textContent.replace(/^\s*\[[^\]]*\]\s*/,'').trim(),a:+m[1],z:+(m[2]||m[1]),lab:'['+m[1]+(m[2]?'–'+m[2]:'')+']',bs:[].map.call(li.querySelectorAll('b,strong'),function(z){return z.textContent.trim();}),h:h,md:md,mo:medioPor(cat,md),fe:fe[1]&&MESES.indexOf(fe[2].toLowerCase())>=0?fe[1]+' de '+fe[2].toLowerCase():(fd&&mes?fd+' de '+mes:''),tipo:tpL||tipoExpl(li.textContent)||tipoDe(li.textContent,'info')});});
  var deI=function(i){return items.find(function(x){return i+1>=x.a&&i+1<=x.z;});};
  var lb=ims.map(function(im,i){var x=deI(i);return {src:im.src,txt:x?x.t:'',cap:(x?x.lab+' '+(x.mo?x.mo.n:x.md)+' · ':'')+'imagen '+(i+1)+' de '+n};});
  var fr=ims.map(function(im,i){var x=deI(i),l=x?'<span style="color:var(--accent)">'+esc(x.lab)+'</span> '+esc(x.mo?x.mo.n:x.md):'imagen '+(i+1);
-  return '<button type="button" class="fr" data-lb="'+i+'" aria-label="Ampliar imagen '+(i+1)+'"><img loading="lazy" src="'+esc(im.el?srcDe(im.el,1280):im.src)+'" alt="'+esc(x?(x.mo?x.mo.n:x.md):'')+'" onerror="this.remove()"><span class="n">'+l+'</span></button>';}).join('');
- var idx=items.map(function(x){return '<li><span class="k-n'+(x.lab.length>4?' w':'')+'">'+esc(x.lab)+'</span><div><span class="md">'+(x.md?(x.mo&&x.mo.ficha?'<a href="'+fichaMedio(x.mo)+'" class="md-a">':'<span class="md-a">')+(x.mo&&x.mo.av?'<span class="av" aria-hidden="true"><img src="'+x.mo.av+'" alt=""></span>':'')+esc(x.mo?x.mo.n:x.md)+(x.mo&&x.mo.ficha?'</a>':'</span>'):'')+(x.fe?' · '+esc(x.fe):'')+'</span>'+
+  var w=+(im.el&&im.el.getAttribute('data-orig-width'))||0,hh=+(im.el&&im.el.getAttribute('data-orig-height'))||0,r=w&&hh?w/hh:0.75;
+  return '<button type="button" class="fr" data-lb="'+i+'" data-r="'+r.toFixed(3)+'" aria-label="Ampliar imagen '+(i+1)+'"><img loading="lazy" src="'+esc(im.el?srcDe(im.el,1280):im.src)+'" alt="'+esc(x?(x.mo?x.mo.n:x.md):'')+'" onerror="this.remove()"><span class="n">'+l+'</span></button>';}).join('');
+ var idx=items.map(function(x){return '<li><span class="k-n'+(x.lab.length>4?' w':'')+'">'+esc(x.lab)+'</span><div><span class="md">'+(x.md?(x.mo&&x.mo.ficha?'<a href="'+fichaMedio(x.mo)+'" class="md-a">':'<span class="md-a">')+(x.mo&&x.mo.av?'<span class="av" aria-hidden="true"><img src="'+x.mo.av+'" alt=""></span>':'')+esc(x.mo?x.mo.n:x.md)+(x.mo&&x.mo.ficha?'</a>':'</span>'):'')+(x.fe?' · '+esc(x.fe):'')+(x.au?' · <span class="au">'+esc(x.au)+'</span>':'')+'</span>'+
   '<div class="tx">'+x.h+'</div></div>'+ico(x.tipo)+'</li>';}).join('');
  var meds={};items.forEach(function(x){x.bs.forEach(function(z){if(z)meds[fold(z)]=1;});});
  // EXTRA! anteriores: los enlaces del final del post
@@ -219,11 +241,12 @@ function vX(o){
   '<div class="crumbs caps" style="padding:0"><a href="/" style="color:#fff">inconsolata</a><i style="color:var(--yellow)">»</i><a href="/tagged/EXTRA!" style="color:#fff">EXTRA!</a></div>'+
   '<h1 class="xw" aria-label="EXTRA! número '+nn+'"><span aria-hidden="true">E</span><span aria-hidden="true">x</span><span aria-hidden="true">t</span><span aria-hidden="true">r</span><span aria-hidden="true">a</span><span aria-hidden="true">!</span></h1></div>'+
   '<div class="r"><span class="xnum">nº '+nn+'</span><p>'+esc(intro)+'</p><div class="meta">'+(mes?'<span>'+mes[0].toUpperCase()+mes.slice(1)+' de '+anioDe(mes,d)+'</span>':'<span>'+fecha(d)+'</span>')+(items.length?'<span>'+n+' piezas</span><span>'+Object.keys(meds).length+' medios</span>':'<span>'+n+' imágenes</span>')+'</div></div></div></section>';
- x.main.innerHTML='<section class="gal"><div class="gal-head"><span class="caps">Las páginas · '+n+'</span><span style="font-size:13px;font-weight:600">Pulsa para ampliar »</span></div><div class="masonry">'+fr+'</div></section>'+
+ x.main.innerHTML='<section class="gal"><div class="gal-head"><span class="caps">Las páginas · '+n+'</span><span style="font-size:13px;font-weight:600">Pulsa para ampliar »</span></div><div class="masonry bento">'+fr+'</div></section>'+
   (idx?'<section class="idx"><div class="caps" style="margin-bottom:14px">En este EXTRA! »</div><ol>'+idx+'</ol></section>':'')+
   (sx?'<section class="prev"><div class="caps" style="border-top:2px solid var(--ink);padding-top:12px">EXTRA! anteriores »</div><div class="prev-row"><a class="cur" href="#">nº '+nn+(mes?' · '+mes:'')+'</a></div>'+sx+'</section>':'')+(!sx&&(r1||r2)?'<section class="prev"><div class="caps" style="border-top:2px solid var(--ink);padding-top:12px">EXTRA! anteriores »</div><div class="prev-row"><a class="cur" href="#">nº '+nn+(mes?' · '+mes:'')+'</a>'+r1+'</div>'+(r2?'<div class="prev-row">'+r2+'</div>':'')+'</section>':'')+
   finRow(o.art);
  document.title='EXTRA! nº '+nn+' · inconsolata»';
+ setTimeout(bentoX,0);var bt;addEventListener('resize',function(){clearTimeout(bt);bt=setTimeout(bentoX,150);});
  return lb;
 }
 

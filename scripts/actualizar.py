@@ -411,6 +411,36 @@ def clasificar(p):
                         pa.add(AUT.index(a_))
             piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et, fecha_trabajo(pt.split('Trabajo', 1)[-1], fecha)])
             ult = None
+    # EXTRA! con la lista «[n] texto<br>tipo | etiquetas | Autor: … | Medio, del 24 de septiembre»: una pieza por imagen, según su número
+    if sec == 'extra' and not piezas:
+        vis = [im for im in ims if not im.get('cover')] or ims
+        for li in re.findall(r'<li>(.*?)</li>', cuerpo, re.S):
+            mn = re.match(r'\s*\[(\d+)(?:\s*[-–]\s*(\d+))?\]', txt(li))
+            partes = re.split(r'<br\s*/?>', li)
+            if not mn or len(partes) < 2 or '|' not in partes[-1]:
+                continue
+            F = [txt(f).strip() for f in partes[-1].split('|')]
+            tp, et, au, md, fe = '', [], '', '', ''
+            for k, f in enumerate(F):
+                mf = re.match(r'(.*?),?\s+del?\s+(\d{1,2}\s+de\s+\w+(?:\s+de\s+\d{4})?)\s*$', f)
+                if mf:
+                    md, fe = mf.group(1).strip(), mf.group(2)
+                elif re.match(r'Autor(?:a|es|as)?\s*:', f):
+                    au = f.split(':', 1)[1]
+                elif k == 0:
+                    tp = next((c for c, rx in TIPO_TAG if re.search(rx.replace('$', ''), f.lower())), '') or TIPO_N.get(nz(f.split(',')[0]), '')
+                elif ':' not in f and len(f) < 120:
+                    et += [e.strip().lower() for e in f.split(',') if e.strip()]
+            m_ = medio_de(md, fecha, []) if md else None
+            pa = set()
+            for n in nombres(au):
+                a_ = ALIAS['autores'].get(nz(n))
+                if a_ in AUT and a_ not in NO_AUTORES:
+                    pa.add(AUT.index(a_))
+            a0, a1 = int(mn.group(1)), int(mn.group(2) or mn.group(1))
+            for k in range(a0, a1 + 1):
+                im = vis[k - 1] if 0 < k <= len(vis) else None
+                piezas.append([miniatura(im, 640) if im else '', tp, [MED.index(m_)] if m_ in MED else [], sorted(pa), et, fecha_trabajo('del ' + fe, fecha) if fe else ''])
     # posts normales con trabajos de varios medios: cada imagen es una pieza con su medio y sus autores. Sale del pie de la imagen
     # puesto en el panel («Medio (Autor y Autor)») o, si no lo hay, de la lista de trabajos «Medio, del … | Autor: …» en el mismo orden
     if sec not in ('muchomas', 'extra', 'web') and len(medios) > 1:
