@@ -182,6 +182,9 @@ html.lite .v-home .frames{display:flex!important;overflow-x:auto;scroll-snap-typ
 html.lite .v-home .frames .frame{flex:0 0 42%;scroll-snap-align:start}
 html.lite .v-home .proj h3{font-size:38px!important;overflow-wrap:anywhere}
 html.lite .legacy{font-size:13px}
+.card .ph{position:relative}
+.card .ph .sec{position:absolute;top:8px;left:8px;background:var(--ink);color:var(--yellow);font:800 11px 'Archivo',sans-serif;letter-spacing:1.5px;text-transform:uppercase;padding:5px 8px;z-index:1}
+html.lite .card .ph .sec{top:3px;left:3px;font-size:7.5px;letter-spacing:.5px;padding:2px 4px}
 .ls-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:30px 0 0}
 .ls-bar select{font:700 15px 'Archivo',sans-serif;border:2px solid var(--ink);background:#fff;color:var(--ink);padding:9px 34px 9px 12px;min-height:44px;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) 19px,calc(100% - 12px) 19px;background-size:6px 6px;background-repeat:no-repeat;cursor:pointer}
 .ls-bar .ls-n{font:italic 600 17px 'Fraunces',serif;color:var(--muted)}

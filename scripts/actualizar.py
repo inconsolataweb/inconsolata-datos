@@ -409,7 +409,9 @@ def clasificar(p):
                     a_ = ALIAS['autores'].get(nz(n))
                     if a_ in AUT and a_ not in NO_AUTORES:
                         pa.add(AUT.index(a_))
-            piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et, fecha_trabajo(pt.split('Trabajo', 1)[-1], fecha)])
+            mt_t = re.search(r'Trabajo\s*:\s*(.*?)\s*(?:\||$)', pt)
+            tit = mt_t.group(1).strip(' «»"\'“”.') if mt_t else ''
+            piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et, fecha_trabajo(pt.split('Trabajo', 1)[-1], fecha), tit])
             ult = None
     # EXTRA! con la lista «[n] texto<br>tipo | etiquetas | Autor: … | Medio, del 24 de septiembre»: una pieza por imagen, según su número
     if sec == 'extra' and not piezas:

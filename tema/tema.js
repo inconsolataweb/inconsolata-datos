@@ -783,6 +783,7 @@ function contar(ps,f){var c={};ps.forEach(function(p){f(p).forEach(function(v){c
 // se muestra la pieza de ese medio, autor o etiqueta, no la primera del post
 var CTXP=null;
 // fechas: en fichas, especiales y estad\u00edsticas cuenta la del trabajo (cuadro negro, o la de la pieza en mucho m\u00e1s y EXTRA!), no la de publicaci\u00f3n
+function titP(p,v){return (v&&v.z&&v.z[6])||tituloP(p);}
 function fT(p){var v=vistaP(p);return (v.z&&v.z[5])||p.f||p.d;}
 function fw(p){return p.fw||p.f||p.d;}
 function ordenaFT(ps){ps.forEach(function(p){p.fw=fT(p);});return ps.sort(function(a,b){return b.fw.localeCompare(a.fw);});}
@@ -792,8 +793,8 @@ function vistaP(p){if(p._pz)return {im:p._pz[0]||p.im,m:p._pz[2].length?p._pz[2]
  return {im:x[0]||p.im,m:x[2].length?x[2]:p.m,a:x[3],z:x};}
 function cartaP(A,p,i){var v=vistaP(p),auts=v.a.slice(0,3).map(function(j){return A.autores[j].n;});
  return '<a href="/post/'+esc(p.u)+(v.z&&(p.s==='m'||p.s==='x')&&p.pz?'#mm-'+(p.pz.indexOf(v.z)+1):'')+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
-  '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'\u00bb '+esc(SECN[p.s]||''))+' \u00b7 '+fcorta(fw(p))+'</span>'+
-  '<span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+(v.a.length>3?' y '+(v.a.length-3)+' m\u00e1s':'')+'</span>':'')+'</a>';}
+  '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+((p.s==='m'||p.s==='x')&&SECN[p.s]?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'\u00bb '+esc(SECN[p.s]||''))+' \u00b7 '+fcorta(fw(p))+'</span>'+
+  '<span class="tt">'+esc(titP(p,v))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+(v.a.length>3?' y '+(v.a.length-3)+' m\u00e1s':'')+'</span>':'')+'</a>';}
 function barrasAnios(ps){var c={},mx=1,h='',ax='';ps.forEach(function(p){var y=+fw(p).slice(0,4);c[y]=(c[y]||0)+1;});
  for(var y=2011;y<=Y1;y++)mx=Math.max(mx,c[y]||0);var n=Y1-2010;
  for(y=2011;y<=Y1;y++){h+='<div class="bar real" style="height:'+Math.max(2,(c[y]||0)/mx*100)+'%" title="'+y+': '+(c[y]||0)+' entradas"><span>'+(c[y]||'')+'</span></div>';ax+='<span>'+String(y).slice(2)+'</span>';}
@@ -1000,7 +1001,7 @@ function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p
  var carta=function(p){var v=vistaP(p),ie=v.z?icoEsp(espDeEtq(v.z[4]),'',false):icoEsp(espSlI(p.i),'',false),auts=v.a.slice(0,3).map(function(i){return A.autores[i].n;});
   return '<a class="ec" href="/post/'+esc(p.u)+(p._pz?'#mm-'+(p._k+1):'')+'"><div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt=""" onerror="this.remove()">':'')+(p.s?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+
    '<span class="ico">'+(ie?'<span>'+ie+'</span>':p.k.slice(0,3).map(function(k){return '<span title="'+esc(TN[k])+'"><svg viewBox="0 0 64 64" aria-hidden="true" style="overflow:visible"><use href="#i-'+k+'"/></svg></span>';}).join(''))+'</span></div>'+
-   '<span class="meta"><b>'+(+fw(p).slice(8,10))+' '+MES3[+fw(p).slice(5,7)-1]+'</b>'+(v.m.length?' \u00b7 '+medsI(v.m):'')+'</span><span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};
+   '<span class="meta"><b>'+(+fw(p).slice(8,10))+' '+MES3[+fw(p).slice(5,7)-1]+'</b>'+(v.m.length?' \u00b7 '+medsI(v.m):'')+'</span><span class="tt">'+esc(titP(p,v))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+'</span>':'')+'</a>';};
  var meses=function(L){var gr={};L.forEach(function(p){(gr[fw(p).slice(0,7)]=gr[fw(p).slice(0,7)]||[]).push(p);});
   return Object.keys(gr).map(function(k){var v=gr[k];return '<section class="mo"><h3>'+MESES[+k.slice(5,7)-1].replace(/^./,function(c){return c.toUpperCase();})+'<small>'+k.slice(0,4)+' \u00b7 '+v.length+' '+(v.length===1?'entrada':'entradas')+'</small></h3><div class="g">'+v.map(carta).join('')+'</div></section>';}).join('');};
  var caps=(x.capitulos||[]).map(function(c){return by[c];}).filter(Boolean).sort(function(a,b){return (b.hasta||'').localeCompare(a.hasta||'');}),tl='';
