@@ -538,6 +538,8 @@ def main():
         nonlocal vistos
         for p in api_posts():
             vistos += 1
+            if os.environ.get('DEPURA') == 'ultimos' and vistos <= 5:
+                print('ULTIMO', p['id'], p.get('date'), p.get('state'), p.get('type'), p.get('tags'))
             if str(p['id']) in existentes and vistos > RELEER:
                 break
             yield p
