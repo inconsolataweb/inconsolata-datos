@@ -19,7 +19,7 @@ function vistaP(p){if(p._pz)return {im:p._pz[0]||p.im,m:p._pz[2].length?p._pz[2]
  var x=z.find(function(x){return f(x)&&x[0];})||z.find(f);if(!x)return base;
  return {im:x[0]||p.im,m:x[2].length?x[2]:p.m,a:x[3],z:x};}
 function cartaP(A,p,i){var v=vistaP(p),auts=v.a.slice(0,3).map(function(j){return A.autores[j].n;});
- return '<a href="/post/'+esc(p.u)+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
+ return '<a href="/post/'+esc(p.u)+(v.z&&(p.s==='m'||p.s==='x')&&p.pz?'#mm-'+(p.pz.indexOf(v.z)+1):'')+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
   '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'» '+esc(SECN[p.s]||''))+' · '+fcorta(fw(p))+'</span>'+
   '<span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+(v.a.length>3?' y '+(v.a.length-3)+' más':'')+'</span>':'')+'</a>';}
 function barrasAnios(ps){var c={},mx=1,h='',ax='';ps.forEach(function(p){var y=+fw(p).slice(0,4);c[y]=(c[y]||0)+1;});

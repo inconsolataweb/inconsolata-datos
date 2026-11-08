@@ -154,7 +154,9 @@ function textoDe(el){var t=document.createElement('div');t.innerHTML=el.innerHTM
 function nuevoTop(cls){var main=document.querySelector('main.wrap'),top=document.createElement('div');top.className=cls;main.parentNode.insertBefore(top,main);return {main:main,top:top};}
 var LEG='<div class="legacy" role="note"><span class="lg-i" aria-hidden="true">\u00bb</span><p><b>Post del archivo.</b> Se public\u00f3 originalmente en una versi\u00f3n anterior de inconsolata\u00bb y puede que alg\u00fan elemento no se vea como deber\u00eda. <a href="mailto:inconsolataweb@gmail.com?subject=Algo%20roto%20en%20un%20post">\u00bfVes algo roto? Av\u00edsame \u00bb</a></p></div>';
 function idMenor(a,b){return a.length<b.length||(a.length===b.length&&a<b);}
-function vecino(id,re,antes){var r=null;Object.keys(TIT).forEach(function(k){if(!re.test(TIT[k]))return;
+// el mucho m\u00e1s (o EXTRA!) anterior o siguiente: por la secci\u00f3n de cada post en los datos; los t\u00edtulos puestos a mano no cubren todos los posts
+function vecino(id,re,antes){var r=null,sec=/EXTRA/i.test(re.source)?'x':'m',M=(typeof META0!=='undefined'&&META0)||{};
+ Object.keys(M).concat(Object.keys(TIT)).forEach(function(k){if(!((M[k]&&M[k][0]===sec)||(!M[k]&&TIT[k]&&re.test(TIT[k]))))return;
  if(antes?idMenor(k,id)&&(!r||idMenor(r,k)):idMenor(id,k)&&(!r||idMenor(k,r)))r=k;});return r;}
 function finRow(art){var sh=art.querySelector('.share'),sp=art.querySelector('.support');
  return '<div class="endrow"><div style="display:flex;flex-direction:column;gap:10px"><span class="caps">Compartir</span>'+(sh?sh.outerHTML:'')+'</div>'+(sp?sp.outerHTML:'')+'</div>';}
@@ -239,11 +241,13 @@ function vMM(o){
   var y=r.fe?anioDe(r.fe.split(' de ')[1],d):'';
   return '<article class="item'+(i%2?' alt':'')+'" id="mm-'+(i+1)+'" data-tipo="'+r.tipo+'" data-etq="'+esc((r.etq||[]).map(fold).join('|'))+'"><button type="button" class="img" data-lb="'+i+'" aria-label="Ampliar: '+esc(r.tr||('imagen '+(i+1)))+'"><span class="tape" aria-hidden="true"></span><img loading="lazy" src="'+esc(r.im.el?srcDe(r.im.el,1280):r.im.src)+'" alt="'+esc(al)+'" onerror="this.remove()"><span class="zoom">Ampliar \u00bb</span></button>'+
    '<div class="txt">'+(r.es?'<a class="ico-esp" href="/especiales#'+esc(r.es)+'"><svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Especial: '+esc(espNom(r.es))+'" style="overflow:visible"><title>Especial: '+esc(espNom(r.es))+'</title><use href="#'+espSym(r.es)+'" class="k"/><use href="#'+espSym(r.es)+'" class="m" x="3" y="2.5"/></svg></a>':ico(r.tipo,'ico'))+(r.md?'<span class="md-l">'+(r.mo&&r.mo.ficha?'<a href="'+fichaMedio(r.mo)+'" class="medio">':'<span class="medio">')+(r.mo&&r.mo.av?'<span class="av" aria-hidden="true"><img src="'+r.mo.av+'" alt=""></span>':'')+esc(r.mo?r.mo.n:r.md)+(r.mo&&r.mo.ficha?'</a>':'</span>')+(r.mo&&fold(r.md)!==fold(r.mo.n)&&/\(.+\)|#\s*\d|n\.?\u00ba\s*\d/i.test(r.md)?'<span class="supl">'+esc(r.md)+'</span>':'')+'</span>':'')+
-   (r.tr?'<h2>'+esc(r.tr)+'</h2>':'')+(r.desc?'<p class="desc">'+r.desc+'</p>':'')+(r.au.length?'<span class="by">por '+r.au.map(function(a){return '<a href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(' y ')+'</span>':'')+
+   (r.tr?'<h2>'+esc(r.tr)+'</h2>':'')+(r.desc?'<p class="desc">'+r.desc+'</p>':'')+(r.au.length?'<span class="by">por '+r.au.map(function(a){return '<a href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).reduce(function(o,a,i,L){return o+(i===0?'':i===L.length-1?' y ':', ')+a;},'')+'</span>':'')+
    (r.fe?'<span class="when">'+esc(r.fe)+' de '+y+'</span>':'')+'</div></article>';}).join('');
  var cu={todas:n};it.forEach(function(r){cu[r.tipo]=(cu[r.tipo]||0)+1;});
  var prev=vecino(id,/^Mucho m\u00e1s/i,true),nextw=vecino(id,/^Mucho m\u00e1s/i,false);
- var pn=function(k,lab){if(!k)return '';var t=(TIT[k].match(/semana\s+([IVXLCDM]+)(?![A-Za-z\u00c1\u00c9\u00cd\u00d3\u00da\u00e1\u00e9\u00ed\u00f3\u00fa\u00d1\u00f1])/)||[])[1]||'';return '<a href="/post/'+k+'" class="pn"><span class="caps">'+lab+'</span><span class="big soft">'+t+'</span></a>';};
+ var deRom=function(r){var v={I:1,V:5,X:10,L:50,C:100,D:500,M:1000},n=0;r=(r||'').toUpperCase();for(var i=0;i<r.length;i++){var a=v[r[i]]||0,b=v[r[i+1]]||0;n+=a<b?-a:a;}return n;};
+ var pn=function(k,lab){if(!k)return '';var t=((TIT[k]||'').match(/semana\s+([IVXLCDM]+)(?![A-Za-z\u00c1\u00c9\u00cd\u00d3\u00da\u00e1\u00e9\u00ed\u00f3\u00fa\u00d1\u00f1])/)||[])[1]||'';
+  if(!t&&num){var nn=deRom(num)+(/anterior/.test(lab)?-1:1);if(nn>0)t=romano(nn);}return '<a href="/post/'+k+'" class="pn"><span class="caps">'+lab+'</span><span class="big soft">'+t+'</span></a>';};
  var x=nuevoTop('mm-top');
  // cinta en movimiento: tipos de pieza, temas del post y etiquetas de las piezas (los tipos y las etiquetas filtran; los temas llevan a su p\u00e1gina)
  var CT=(typeof cat0!=='undefined'&&cat0)||o.cat,mtT=((typeof META0!=='undefined'&&META0[id])||[])[4]||[],temasP=mtT.map(function(i){return CT.temas[i];}).filter(function(t){return t&&t.x!=='oculto';});
@@ -328,7 +332,7 @@ function vX(o){
   if(/^\d{4}$/.test(t))r2+='<a class="yr" href="'+esc(h)+'">'+t+'</a>';else r1+='<a href="'+esc(h)+'">'+(k?'n\u00ba '+k+' \u00b7 ':'')+esc(t)+'</a>';});}
  var sx='',srx=(!r1&&!r2)?serieDe(b,id):null;
  if(srx){var sx=srx.rows.map(function(r){return '<div class="prev-row'+(r.y?' y':'')+'">'+(r.y?'<span class="yr">'+r.y+'</span>':'')+'<span class="ls">'+r.ls.map(function(l){var k=(l.h.match(/extra-?(\d+)/i)||[])[1];return '<a href="'+esc(l.h)+'">'+(k?'n\u00ba '+k+' \u00b7 ':'')+esc(l.t)+'</a>';}).join('')+'</span></div>';}).join('');}
- if(!r1){var c=id;for(var q=0;q<4;q++){c=vecino(c,/^EXTRA!/i,true);if(!c)break;r1+='<a href="/post/'+c+'">'+esc(TIT[c].replace(/^EXTRA!\s*/i,''))+'</a>';}}
+ if(!r1){var c=id;for(var q=0;q<4;q++){c=vecino(c,/^EXTRA!/i,true);if(!c)break;r1+='<a href="/post/'+c+'">'+esc((TIT[c]||'').replace(/^EXTRA!\s*/i,'')||'n\u00ba anterior')+'</a>';}}
  var x=nuevoTop('mm-top');
  x.top.innerHTML=(d<LANZAMIENTO?'<div class="wrap">'+LEG+'</div>':'')+'<section class="xhero"><div class="wrap inner"><div class="l">'+
   '<div class="crumbs caps" style="padding:0"><a href="/" style="color:#fff">inconsolata</a><i style="color:var(--yellow)">\u00bb</i><a href="/tagged/EXTRA!" style="color:#fff">EXTRA!</a></div>'+
@@ -787,7 +791,7 @@ function vistaP(p){if(p._pz)return {im:p._pz[0]||p.im,m:p._pz[2].length?p._pz[2]
  var x=z.find(function(x){return f(x)&&x[0];})||z.find(f);if(!x)return base;
  return {im:x[0]||p.im,m:x[2].length?x[2]:p.m,a:x[3],z:x};}
 function cartaP(A,p,i){var v=vistaP(p),auts=v.a.slice(0,3).map(function(j){return A.autores[j].n;});
- return '<a href="/post/'+esc(p.u)+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
+ return '<a href="/post/'+esc(p.u)+(v.z&&(p.s==='m'||p.s==='x')&&p.pz?'#mm-'+(p.pz.indexOf(v.z)+1):'')+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
   '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'\u00bb '+esc(SECN[p.s]||''))+' \u00b7 '+fcorta(fw(p))+'</span>'+
   '<span class="tt">'+esc(tituloP(p))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+(v.a.length>3?' y '+(v.a.length-3)+' m\u00e1s':'')+'</span>':'')+'</a>';}
 function barrasAnios(ps){var c={},mx=1,h='',ax='';ps.forEach(function(p){var y=+fw(p).slice(0,4);c[y]=(c[y]||0)+1;});
