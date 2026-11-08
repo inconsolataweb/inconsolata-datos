@@ -1,443 +1,479 @@
 {
- "_ejemplo": {
-  "oficio": "Infografista",
-  "medio": "Medio principal si no es el primero de su lista",
-  "pais": "Italia",
-  "cc": "it",
-  "x": "usuario",
-  "bsky": "usuario.bsky.social",
-  "ig": "usuario",
-  "linkedin": "https://www.linkedin.com/in/usuario",
-  "web": "https://…",
-  "texto": "Texto propio sobre el autor (opcional)"
- },
- "Roberto Alvarado": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "México",
-  "cc": "mx",
-  "linkedin": "https://mx.linkedin.com/in/robertoalvarado29",
-  "web": "https://www.behance.net/robertoalvarado29",
-  "ig": "robertoalvarad29"
- },
- "Luisa Ortega": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "México",
-  "cc": "mx"
- },
- "Emilio Amade": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "emilioamade",
-  "web": "https://www.behance.net/emilioamade",
-  "ig": "milkoamade",
-  "linkedin": "https://www.linkedin.com/in/emilio-amade-5129543"
- },
- "Flavie Holzinger": {
-  "genero": "autora",
-  "oficio": "cartógrafo/a",
-  "pais": "Francia",
-  "cc": "fr",
-  "x": "FlavieHolzinger",
-  "web": "https://www.lemonde.fr/en/signataires/flavie-holzinger/"
- },
- "Francesca Fattori": {
-  "genero": "autora",
-  "pais": "Italia",
-  "cc": "it",
-  "oficio": "cartógrafo/a",
-  "web": "https://www.lemonde.fr/signataires/francesca-fattori/",
-  "x": "FranceFattori",
-  "ig": "f.r.a.n.c.e.s.c.a_paris",
-  "linkedin": "https://fr.linkedin.com/in/francescafattori"
- },
- "Óscar Ayerra": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/oscar-ramos-ayerra-6b516641",
-  "web": "https://www.lavozdegalicia.es/firmas/oscar-ramos-ayerra/",
-  "x": "AyerraGraf"
- },
- "Pedro Sánchez": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es"
- },
- "Javier Aguirre": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/javier-aguirre-6ba1407",
-  "web": "https://www.elmundo.es/autor/javier-aguirre.html",
-  "x": "javagured",
-  "ig": "elmaestrodehuellas"
- },
- "Ismael F. Mira": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "México",
-  "cc": "mx"
- },
- "Delphine Papin": {
-  "genero": "autora",
-  "linkedin": "https://fr.linkedin.com/in/delphine-papin-b062b584",
-  "web": "https://www.lemonde.fr/signataires/delphine-papin/",
-  "oficio": "infografista",
-  "pais": "Francia",
-  "cc": "fr",
-  "x": "Delphinepapin"
- },
- "Josemi Benítez": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "JosemiBenitez",
-  "web": "https://www.elcorreo.com/autor/josemi-benitez-165.html"
- },
- "Ramón Curto": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "RamonCurto3",
-  "linkedin": "https://www.linkedin.com/in/infographic",
-  "web": "https://www.behance.net/ramoncurto",
-  "ig": "ramoncurto"
- },
- "Carlos Gregorio Simón": {
-  "genero": "autor",
-  "oficio": "ilustrador/a",
-  "pais": "España",
-  "cc": "es",
-  "ig": "calaveradiablo",
-  "x": "CalaveraDiablo"
- },
- "Esther Utrilla": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/esther-utrilla-46725887",
-  "x": "EstherUtrilla",
-  "ig": "eutrilla"
- },
- "Rodrigo Silva": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "web": "https://elpais.com/autor/rodrigo-silva/",
-  "x": "rodrigo0silva",
-  "linkedin": "https://es.linkedin.com/in/rodrigo-silva-mart%C3%ADnez-2bbb9023"
- },
- "Xemartin Laborde": {
-  "x": "XemartinLaborde",
-  "genero": "autor",
-  "oficio": "cartógrafo/a",
-  "web": "http://xemartinlaborde.com/",
-  "ig": "xemartin_laborde",
-  "pais": "Francia",
-  "cc": "fr",
-  "linkedin": "https://fr.linkedin.com/in/xemartin-laborde-2b24a113a"
- },
- "Paula Simonetti": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "Italia",
-  "cc": "it",
-  "x": "ppsimonetti",
-  "linkedin": "https://it.linkedin.com/in/paula-simonetti-informationdesigner",
-  "ig": "pspaulis"
- },
- "Antonio Cruz": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/antonio-cruz-gracia-688a53234"
- },
- "Álvaro Matilla": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es"
- },
- "Audrey Lagadec": {
-  "genero": "autora",
-  "oficio": "ilustrador/a",
-  "pais": "Francia",
-  "cc": "fr",
-  "linkedin": "https://fr.linkedin.com/in/audrey-lagadec-05448812b",
-  "web": "https://audreylagadec.wordpress.com/"
- },
- "Eduard Forroll": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "forroll",
-  "web": "https://www.eduardforroll.com/",
-  "linkedin": "https://es.linkedin.com/in/eduard-forroll-isanda-999b761a"
- },
- "Julián de Velasco": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/julian-de-velasco-tobar-957974122",
-  "web": "https://www.abc.es/autor/julian-de-velasco-5205/"
- },
- "Nacho Catalán": {
-  "genero": "autor",
-  "web": "https://elpais.com/autor/ignacio-catalan-lopez/",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es"
- },
- "Alberto Hernández": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "albertohv_",
-  "web": "https://www.elmundo.es/autor/alberto-hernandez.html"
- },
- "Maite Vaquero": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "web": "https://www.elmundo.es/autor/maite-vaquero.html"
- },
- "Yolanda Clemente": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "yolsclemente",
-  "linkedin": "https://es.linkedin.com/in/yolanda-clemente-pomeda-481b6711",
-  "web": "https://www.behance.net/yolandaclemente"
- },
- "Martina Gil": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/martina-gil-pizarro-3916b2a5"
- },
- "Isabel González": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es"
- },
- "Raúl Camañas": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "raulcamanas",
-  "linkedin": "https://es.linkedin.com/in/raúl-camañas",
-  "web": "https://www.behance.net/raulcamanas"
- },
- "Belén Trincado": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "ig": "belen_trincado_aznar",
-  "x": "ncoeurbe",
-  "web": "https://www.behance.net/belentri8698?locale=es_ES",
-  "linkedin": "https://es.linkedin.com/in/belén-trincado-aznar-007a1b34"
- },
- "Sofía Valgañón": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "ig": "sofia_valganon",
-  "linkedin": "https://es.linkedin.com/in/sofía-valgañón-valgañón-a88836147"
- },
- "Javier Torres": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/javier-torres-santodomingo-12980b29",
-  "web": "https://www.abc.es/autor/javier-torres-santodomingo-5206/"
- },
- "Véronique Malécot": {
-  "genero": "autora",
-  "pais": "Francia",
-  "cc": "fr",
-  "ig": "Vero_Malecot",
-  "linkedin": "https://fr.linkedin.com/in/véronique-malécot-250087155",
-  "web": "https://www.lemonde.fr/signataires/veronique-malecot/",
-  "oficio": "cartógrafo/a"
- },
- "Antonio Alonso": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "web": "https://elpais.com/autor/antonio-alonso/"
- },
- "Janet Loehrke": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "Estados Unidos",
-  "cc": "us",
-  "linkedin": "https://www.linkedin.com/in/janet-loehrke"
- },
- "Gonzalo de las Heras": {
-  "linkedin": "https://es.linkedin.com/in/gonzalo-de-las-heras-palmero-59b1ab2a",
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "web": "https://www.elcorreo.com/autor/gonzalo-de-las-heras-166.html",
-  "x": "gdelasheras"
- },
- "Juan Carlos Sánchez": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "_JuanCsanchez_",
-  "linkedin": "https://es.linkedin.com/in/jcsanchezinfografiamultimedia",
-  "web": "https://www.flickr.com/photos/juan_carlos_sanchez_rocha/"
- },
- "Alexia López": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/alexia-lopez-campos-85516541",
-  "x": "Alexia_LC"
- },
- "C. Alejandro Sánchez": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "México",
-  "cc": "mx"
- },
- "Isabel Toledo": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/isabel-toledo-viscasillas-00233126",
-  "x": "isatoledo83",
-  "web": "https://www.elcorreo.com/autor/isabel-toledo-3306.html"
- },
- "Alan Jürgens": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "AlanJrgens2"
- },
- "Tania Nieto": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/tania-nieto-díez-aa31232a5"
- },
- "Julio Loyola": {
-  "genero": "autor",
-  "oficio": "ilustrador/a",
-  "pais": "México",
-  "cc": "mx",
-  "ig": "eldionisiosk",
-  "linkedin": "https://mx.linkedin.com/in/julio-césar-loyola-benítez-aa09802b3"
- },
- "Elsa Martín": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/elsa-martin-millan",
-  "web": "https://elsamartinmillan.wixsite.com/emartinmillan",
-  "x": "elsa_millan"
- },
- "Cristina Claverol": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/cristina-claverol"
- },
- "Francina Cortés": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "web": "https://www.behance.net/francinanubc31",
-  "linkedin": "https://es.linkedin.com/in/francina-cortés-viana-b9758516",
-  "ig": "francinanus"
- },
- "Miguel Ángel Carbonero": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "macarbonero"
- },
- "Arturo Ramírez": {
-  "genero": "autor",
-  "linkedin": "https://mx.linkedin.com/in/arturo-ramirez-128098256",
-  "web": "https://www.behance.net/arturoramirezmontes",
-  "oficio": "infografista",
-  "pais": "México",
-  "cc": "mx"
- },
- "Alex R. Fischer": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/alex-riera-fischer-656a523",
-  "web": "https://www.elperiodico.com/es/autor/alex-r-fischer-1016632/",
-  "x": "Alex_R_Fischer"
- },
- "Elena Segura": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "linkedin": "https://es.linkedin.com/in/elena-segura-gordillo"
- },
- "Francisco Solorio": {
-  "genero": "autor",
-  "oficio": "infografista",
-  "pais": "Chile",
-  "cc": "cl",
-  "x": "panchosol",
-  "web": "https://panchosolorio.blogspot.com"
- },
- "Floriane Picard": {
-  "genero": "autora",
-  "web": "https://www.lemonde.fr/signataires/floriane-picard/",
-  "x": "PicardFloriane",
-  "linkedin": "https://fr.linkedin.com/in/floriane-picard-896370132",
-  "oficio": "cartógrafo/a",
-  "pais": "Francia",
-  "cc": "fr"
- },
- "Clara Penín": {
-  "genero": "autora",
-  "oficio": "infografista",
-  "pais": "España",
-  "cc": "es",
-  "x": "arake14"
- }
+  "_ejemplo": {
+    "oficio": "Infografista",
+    "medio": "Medio principal si no es el primero de su lista",
+    "pais": "Italia",
+    "cc": "it",
+    "x": "usuario",
+    "bsky": "usuario.bsky.social",
+    "ig": "usuario",
+    "linkedin": "https://www.linkedin.com/in/usuario",
+    "web": "https://…",
+    "texto": "Texto propio sobre el autor (opcional)"
+  },
+  "Roberto Alvarado": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "México",
+    "cc": "mx",
+    "linkedin": "https://mx.linkedin.com/in/robertoalvarado29",
+    "web": "https://www.behance.net/robertoalvarado29",
+    "ig": "robertoalvarad29"
+  },
+  "Luisa Ortega": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "México",
+    "cc": "mx"
+  },
+  "Emilio Amade": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "emilioamade",
+    "web": "https://www.behance.net/emilioamade",
+    "ig": "milkoamade",
+    "linkedin": "https://www.linkedin.com/in/emilio-amade-5129543"
+  },
+  "Flavie Holzinger": {
+    "genero": "autora",
+    "oficio": "cartógrafo/a",
+    "pais": "Francia",
+    "cc": "fr",
+    "x": "FlavieHolzinger",
+    "web": "https://www.lemonde.fr/en/signataires/flavie-holzinger/"
+  },
+  "Francesca Fattori": {
+    "genero": "autora",
+    "pais": "Italia",
+    "cc": "it",
+    "oficio": "cartógrafo/a",
+    "web": "https://www.lemonde.fr/signataires/francesca-fattori/",
+    "x": "FranceFattori",
+    "ig": "f.r.a.n.c.e.s.c.a_paris",
+    "linkedin": "https://fr.linkedin.com/in/francescafattori"
+  },
+  "Óscar Ayerra": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/oscar-ramos-ayerra-6b516641",
+    "web": "https://www.lavozdegalicia.es/firmas/oscar-ramos-ayerra/",
+    "x": "AyerraGraf"
+  },
+  "Pedro Sánchez": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es"
+  },
+  "Javier Aguirre": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/javier-aguirre-6ba1407",
+    "web": "https://www.elmundo.es/autor/javier-aguirre.html",
+    "x": "javagured",
+    "ig": "elmaestrodehuellas"
+  },
+  "Ismael F. Mira": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "México",
+    "cc": "mx"
+  },
+  "Delphine Papin": {
+    "genero": "autora",
+    "linkedin": "https://fr.linkedin.com/in/delphine-papin-b062b584",
+    "web": "https://www.lemonde.fr/signataires/delphine-papin/",
+    "oficio": "infografista",
+    "pais": "Francia",
+    "cc": "fr",
+    "x": "Delphinepapin"
+  },
+  "Josemi Benítez": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "JosemiBenitez",
+    "web": "https://www.elcorreo.com/autor/josemi-benitez-165.html"
+  },
+  "Ramón Curto": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "RamonCurto3",
+    "linkedin": "https://www.linkedin.com/in/infographic",
+    "web": "https://www.behance.net/ramoncurto",
+    "ig": "ramoncurto"
+  },
+  "Carlos Gregorio Simón": {
+    "genero": "autor",
+    "oficio": "ilustrador/a",
+    "pais": "España",
+    "cc": "es",
+    "ig": "calaveradiablo",
+    "x": "CalaveraDiablo"
+  },
+  "Esther Utrilla": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/esther-utrilla-46725887",
+    "x": "EstherUtrilla",
+    "ig": "eutrilla"
+  },
+  "Rodrigo Silva": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "web": "https://elpais.com/autor/rodrigo-silva/",
+    "x": "rodrigo0silva",
+    "linkedin": "https://es.linkedin.com/in/rodrigo-silva-mart%C3%ADnez-2bbb9023"
+  },
+  "Xemartin Laborde": {
+    "x": "XemartinLaborde",
+    "genero": "autor",
+    "oficio": "cartógrafo/a",
+    "web": "http://xemartinlaborde.com/",
+    "ig": "xemartin_laborde",
+    "pais": "Francia",
+    "cc": "fr",
+    "linkedin": "https://fr.linkedin.com/in/xemartin-laborde-2b24a113a"
+  },
+  "Paula Simonetti": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "Italia",
+    "cc": "it",
+    "x": "ppsimonetti",
+    "linkedin": "https://it.linkedin.com/in/paula-simonetti-informationdesigner",
+    "ig": "pspaulis"
+  },
+  "Antonio Cruz": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/antonio-cruz-gracia-688a53234"
+  },
+  "Álvaro Matilla": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es"
+  },
+  "Audrey Lagadec": {
+    "genero": "autora",
+    "oficio": "ilustrador/a",
+    "pais": "Francia",
+    "cc": "fr",
+    "linkedin": "https://fr.linkedin.com/in/audrey-lagadec-05448812b",
+    "web": "https://audreylagadec.wordpress.com/"
+  },
+  "Eduard Forroll": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "forroll",
+    "web": "https://www.eduardforroll.com/",
+    "linkedin": "https://es.linkedin.com/in/eduard-forroll-isanda-999b761a"
+  },
+  "Julián de Velasco": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/julian-de-velasco-tobar-957974122",
+    "web": "https://www.abc.es/autor/julian-de-velasco-5205/"
+  },
+  "Nacho Catalán": {
+    "genero": "autor",
+    "web": "https://elpais.com/autor/ignacio-catalan-lopez/",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es"
+  },
+  "Alberto Hernández": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "albertohv_",
+    "web": "https://www.elmundo.es/autor/alberto-hernandez.html"
+  },
+  "Maite Vaquero": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "web": "https://www.elmundo.es/autor/maite-vaquero.html"
+  },
+  "Yolanda Clemente": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "yolsclemente",
+    "linkedin": "https://es.linkedin.com/in/yolanda-clemente-pomeda-481b6711",
+    "web": "https://www.behance.net/yolandaclemente"
+  },
+  "Martina Gil": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/martina-gil-pizarro-3916b2a5"
+  },
+  "Isabel González": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es"
+  },
+  "Raúl Camañas": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "raulcamanas",
+    "linkedin": "https://es.linkedin.com/in/raúl-camañas",
+    "web": "https://www.behance.net/raulcamanas"
+  },
+  "Belén Trincado": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "ig": "belen_trincado_aznar",
+    "x": "ncoeurbe",
+    "web": "https://www.behance.net/belentri8698?locale=es_ES",
+    "linkedin": "https://es.linkedin.com/in/belén-trincado-aznar-007a1b34"
+  },
+  "Sofía Valgañón": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "ig": "sofia_valganon",
+    "linkedin": "https://es.linkedin.com/in/sofía-valgañón-valgañón-a88836147"
+  },
+  "Javier Torres": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/javier-torres-santodomingo-12980b29",
+    "web": "https://www.abc.es/autor/javier-torres-santodomingo-5206/"
+  },
+  "Véronique Malécot": {
+    "genero": "autora",
+    "pais": "Francia",
+    "cc": "fr",
+    "ig": "Vero_Malecot",
+    "linkedin": "https://fr.linkedin.com/in/véronique-malécot-250087155",
+    "web": "https://www.lemonde.fr/signataires/veronique-malecot/",
+    "oficio": "cartógrafo/a"
+  },
+  "Antonio Alonso": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "web": "https://elpais.com/autor/antonio-alonso/"
+  },
+  "Janet Loehrke": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "Estados Unidos",
+    "cc": "us",
+    "linkedin": "https://www.linkedin.com/in/janet-loehrke"
+  },
+  "Gonzalo de las Heras": {
+    "linkedin": "https://es.linkedin.com/in/gonzalo-de-las-heras-palmero-59b1ab2a",
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "web": "https://www.elcorreo.com/autor/gonzalo-de-las-heras-166.html",
+    "x": "gdelasheras"
+  },
+  "Juan Carlos Sánchez": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "_JuanCsanchez_",
+    "linkedin": "https://es.linkedin.com/in/jcsanchezinfografiamultimedia",
+    "web": "https://www.flickr.com/photos/juan_carlos_sanchez_rocha/"
+  },
+  "Alexia López": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/alexia-lopez-campos-85516541",
+    "x": "Alexia_LC"
+  },
+  "C. Alejandro Sánchez": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "México",
+    "cc": "mx"
+  },
+  "Isabel Toledo": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/isabel-toledo-viscasillas-00233126",
+    "x": "isatoledo83",
+    "web": "https://www.elcorreo.com/autor/isabel-toledo-3306.html"
+  },
+  "Alan Jürgens": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "AlanJrgens2"
+  },
+  "Tania Nieto": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/tania-nieto-díez-aa31232a5"
+  },
+  "Julio Loyola": {
+    "genero": "autor",
+    "oficio": "ilustrador/a",
+    "pais": "México",
+    "cc": "mx",
+    "ig": "eldionisiosk",
+    "linkedin": "https://mx.linkedin.com/in/julio-césar-loyola-benítez-aa09802b3"
+  },
+  "Elsa Martín": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/elsa-martin-millan",
+    "web": "https://elsamartinmillan.wixsite.com/emartinmillan",
+    "x": "elsa_millan"
+  },
+  "Cristina Claverol": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/cristina-claverol"
+  },
+  "Francina Cortés": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "web": "https://www.behance.net/francinanubc31",
+    "linkedin": "https://es.linkedin.com/in/francina-cortés-viana-b9758516",
+    "ig": "francinanus"
+  },
+  "Miguel Ángel Carbonero": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "macarbonero"
+  },
+  "Arturo Ramírez": {
+    "genero": "autor",
+    "linkedin": "https://mx.linkedin.com/in/arturo-ramirez-128098256",
+    "web": "https://www.behance.net/arturoramirezmontes",
+    "oficio": "infografista",
+    "pais": "México",
+    "cc": "mx"
+  },
+  "Alex R. Fischer": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/alex-riera-fischer-656a523",
+    "web": "https://www.elperiodico.com/es/autor/alex-r-fischer-1016632/",
+    "x": "Alex_R_Fischer"
+  },
+  "Elena Segura": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "linkedin": "https://es.linkedin.com/in/elena-segura-gordillo"
+  },
+  "Francisco Solorio": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "Chile",
+    "cc": "cl",
+    "x": "panchosol",
+    "web": "https://panchosolorio.blogspot.com"
+  },
+  "Floriane Picard": {
+    "genero": "autora",
+    "web": "https://www.lemonde.fr/signataires/floriane-picard/",
+    "x": "PicardFloriane",
+    "linkedin": "https://fr.linkedin.com/in/floriane-picard-896370132",
+    "oficio": "cartógrafo/a",
+    "pais": "Francia",
+    "cc": "fr"
+  },
+  "Clara Penín": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "España",
+    "cc": "es",
+    "x": "arake14"
+  },
+  "Pia Bublies": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "Alemania",
+    "cc": "de"
+  },
+  "Ruth Igielnik": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "Estados Unidos",
+    "cc": "us"
+  },
+  "Lauren McGaughy": {
+    "genero": "autora",
+    "oficio": "infografista",
+    "pais": "Estados Unidos",
+    "cc": "us"
+  },
+  "Evan Reynolds": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "Estados Unidos",
+    "cc": "us"
+  },
+  "Daniel Wood": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "Estados Unidos",
+    "cc": "us"
+  },
+  "J. David Goodman": {
+    "genero": "autor",
+    "oficio": "infografista",
+    "pais": "Estados Unidos",
+    "cc": "us"
+  }
 }
