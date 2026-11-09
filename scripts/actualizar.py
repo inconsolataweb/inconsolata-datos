@@ -283,7 +283,7 @@ def medio_de(nombre, fecha, tags):
 MESES = {'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'}
 # para buscar autores ya conocidos en el texto libre, solo los que ya han salido al menos dos veces (evita falsos positivos)
 CONOCIDOS = {k: n for k, n in ALIAS['autores'].items() if n in {a['n'] for a in IDX['autores'] if a['p'] >= 2}}
-AUTOR_RE = re.compile(r'Autor(?:a|es|as)?\s*:\s*(.+?)(?=\s*(?:\||Medio\s*:|Fecha\s*:|$))')
+AUTOR_RE = re.compile(r'(?:Autor(?:a|es|as)?|Ilustraci(?:ón|ones))\s*:\s*(.+?)(?=\s*(?:\||Medio\s*:|Fecha\s*:|$))')
 def nombres(s):
     s = re.split(r'(?<=[a-zà-ÿ]{2})\.\s', s)[0]
     s = re.sub(r'\s+(?:y|e|&)\s+', ', ', s)
