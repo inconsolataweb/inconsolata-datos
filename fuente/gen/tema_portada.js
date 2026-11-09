@@ -107,7 +107,7 @@ function webSec(p,W){var AJp=(typeof AJ!=='undefined'&&AJ[p.id]&&AJ[p.id].pies)|
  var lk=w.lk||p.u,dom=(lk.match(/^https?:\/\/([^/?#]+)(\/[^?#]*)?/)||[]);var url=dom[1]?(dom[1].replace(/^www\./,'')+(dom[2]&&dom[2]!=='/'?dom[2]:'')):'inconsolata.com'+(lk.charAt(0)==='/'?lk:'');
  var ext=/^https?:/.test(lk)&&!/inconsolata\.com|tumblr\.com/.test(lk);
  var fd=fondoDe(lk);
- return '<section class="ew'+(fd?' ew-mf':'')+'">'+(fd?muroFondo(fd,innerWidth<900?3:FONDOS[fd]):'')+'<div class="wrap ew-in"><div class="ew-tx"><span class="caps ew-k">'+(p.d===hoyISO()?'Hoy » ':'')+'Especial » la web</span><h2 class="soft"><a href="'+esc(lk)+'"'+(ext?' rel="noopener"':'')+'>'+destaca(p.t)+'</a></h2>'+
+ return '<section class="ew'+(fd?' ew-mf':'')+'">'+(fd?muroFondo(fd,innerWidth<900?3:FONDOS[fd]):'')+'<div class="wrap ew-in"><div class="ew-tx"><span class="caps ew-k">'+(p.d===hoyISO()?'Hoy » ':'')+'Especial » '+esc((AJ[p.id]||{}).ruta||'la web')+'</span><h2 class="soft"><a href="'+esc(lk)+'"'+(ext?' rel="noopener"':'')+'>'+destaca(p.t)+'</a></h2>'+
   (w.b?'<p>'+esc(primeras(w.b,240))+'</p>':'')+'<a class="ew-cta" href="'+esc(lk)+'">Ver la presentación »</a></div>'+
   (w.g?'<a class="ew-nav" href="'+esc(lk)+'" aria-hidden="true" tabindex="-1"><span class="ew-bar"><i></i><i></i><i></i><span>'+esc(url)+'</span></span><span class="ew-win"><img src="'+esc(w.g)+'" alt=""></span></a>':'')+'</div>'+
   ((w.fr||[]).length?'<div class="ew-tira"><div class="ew-tr">'+w.fr.map(function(f){return '<a href="'+esc(lk)+'"><img loading="lazy" src="'+esc(f[0])+'" alt="'+esc(f[1]||'')+'">'+(f[1]?'<span class="caps">'+esc(f[1])+' ▸</span>':'')+'</a>';}).join('')+'</div></div>':'')+'</section>';}
@@ -347,7 +347,7 @@ function ltHero(p,k){var u=ltImg(p);
  return '<a class="lt-hero" href="'+esc(p.u)+'">'+(u?'<img src="'+esc(u)+'" alt="">':'')+'<span class="lt-ov"><span class="lt-kk">'+esc(k)+'</span><span class="lt-ht">'+ltTit(p)+'</span>'+ltK(p)+'</span></a>';}
 function ltWeb(p,W){var w=W&&W.i===p.id?W:{u:p.u,lk:p.lk,t:p.t,b:p.txt,g:p.gif||(p.ims[0]&&p.ims[0].big)},lk=w.lk||p.u;
  var fd=fondoDe(lk);
- return '<a class="lt-web'+(fd?' ew-mf':'')+'" href="'+esc(lk)+'">'+(fd?muroFondo(fd,3):'')+'<span class="lt-kk">'+(p.d===hoyISO()?'Hoy » ':'')+'Especial » la web</span><span class="lt-ht">'+destaca(w.t||p.t)+'</span>'+
+ return '<a class="lt-web'+(fd?' ew-mf':'')+'" href="'+esc(lk)+'">'+(fd?muroFondo(fd,3):'')+'<span class="lt-kk">'+(p.d===hoyISO()?'Hoy » ':'')+'Especial » '+esc((AJ[p.id]||{}).ruta||'la web')+'</span><span class="lt-ht">'+destaca(w.t||p.t)+'</span>'+
   (w.g&&!fd?'<span class="lt-wf"><span class="lt-wb"><i></i><i></i><i></i></span><img src="'+esc(w.g)+'" alt=""></span>':'')+(w.b?'<span class="lt-wp">'+esc(primeras(w.b,160))+'</span>':'')+'<span class="lt-cta">Ver la presentación »</span></a>';}
 function ltMM(mm){var fr=mm.fr||[],num=(mm.t.match(/semana\s+([IVXLCDM]+)(?![A-Za-zÁÉÍÓÚáéíóúÑñ])/)||[])[1]||'';
  return '<section class="lt-mm"><div class="lt-in"><span class="lt-kk">'+(mm.d===hoyISO()?'Hoy » ':'')+'La semana en infografías</span><a class="lt-mmt" href="'+esc(mm.u)+'"><span class="soft">mucho más »</span> <b>'+esc(num.toUpperCase())+'</b></a></div>'+

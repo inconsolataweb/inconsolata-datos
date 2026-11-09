@@ -420,6 +420,8 @@ function ajustes(body,aj,s){if(!aj)return;
 }
 function post(art,meta,cat,medido){
  var id=rid(art), d=art.dataset.date, mt=meta[id];
+ // especial web con página propia en la web (/eps50, /bienvenida…): el post lleva directamente a ella (fichas, archivo, buscador…)
+ var ajE=(AJ[id]||{}).enlace||'';if(mt&&mt[0]==='w'&&/^(https?:\/\/(www\.)?inconsolata\.com)?\/[a-z0-9-]+\/?$/.test(ajE)&&!/[?&]ver=post/.test(location.search)){location.replace(ajE.replace(/^https?:\/\/(www\.)?inconsolata\.com/,''));return;}
  // post recién publicado que aún no está en los datos (se actualizan cada hora): la sección sale de sus etiquetas
  if(!mt){var tg0=(art.dataset.tags||'').toLowerCase().split('|');var has=function(r){return tg0.some(function(t){return r.test(t);});};
   mt=[has(/^especial ?web$/)?'w':has(/^mucho ?m[aá]s$/)?'m':has(/^extra!?$/)?'x':has(/^detallitos$/)?'d':has(/^metablog$/)?'b':has(/^offtopic$/)?'o':'',[],[],[],[]];}
