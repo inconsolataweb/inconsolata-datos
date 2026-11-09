@@ -437,7 +437,7 @@ function deTarjeta(c,meta,cat){
   [].forEach.call(body.querySelectorAll('img'),function(i){if(i.closest('blockquote'))return;
    ims.push({big:srcDe(i,1280),sm:srcDe(i,640),w:+(i.getAttribute('data-orig-width')||0),h:+(i.getAttribute('data-orig-height')||0)});});}
  ims=ims.filter(function(im,k){return !esPortadilla(s,k,im,d||'2099');});
- var t=(c.querySelector('.tt')||{}).textContent||'',bh=body&&body.querySelector('h1');t=t.trim()||TIT[id]||(bh?bh.textContent.trim():'');
+ var t=(c.querySelector('.tt')||{}).textContent||'',bh=body&&body.querySelector('h1');t=TIT[id]||t.trim()||(bh?bh.textContent.trim():'');
  var txt=deco(c.dataset.txt||'').replace(/^[\s\u2a54]+/,'');if(c.dataset.root)txt=txt.replace(/^[\w.-]+:\s*/,'').replace(/^[\s\u2a54]+/,'');
  if(bh&&txt.indexOf(bh.textContent.trim())===0)txt=txt.slice(bh.textContent.trim().length).replace(/^[\s\u2a54]+/,'');
  if(!t)t=primeras(txt,110);
