@@ -475,5 +475,23 @@
     "oficio": "infografista",
     "pais": "Estados Unidos",
     "cc": "us"
+  },
+  "Cinta Arribas": {
+    "genero": "autora",
+    "oficio": "ilustrador/a",
+    "pais": "España",
+    "cc": "es"
+  },
+  "Sergio García Moral": {
+    "genero": "autor",
+    "oficio": "ilustrador/a",
+    "pais": "España",
+    "cc": "es"
+  },
+  "Lola Moral": {
+    "genero": "autora",
+    "oficio": "ilustrador/a",
+    "pais": "España",
+    "cc": "es"
   }
 }
