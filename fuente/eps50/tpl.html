@@ -111,6 +111,19 @@ figcaption a{color:var(--tinta);font-weight:800;text-decoration-color:var(--mage
 .pand h2 em{color:#E5484D}
 .pand figure{margin:40px 0 0}
 
+/* carril de todas las portadas */
+.carril{background:var(--noche);color:#fff;overflow:hidden}
+.carril .k{color:var(--amarillo)}.carril h2 em{color:var(--amarillo)}
+.filas{display:flex;flex-direction:column;gap:14px;margin:44px 0 40px;transform:rotate(-1.5deg)}
+.fila{display:flex;width:max-content;animation:lado 260s linear infinite}
+.fila.r{animation-direction:reverse;animation-duration:300s}
+.fila img{height:clamp(170px,22vw,280px);width:auto;max-width:none;flex-shrink:0;margin-right:14px}
+.filas:hover .fila,.filas:focus-within .fila{animation-play-state:paused}
+@keyframes lado{to{transform:translateX(-50%)}}
+/* cuadro negro de la fuente */
+.fuente{display:flex;align-items:center;justify-content:space-between;gap:20px;background:var(--tinta);color:#fff;padding:22px 26px;max-width:900px;margin:0 auto 56px;box-shadow:8px 8px 0 var(--magenta);font:700 clamp(16px,2vw,20px)/1.35 var(--util)}
+.fuente .q{color:var(--amarillo);margin-right:6px}
+.fuente img{height:48px;width:auto;flex-shrink:0}
 /* ficha */
 .fin{background:var(--amarillo);border-top:2px solid var(--tinta)}
 .ficha{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center;background:#fff;border:2px solid var(--tinta);box-shadow:10px 10px 0 var(--tinta);padding:clamp(22px,4vw,40px);max-width:900px;margin:0 auto;text-decoration:none}
@@ -137,7 +150,7 @@ figcaption a{color:var(--tinta);font-weight:800;text-decoration-color:var(--mage
  .ficha{grid-template-columns:1fr;justify-items:start}
  .lb{padding:50px 8px}
 }
-@media (prefers-reduced-motion:reduce){.pista{animation:none}.baja i{animation:none}html{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){.fila{animation:none}.filas{overflow-x:auto}.pista{animation:none}.baja i{animation:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -205,8 +218,21 @@ figcaption a{color:var(--tinta);font-weight:800;text-decoration-color:var(--mage
  </div>
 </section>
 
+<section class="carril" aria-labelledby="t-car">
+ <div class="in">
+  <span class="caps k">Todas las portadas</span>
+  <h2 id="t-car" class="soft">Medio siglo, <em>portada a portada</em></h2>
+  <p class="lead" style="color:#D9D3C6">Las portadas que recoge el aniversario, de 1976 a hoy. Las 219 pueden verse, con su fecha, en <a href="https://elpais.com/eps/2026-10-25/el-pais-semanal-50-anos-en-portadas.html" target="_blank" rel="noopener" style="color:#fff">la página que les dedica El País</a>.</p>
+ </div>
+ <a class="filas" href="https://elpais.com/eps/2026-10-25/el-pais-semanal-50-anos-en-portadas.html" target="_blank" rel="noopener" aria-label="Ver las 219 portadas en El País">
+  <span class="fila"><img src="%%B%%h2/0.jpg" alt="" width="11200" height="280" loading="lazy" onerror="reint(this)"><img src="%%B%%h2/1.jpg" alt="" width="11200" height="280" loading="lazy" onerror="reint(this)"><img src="%%B%%h2/0.jpg" alt="" width="11200" height="280" loading="lazy" onerror="reint(this)"><img src="%%B%%h2/1.jpg" alt="" width="11200" height="280" loading="lazy" onerror="reint(this)"></span><span class="fila r"><img src="%%B%%h2/2.jpg" alt="" width="11200" height="280" loading="lazy" onerror="reint(this)"><img src="%%B%%h2/3.jpg" alt="" width="11200" height="280" loading="lazy" onerror="reint(this)"><img src="%%B%%h2/2.jpg" alt="" width="11200" height="280" loading="lazy" onerror="reint(this)"><img src="%%B%%h2/3.jpg" alt="" width="11200" height="280" loading="lazy" onerror="reint(this)"></span>
+ </a>
+ <div class="in" style="text-align:center"><a class="btn" href="https://elpais.com/eps/2026-10-25/el-pais-semanal-50-anos-en-portadas.html" target="_blank" rel="noopener">Ver las 219 portadas en El País »</a></div>
+</section>
+
 <section class="fin" aria-label="El País Semanal en inconsolata»">
  <div class="in">
+  <p class="fuente"><span><span class="q">»</span>El País Semanal (Especial Aniversario) #2.613, del 25 de octubre de 2026</span><img src="https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/medios/el-pais-semanal-avatar-w.png" alt="" onerror="reint(this)"></p>
   <a class="ficha" href="/medios#el-pais-semanal">
    <span class="lo"><img src="https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/medios/el-pais-semanal-logo.png" alt="" onerror="reint(this)"></span>
    <span><span class="caps k">Ficha » medio</span><span class="nm" style="display:block">El País Semanal</span><span class="d">Suplemento de El País · España · en inconsolata» desde 2011</span><br><span class="ver">Ver su ficha »</span></span>

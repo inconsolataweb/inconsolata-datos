@@ -77,6 +77,30 @@ iframe.tmblr-iframe,iframe[class*="tmblr-iframe"]{top:auto!important;bottom:10px
 .v-home .ew-tr img{width:100%;height:150px;object-fit:cover;object-position:top;display:block}
 .v-home .ew-tr .caps{display:block;font-size:11px;letter-spacing:2px;margin-top:8px}
 .v-home .ew+.wrap>section:first-child{margin-top:72px}
+/* especial web con muro de portadas de fondo (p. ej. /eps50) */
+.ew-mf{position:relative;overflow:hidden;isolation:isolate}
+.v-home .ew.ew-mf{background:#121110;color:#fff;padding:110px 0 0;border-color:var(--ink)}
+.ew-mf .ewmf{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.ew-mf .ewmf::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(18,17,16,.92) 0,rgba(18,17,16,.78) 45%,rgba(18,17,16,.35) 100%)}
+.ew-mf .ewmf-cols{position:absolute;inset:-30% -4%;display:grid;grid-template-columns:repeat(var(--n),1fr);gap:16px;transform:rotate(-4deg)}
+.ew-mf .ewmf-c{overflow:hidden;min-width:0}
+.ew-mf .ewmf-p{animation:mfSube 160s linear infinite;width:100%!important;max-width:100%}
+.ew-mf .ewmf-c:nth-child(even) .ewmf-p{animation-direction:reverse}
+.ew-mf .ewmf-p img{display:block;width:100%;height:auto}
+@keyframes mfSube{to{transform:translateY(-50%)}}
+@media (prefers-reduced-motion:reduce){.ew-mf .ewmf-p{animation:none}}
+.v-home .ew.ew-mf .ew-in{grid-template-columns:minmax(0,1fr);max-width:none;padding-bottom:110px}
+.v-home .ew.ew-mf .ew-tx{max-width:760px}
+.v-home .ew.ew-mf .ew-nav{display:none}
+.v-home .ew.ew-mf h2 a{color:#fff}.v-home .ew.ew-mf h2 em{color:var(--yellow)}
+.v-home .ew.ew-mf .ew-k{color:var(--yellow)}
+.v-home .ew.ew-mf p{color:#E8E3D8}
+.v-home .ew.ew-mf .ew-cta{box-shadow:7px 7px 0 var(--yellow)}
+.v-home .ew.ew-mf .ew-tira{margin-top:0}
+.lt-web.ew-mf{background:#121110;color:#fff;padding-top:60px;padding-bottom:60px}
+.lt-web.ew-mf .ewmf::after{background:rgba(18,17,16,.72)}
+.lt-web.ew-mf .lt-kk{color:var(--yellow)}.lt-web.ew-mf .lt-ht em{color:var(--yellow)}.lt-web.ew-mf .lt-wp{color:#E8E3D8}
+.lt-web.ew-mf .lt-cta{box-shadow:4px 4px 0 var(--yellow)}
 @media (max-width:900px){.v-home .ew{padding-top:40px}.v-home .ew-in{grid-template-columns:1fr;gap:36px}.v-home .ew-post{display:block;margin:18px 0 0}.v-home .ew-tira{margin-top:44px}.v-home .ew-tr a{flex-basis:200px}.v-home .ew-tr img{height:120px}}
 /* avisos de portada: tira bajo la cabecera (A) y columna junto al destacado (D) */
 .v-home .tira{display:flex;align-items:center;gap:18px;border-bottom:1px solid var(--ink);padding:12px 0;margin:-6px 0 18px}
