@@ -103,6 +103,10 @@ EXTRA = """
 .sheet.c-magenta .k-esp{color:var(--yellow)}
 .sheet.c-magenta .k-av{filter:none}
 .sheet.c-amarillo{background:var(--yellow)}
+/* fondo amarillo: la letra pasa a tinta aunque la tarjeta sea oscura (especiales, mucho más…) */
+.sheet.c-amarillo,.sheet.c-amarillo .tt,.sheet.c-amarillo .tt a,.sheet.c-amarillo .kicker,.sheet.c-amarillo .kicker a,.sheet.c-amarillo .by,.sheet.c-amarillo p,.sheet.c-amarillo h2,.sheet.c-amarillo h3,.sheet.c-amarillo a{color:var(--ink)!important}
+.sheet.c-amarillo em{color:var(--accent)!important}
+.sheet.c-amarillo .k-av,.sheet.c-amarillo .kicker img{filter:brightness(0)}
 .hm-avs{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap}
 .hm-avs a{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.14);font-weight:800}
 .hm-avs .k-av{width:24px!important;height:24px!important;margin:0!important;vertical-align:0}
