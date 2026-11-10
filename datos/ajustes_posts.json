@@ -1,84 +1,10 @@
 {
-  "831827785244868608": {
-    "pies": {
-      "1": "El País (Rodrigo Silva, Luiza Cauduro y Nacho Catalán)",
-      "2": "El Correo (Josemi Benítez, Gonzalo de las Heras, Isabel Toledo y Óscar Beltrán de Olátora)",
-      "3": "ABC (Javier Torres, Emma Esser, Marcos Jiménez y Julián de Velasco)",
-      "4": "El Mundo (Emilio Amade, Álvaro Matilla, Juan C. Sánchez y Alberto Hernández)",
-      "5": "Cinco Días (Belén Trincado)",
-      "6": "El Periódico",
-      "7": "La Vanguardia",
-      "8": "La Razón (Tania Nieto y Teresa Gallardo)"
-    },
-    "subrayados": [
-      "contextualizar cómo tuvo lugar el accidente"
-    ]
-  },
-  "831918987644452864": {
-    "pies": {
-      "1": "El Mundo",
-      "2": "El Mundo (Emilio Amade, Javier Aguirre, Juan C. Sánchez y Álvaro Matilla)",
-      "3": "La Vanguardia",
-      "4": "La Voz de Galicia",
-      "5": "La Vanguardia"
-    },
-    "subrayados": [
-      "entender qué falló en la cadena de decisiones"
-    ]
-  },
-  "832076806134841344": {
-    "enlace": "https://inconsolata.com/bienvenida",
-    "texto": "Quince años después de su nacimiento, la web del diseño periodístico renueva su web e identidad visual en el rediseño más ambicioso de su historia.",
-    "pies": {
-      "2": "La portada",
-      "3": "Fichas de medios",
-      "4": "Fichas de autores",
-      "5": "El buscador",
-      "6": "Estadísticas",
-      "7": "mucho más",
-      "8": "EXTRA!",
-      "9": "En el móvil",
-      "10": "Cronología"
-    }
-  },
-  "832281317249007616": {
-    "pies": {
-      "1": "Le Monde (Julie Cassotti, Francesca Fattori, Flavie Holzinger, Audrey Lagadec, Riccardo Pravettoni y Victor Simonnet)",
-      "2": "El Mundo (Alberto Hernández)",
-      "3": "Ara (Eduard Forroll)",
-      "4": "Corriere della Sera (Sabina Castagnaviz)",
-      "5": "El País",
-      "6": "The New York Times (Leanne Abraham y Alicia Parlapiano)"
-    }
-  },
-  "832371502828666880": {
-    "entradilla": "Las Provincias regresa a los lugares afectados por la DANA de 2026 en un suplemento especial dedicado a las víctimas de la riada.",
-    "subrayados": [
-      "“No os olvidamos”"
-    ]
-  },
-  "832463945905438720": {
-    "entradilla": "Las 'midterms' cumplieron los pronósticos y azotaron a Trump una humillante derrota que marcará la segunda mitad de su mandato. Analizamos mapas, gráficos e infografías sobre las elecciones legislativas norteamericanas.",
-    "pies": {
-      "1": "The New York Times (web/app)",
-      "2": "The New York Times (Albert Sun, Minho Kim, Marco Hernandez y Emily Davies)",
-      "3": "La Stampa",
-      "4": "Corriere della Sera (Andrea Venier)",
-      "5": "The Wall Street Journal (Danny Dougherty, Aaron Zitner y Anthony DeBarros)",
-      "6": "The Guardian",
-      "7": "Financial Times (Steven Bernard, Jonathan Vincent, Oliver Hawkins, Martin Stabe)",
-      "8": "Ara (Esther Utrilla)",
-      "9": "La Vanguardia"
-    },
-    "subrayados": [
-      "una humillación histórica para Trump"
-    ]
-  },
-  "832822059783602176": {
-    "enlace": "https://inconsolata.com/eps50",
-    "texto": "El imprescindible suplemento dominical de El País celebra su medio siglo de vida con un repaso a sus mejores portadas.",
-    "ruta": "El País Semanal",
-    "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/eps50/portada.jpg",
-    "imagen_r": 0.82
-  }
+"831827785244868608": {"pies": {"1":"El País (Rodrigo Silva, Luiza Cauduro y Nacho Catalán)","2":"El Correo (Josemi Benítez, Gonzalo de las Heras, Isabel Toledo y Óscar Beltrán de Olátora)","3":"ABC (Javier Torres, Emma Esser, Marcos Jiménez y Julián de Velasco)","4":"El Mundo (Emilio Amade, Álvaro Matilla, Juan C. Sánchez y Alberto Hernández)","5":"Cinco Días (Belén Trincado)","6":"El Periódico","7":"La Vanguardia","8":"La Razón (Tania Nieto y Teresa Gallardo)"}, "subrayados": ["contextualizar cómo tuvo lugar el accidente"]},
+"831918987644452864": {"pies": {"1":"El Mundo","2":"El Mundo (Emilio Amade, Javier Aguirre, Juan C. Sánchez y Álvaro Matilla)","3":"La Vanguardia","4":"La Voz de Galicia","5":"La Vanguardia"}, "subrayados": ["entender qué falló en la cadena de decisiones"]},
+"832076806134841344": {"enlace": "https://inconsolata.com/bienvenida", "texto": "Quince años después de su nacimiento, la web del diseño periodístico renueva su web e identidad visual en el rediseño más ambicioso de su historia.", "pies": {"2":"La portada","3":"Fichas de medios","4":"Fichas de autores","5":"El buscador","6":"Estadísticas","7":"mucho más","8":"EXTRA!","9":"En el móvil","10":"Cronología"}},
+"832281317249007616": {"pies": {"1":"Le Monde (Julie Cassotti, Francesca Fattori, Flavie Holzinger, Audrey Lagadec, Riccardo Pravettoni y Victor Simonnet)","2":"El Mundo (Alberto Hernández)","3":"Ara (Eduard Forroll)","4":"Corriere della Sera (Sabina Castagnaviz)","5":"El País","6":"The New York Times (Leanne Abraham y Alicia Parlapiano)"}},
+"832371502828666880": {"entradilla": "Las Provincias regresa a los lugares afectados por la DANA de 2026 en un suplemento especial dedicado a las víctimas de la riada.", "subrayados": ["“No os olvidamos”"]},
+"832463945905438720": {"entradilla": "Las 'midterms' cumplieron los pronósticos y azotaron a Trump una humillante derrota que marcará la segunda mitad de su mandato. Analizamos mapas, gráficos e infografías sobre las elecciones legislativas norteamericanas.", "pies": {"1":"The New York Times (web/app)","2":"The New York Times (Albert Sun, Minho Kim, Marco Hernandez y Emily Davies)","3":"La Stampa","4":"Corriere della Sera (Andrea Venier)","5":"The Wall Street Journal (Danny Dougherty, Aaron Zitner y Anthony DeBarros)","6":"The Guardian","7":"Financial Times (Steven Bernard, Jonathan Vincent, Oliver Hawkins, Martin Stabe)","8":"Ara (Esther Utrilla)","9":"La Vanguardia"}, "subrayados": ["una humillación histórica para Trump"]},
+"832822059783602176": {"enlace": "https://inconsolata.com/eps50", "texto": "El imprescindible suplemento dominical de El País celebra su medio siglo de vida con un repaso a sus mejores portadas.", "ruta": "El País Semanal", "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/eps50/portada.jpg", "imagen_r": 0.82},
+"832918800098787328": {"entradilla": "El Diario Vasco nos explica con todo detalle cómo recoger adecuadamente las setas en la temporada de otoño: descubre los mejores hábitats, técnicas y herramientas para llenarte la cesta.", "subrayados": ["sobre cómo recoger adecuadamente los hongos"]}
 }
