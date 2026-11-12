@@ -452,11 +452,14 @@ def clasificar(p):
         vis = [im for im in ims if not im.get('cover')] or ims
         fs = fechas_trabajo(' '.join(lineas_fuente), fecha)
         tit = {}
-        for li in re.findall(r'<li>(.*?)</li>', cuerpo, re.S):
-            mn = re.match(r'\s*\[(\d+)\]\s*(.*)', txt(li))
-            if mn:
+        # «[1] Tema 1 [2] Tema 2…»: en una lista, en párrafos o seguidos en una línea; «| Autor: …» solo si cambia el del post
+        for bl in re.findall(r'<(?:li|p)\b[^>]*>(.*?)</(?:li|p)>', cuerpo, re.S):
+            tb = txt(bl)
+            if not re.match(r'\s*\[\d+\]', tb):
+                continue
+            for mn in re.finditer(r'\[(\d+)\]\s*([^\[]*)', tb):
                 F = mn.group(2).split('|')
-                tit[int(mn.group(1))] = (F[0].strip(' .'), ', '.join(f.split(':', 1)[1] for f in F[1:] if re.match(r'\s*Autor', f) and ':' in f))
+                tit[int(mn.group(1))] = (F[0].strip(' .;,'), ', '.join(f.split(':', 1)[1] for f in F[1:] if re.match(r'\s*Autor', f) and ':' in f))
         md = [MED.index(m) for m in medios if m in MED][:1]
         aa = sorted(AUT.index(a) for a in autores if a in AUT and a not in NO_AUTORES)
         for k, im in enumerate(vis, 1):

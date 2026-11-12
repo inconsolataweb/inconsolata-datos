@@ -535,10 +535,11 @@ function post(art,meta,cat,medido){
   [].forEach.call(c.querySelectorAll('a'),function(a){a.tabIndex=-1;});tr.appendChild(c);tr.style.setProperty('--dur',Math.max(8,w/40)+'s');tr.classList.add('gira');}
  var ruedaT;addEventListener('resize',function(){clearTimeout(ruedaT);ruedaT=setTimeout(function(){[].forEach.call(document.querySelectorAll('.fuente'),rueda);},200);});
  // Actualidad Económica: la lista «[n] Tema | Autor: …» da el tema de cada informe y no se muestra
- var AET={};if(s==='a')[].forEach.call(body.querySelectorAll('ul,ol'),function(l){var li=[].filter.call(l.children,function(x){return x.tagName==='LI';});
-  if(!li.length||!li.every(function(x){return /^\s*\[\d+\]/.test(x.textContent);}))return;
-  li.forEach(function(x){var m=x.textContent.replace(/\xa0/g,' ').match(/^\s*\[(\d+)\]\s*([^|]*)(.*)$/);if(m)AET[+m[1]]={t:m[2].trim().replace(/[.\s]+$/,''),au:((m[3].match(/Autor(?:a|es|as)?\s*:\s*([^|]*)/i)||[])[1]||'').trim()};});
-  var pr=l.previousElementSibling;if(pr&&pr.tagName==='P'&&/:\s*$/.test(pr.textContent.trim())&&pr.textContent.trim().length<140)pr.remove();l.remove();});
+ var AET={};if(s==='a'){var aeL=function(t,x){var re=/\[(\d+)\]\s*([^\[]*)/g,m;t=t.replace(/\xa0/g,' ');while((m=re.exec(t))){var F=m[2].split('|'),au='';F.slice(1).forEach(function(f){var q=f.match(/^\s*Autor(?:a|es|as)?\s*:\s*(.*)$/i);if(q)au=q[1].trim();});AET[+m[1]]={t:F[0].trim().replace(/[.;,\s]+$/,''),au:au};}
+   var pr=x.previousElementSibling;if(pr&&pr.tagName==='P'&&!/^\s*\[\d+\]/.test(pr.textContent)&&/:\s*$/.test(pr.textContent.trim())&&pr.textContent.trim().length<140)pr.remove();x.remove();};
+  [].forEach.call(body.querySelectorAll('ul,ol'),function(l){var li=[].filter.call(l.children,function(x){return x.tagName==='LI';});
+   if(li.length&&li.every(function(x){return /^\s*\[\d+\]/.test(x.textContent);}))aeL(li.map(function(x){return x.textContent;}).join(' '),l);});
+  [].forEach.call(body.querySelectorAll('p'),function(p){if(/^\s*\[\d+\]/.test(p.textContent))aeL(p.textContent,p);});}
  // lista de trabajos («Medio, del 1 de noviembre | Autor: …» o «tipo | Autores: … | Medio»): son datos para el cuadro negro, no texto del post.
  // Se quitan también la frase que la presenta («Hemos destacado los siguientes trabajos:») y la línea final «» Todos los trabajos…», que pasa al cuadro.
  [].forEach.call(body.querySelectorAll('ul,ol'),function(l){var li=[].filter.call(l.children,function(x){return x.tagName==='LI';});
@@ -588,9 +589,10 @@ function post(art,meta,cat,medido){
   var ftx=[].map.call(art.querySelectorAll('.fuente .f-tx'),function(x){return x.textContent;}).join(' '),FD=fechasTr(ftx,d),
    nums=(ftx.match(/#\s*([\d.]+)(?:\s*[-–]\s*#?\s*([\d.]+))?/)||[]),M3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   var fe=function(i){var x=FD.length===n?FD[i]:'';return x?(+x.slice(8,10))+' '+MESES[+x.slice(5,7)-1]:'';};
+  var aeAD=(mt&&mt[3]||[]).map(function(i){var a=cat.autores[i];return a&&(a.n||a);}).filter(Boolean).join(', ');
   ims.forEach(function(im,i){var T=AET[i+1]||{};lb.push({src:im.src,cap:(T.t?T.t+' · ':'')+(fe(i)?fe(i)+' · ':'')+'Actualidad Económica (El Mundo) · '+(i+1)+' de '+n});});
   vis.innerHTML='<div class="ae-rows">'+ims.map(function(im,i){var T=AET[i+1]||{},r=im.el&&+im.el.getAttribute('data-orig-width')/+im.el.getAttribute('data-orig-height');
-   return '<article class="ae-sem" id="ae-'+(i+1)+'"><div class="ae-eje"><span class="ae-n">'+('0'+(i+1)).slice(-2)+'</span>'+(fe(i)?'<span class="ae-d">'+fe(i)+'</span>':'')+(T.t?'<span class="ae-t">'+esc(T.t)+'</span>':'')+(T.au?'<span class="ae-au">'+esc(T.au)+'</span>':'')+'</div>'+
+   return '<article class="ae-sem" id="ae-'+(i+1)+'"><div class="ae-eje"><span class="ae-n">'+('0'+(i+1)).slice(-2)+'</span>'+(fe(i)?'<span class="ae-d">'+fe(i)+'</span>':'')+(T.t?'<span class="ae-t">'+esc(T.t)+'</span>':'')+((T.au||aeAD)?'<span class="ae-au">'+esc(T.au||aeAD)+'</span>':'')+'</div>'+
     '<button type="button" class="shot ae-ph" data-lb="'+i+'" aria-label="Ampliar el informe '+(i+1)+'"'+(r?' style="aspect-ratio:'+r.toFixed(3)+'"':'')+'><img loading="lazy" src="'+esc(im.src)+'" alt="'+esc(T.t||('Informe de Actualidad Económica, '+(i+1)+' de '+n))+'"><span class="zoom">Ampliar »</span></button></article>';}).join('')+'</div>';
   // al pie: el informe anterior (y el siguiente) de la serie, como en el mucho más
   var aeP=vecino(id,/^$/,true,'a'),aeS=vecino(id,/^$/,false,'a');
