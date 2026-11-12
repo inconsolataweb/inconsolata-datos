@@ -62,7 +62,7 @@ function nuevoTop(cls){var main=document.querySelector('main.wrap'),top=document
 var LEG='<div class="legacy" role="note"><span class="lg-i" aria-hidden="true">»</span><p><b>Post del archivo.</b> Se publicó originalmente en una versión anterior de inconsolata» y puede que algún elemento no se vea como debería. <a href="mailto:inconsolataweb@gmail.com?subject=Algo%20roto%20en%20un%20post">¿Ves algo roto? Avísame »</a></p></div>';
 function idMenor(a,b){return a.length<b.length||(a.length===b.length&&a<b);}
 // el mucho más (o EXTRA!) anterior o siguiente: por la sección de cada post en los datos; los títulos puestos a mano no cubren todos los posts
-function vecino(id,re,antes){var r=null,sec=/EXTRA/i.test(re.source)?'x':'m',M=(typeof META0!=='undefined'&&META0)||{};
+function vecino(id,re,antes,sc){var r=null,sec=sc||(/EXTRA/i.test(re.source)?'x':'m'),M=(typeof META0!=='undefined'&&META0)||{};
  Object.keys(M).concat(Object.keys(TIT)).forEach(function(k){if(!((M[k]&&M[k][0]===sec)||(!M[k]&&TIT[k]&&re.test(TIT[k]))))return;
  if(antes?idMenor(k,id)&&(!r||idMenor(r,k)):idMenor(id,k)&&(!r||idMenor(k,r)))r=k;});return r;}
 function finRow(art){var sh=art.querySelector('.share'),sp=art.querySelector('.support');

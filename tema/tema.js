@@ -160,7 +160,7 @@ function nuevoTop(cls){var main=document.querySelector('main.wrap'),top=document
 var LEG='<div class="legacy" role="note"><span class="lg-i" aria-hidden="true">\u00bb</span><p><b>Post del archivo.</b> Se public\u00f3 originalmente en una versi\u00f3n anterior de inconsolata\u00bb y puede que alg\u00fan elemento no se vea como deber\u00eda. <a href="mailto:inconsolataweb@gmail.com?subject=Algo%20roto%20en%20un%20post">\u00bfVes algo roto? Av\u00edsame \u00bb</a></p></div>';
 function idMenor(a,b){return a.length<b.length||(a.length===b.length&&a<b);}
 // el mucho m\u00e1s (o EXTRA!) anterior o siguiente: por la secci\u00f3n de cada post en los datos; los t\u00edtulos puestos a mano no cubren todos los posts
-function vecino(id,re,antes){var r=null,sec=/EXTRA/i.test(re.source)?'x':'m',M=(typeof META0!=='undefined'&&META0)||{};
+function vecino(id,re,antes,sc){var r=null,sec=sc||(/EXTRA/i.test(re.source)?'x':'m'),M=(typeof META0!=='undefined'&&META0)||{};
  Object.keys(M).concat(Object.keys(TIT)).forEach(function(k){if(!((M[k]&&M[k][0]===sec)||(!M[k]&&TIT[k]&&re.test(TIT[k]))))return;
  if(antes?idMenor(k,id)&&(!r||idMenor(r,k)):idMenor(id,k)&&(!r||idMenor(k,r)))r=k;});return r;}
 function finRow(art){var sh=art.querySelector('.share'),sp=art.querySelector('.support');
@@ -1650,6 +1650,15 @@ function post(art,meta,cat,medido){
   vis.innerHTML='<div class="ae-rows">'+ims.map(function(im,i){var T=AET[i+1]||{},r=im.el&&+im.el.getAttribute('data-orig-width')/+im.el.getAttribute('data-orig-height');
    return '<article class="ae-sem" id="ae-'+(i+1)+'"><div class="ae-eje"><span class="ae-n">'+('0'+(i+1)).slice(-2)+'</span>'+(fe(i)?'<span class="ae-d">'+fe(i)+'</span>':'')+(T.t?'<span class="ae-t">'+esc(T.t)+'</span>':'')+(T.au?'<span class="ae-au">'+esc(T.au)+'</span>':'')+'</div>'+
     '<button type="button" class="shot ae-ph" data-lb="'+i+'" aria-label="Ampliar el informe '+(i+1)+'"'+(r?' style="aspect-ratio:'+r.toFixed(3)+'"':'')+'><img loading="lazy" src="'+esc(im.src)+'" alt="'+esc(T.t||('Informe de Actualidad Econ\u00f3mica, '+(i+1)+' de '+n))+'"><span class="zoom">Ampliar \u00bb</span></button></article>';}).join('')+'</div>';
+  // al pie: el informe anterior (y el siguiente) de la serie, como en el mucho m\u00e1s
+  var aeP=vecino(id,/^$/,true,'a'),aeS=vecino(id,/^$/,false,'a');
+  if(aeP||aeS){var aeC=function(k,lab,c){return k?'<a class="ae-pn '+c+'" href="/post/'+k+'" data-k="'+k+'"><span class="ae-pth" aria-hidden="true"></span><span class="ae-ptx"><span class="caps">'+lab+'</span><span class="ae-pt soft">'+(TIT[k]?destaca(TIT[k]):'Actualidad Econ\u00f3mica')+'</span><span class="ae-pp"></span></span></a>':'';};
+   vis.insertAdjacentHTML('beforeend','<nav class="ae-close" aria-label="Otros informes de la serie">'+aeC(aeP,'\u00ab Informes anteriores','ant')+aeC(aeS,'Informes siguientes \u00bb','sig')+'</nav>');
+   get('archivo').then(function(A){[].forEach.call(vis.querySelectorAll('.ae-pn'),function(el){var p=A.posts.filter(function(q){return q.i===el.dataset.k;})[0];if(!p)return;
+    var L=(p.pz||[]).map(function(z){return z[5];}).filter(Boolean).sort();if(!L.length)L=[p.f||p.d];
+    var a=L[0],b=L[L.length-1],ms=function(x){return MESES[+x.slice(5,7)-1];};
+    el.querySelector('.ae-pp').textContent=(a.slice(0,7)===b.slice(0,7)?ms(a)+' de '+a.slice(0,4):ms(a)+(a.slice(0,4)!==b.slice(0,4)?' de '+a.slice(0,4):'')+' \u2013 '+ms(b)+' de '+b.slice(0,4))+' \u00b7 '+(p.n||L.length)+' informes';
+    if(p.im)el.querySelector('.ae-pth').innerHTML='<img loading="lazy" src="'+esc(p.im)+'" alt="" onerror="this.remove()">';});}).catch(function(){});}
   lay.classList.add('single');
   var r0=FD[0],r1=FD[FD.length-1],per=r0?(r0.slice(0,7)===r1.slice(0,7)?MESES[+r0.slice(5,7)-1]+' de '+r0.slice(0,4):MESES[+r0.slice(5,7)-1]+(r0.slice(0,4)!==r1.slice(0,4)?' de '+r0.slice(0,4):'')+' \u2013 '+MESES[+r1.slice(5,7)-1]+' de '+r1.slice(0,4)):'';
   var aus=(mt&&mt[3]||[]).map(function(i){var a=cat.autores[i];return a&&(a.n||a);}).filter(Boolean);
