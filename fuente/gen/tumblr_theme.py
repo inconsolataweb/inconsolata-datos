@@ -206,8 +206,41 @@ html.lite .v-home .frames{display:flex!important;overflow-x:auto;scroll-snap-typ
 html.lite .v-home .frames .frame{flex:0 0 42%;scroll-snap-align:start}
 html.lite .v-home .proj h3{font-size:38px!important;overflow-wrap:anywhere}
 html.lite .legacy{font-size:13px}
+/* ===== Actualidad Económica (#aeco) ===== */
+:root{--ae:#0A7C66}
+body.v-ae .layout .aside{order:-1;margin-bottom:34px}
+body.v-ae .post>.title,body.v-ae .post .crumbs:not(.ae-hd .crumbs){display:none}
+.ae-hd{background:var(--ae);color:#fff;padding:34px 0 0;overflow:hidden;border-bottom:2px solid var(--ink)}
+.ae-hd .crumbs{color:#BFF2E2;margin-bottom:18px}.ae-hd .crumbs a{color:#fff}.ae-hd .crumbs i{color:var(--yellow)}
+.ae-k{display:block;font:800 12px 'Archivo',sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:#BFF2E2}
+.ae-hd h1{font-size:clamp(42px,6vw,84px);line-height:.95;margin:10px 0 18px;color:#fff}
+.ae-hd h1 em{color:var(--yellow)}
+.ae-hd h1 span{display:block;font-size:.46em;color:var(--yellow);margin-top:6px}
+.ae-hd svg{display:block;width:100%;height:90px}
+.ae-hd .ae-l1{stroke-dasharray:2400;stroke-dashoffset:2400;animation:aeLin 2.4s .3s ease-out forwards}
+@keyframes aeLin{to{stroke-dashoffset:0}}
+.ae-meta{background:#fff;border-bottom:2px solid var(--ink)}
+.ae-meta .wrap{display:flex;flex-wrap:wrap;gap:10px 40px;padding-top:16px;padding-bottom:16px}
+.ae-meta div>div{font:800 11px 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase}
+.ae-meta b{display:block;font:italic 900 30px/1.05 'Fraunces',serif;font-variation-settings:'SOFT' 100,'WONK' 1,'opsz' 144;color:var(--ae);letter-spacing:0;text-transform:none}
+.ae-meta b a{color:inherit;text-decoration:none}
+.ae-rows{display:flex;flex-direction:column}
+.ae-sem{display:grid;grid-template-columns:170px minmax(0,1fr);gap:28px;padding:30px 0;border-bottom:1px solid #CFC8B8}
+.ae-sem:first-child{padding-top:6px}
+.ae-eje{border-right:3px solid var(--ae);padding-right:18px;text-align:right;position:relative;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.ae-eje::after{content:'';position:absolute;right:-10px;top:8px;width:17px;height:17px;border-radius:50%;background:var(--yellow);border:3px solid var(--ae)}
+.ae-n{font:italic 900 46px/1 'Fraunces',serif;color:var(--ae)}
+.ae-d{font:800 11px 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase}
+.ae-t{font:600 17px/1.25 'Fraunces',serif;margin-top:6px}
+.ae-au{font:600 13px/1.3 'Archivo',sans-serif;color:var(--muted)}
+.ae-ph{display:block;padding:0;border:2px solid var(--ink);box-shadow:7px 7px 0 var(--ink);background:#fff;cursor:zoom-in;position:relative;width:100%}
+.ae-ph img{display:block;width:100%;height:100%;object-fit:contain}
+@media (max-width:760px){.ae-sem{grid-template-columns:1fr;gap:14px;padding:22px 0}.ae-eje{text-align:left;align-items:flex-start;border-right:0;border-left:3px solid var(--ae);padding:0 0 0 16px;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:4px 12px}.ae-eje::after{left:-10px;right:auto}.ae-n{font-size:34px}.ae-t{flex-basis:100%;margin:0}.ae-hd h1{font-size:40px}.ae-meta b{font-size:24px}}
+@media (prefers-reduced-motion:reduce){.ae-hd .ae-l1{animation:none;stroke-dashoffset:0}}
 .card .ph{position:relative}
 .card .ph .sec{position:absolute;top:8px;left:8px;background:var(--ink);color:var(--yellow);font:800 11px 'Archivo',sans-serif;letter-spacing:1.5px;text-transform:uppercase;padding:5px 8px;z-index:1}
+
+.card .ph .sec.sec-ae{background:var(--ae);color:#fff}
 html.lite .card .ph .sec{top:3px;left:3px;font-size:7.5px;letter-spacing:.5px;padding:2px 4px}
 .ls-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:30px 0 0}
 .ls-bar select{font:700 15px 'Archivo',sans-serif;border:2px solid var(--ink);background:#fff;color:var(--ink);padding:9px 34px 9px 12px;min-height:44px;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) 19px,calc(100% - 12px) 19px;background-size:6px 6px;background-repeat:no-repeat;cursor:pointer}
@@ -343,7 +376,7 @@ JS = r"""
 (function(){var y=document.getElementById('y-now');if(y)y.textContent=new Date().getFullYear();})();
 var CDN=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'datos/';
 var LANZAMIENTO='2026-11-01';
-var TN=__TN__, TS=__TS__, SECN={m:'mucho más',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic',w:'especial web'};
+var TN=__TN__, TS=__TS__, SECN={a:'Actualidad Económica',m:'mucho más',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic',w:'especial web'};
 var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 // la cortina de carga (tema.css) se retira cuando la vista ya está montada
@@ -364,10 +397,12 @@ function getS(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||
 function fecha(d){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+' de '+d.slice(0,4);}
 // fechas de los trabajos citadas en un texto («del 1 de noviembre», «del 30 de agosto; 6 y 13 de septiembre de 2026»), ordenadas;
 // sin año se entiende el del post (o el anterior si quedaría muy por delante de la publicación)
-function fechasTr(t,d){var fp=new Date(d+'T12:00:00'),o={},re=/(\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?/gi,m;
- while((m=re.exec(t||''))){var mes=MESES.indexOf(m[2].toLowerCase().replace('setiembre','septiembre')),y=m[3]?+m[3]:fp.getFullYear(),f=new Date(y,mes,+m[1],12);
-  if(!m[3]&&(f-fp)/864e5>20)f=new Date(y-1,mes,+m[1],12);if((f-fp)/864e5>20||(fp-f)/864e5>3660)continue;
-  o[f.getFullYear()+'-'+('0'+(f.getMonth()+1)).slice(-2)+'-'+('0'+f.getDate()).slice(-2)]=1;}
+function fechasTr(t,d){var fp=new Date(d+'T12:00:00'),o={},re=/((?:\d{1,2}\s*(?:,|y|e)\s*)*\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?/gi,m;
+ // «7, 14, 21 y 28 de junio»: los días sueltos se apoyan en el mes que viene después
+ while((m=re.exec(t||''))){var mes=MESES.indexOf(m[2].toLowerCase().replace('setiembre','septiembre'));
+  (m[1].match(/\d{1,2}/g)||[]).forEach(function(dd){var y=m[3]?+m[3]:fp.getFullYear(),f=new Date(y,mes,+dd,12);
+   if(!m[3]&&(f-fp)/864e5>20)f=new Date(y-1,mes,+dd,12);if((f-fp)/864e5>20||(fp-f)/864e5>3660)return;
+   o[f.getFullYear()+'-'+('0'+(f.getMonth()+1)).slice(-2)+'-'+('0'+f.getDate()).slice(-2)]=1;});}
  return Object.keys(o).sort();}
 function fechaRango(L){if(!L.length)return '';if(L.length===1)return fecha(L[0]);var a=L[0],b=L[L.length-1];
  if(a.slice(0,7)===b.slice(0,7))return (+a.slice(8,10))+'–'+fecha(b);
@@ -460,7 +495,7 @@ function post(art,meta,cat,medido){
  if(h1.classList.contains('auto'))h1.textContent=t; else h1.innerHTML=destaca(t); document.title=quita(t)+' · inconsolata»';
  var bico=icoEsp(mt[0]==='m'||mt[0]==='x'?'':mt[5],'big-ico')||(tipos[0]?ico(tipos[0],'big-ico'):'');if(bico)art.querySelector('.title').insertAdjacentHTML('beforeend',bico);
  // migas
- var cr='<a href="/">inconsolata</a><i>»</i>'+(s&&s!=='m'&&s!=='x'?'<a href="/tagged/'+encodeURIComponent(SECN[s])+'">'+SECN[s]+'</a>':tipos[0]?'<a href="/buscador#k='+tipos[0]+'">'+esc(TN[tipos[0]])+'</a>':'<span>post</span>');
+ var cr='<a href="/">inconsolata</a><i>»</i>'+(s&&s!=='m'&&s!=='x'?'<a href="/tagged/'+(s==='a'?'aeco':encodeURIComponent(SECN[s]))+'">'+SECN[s]+'</a>':tipos[0]?'<a href="/buscador#k='+tipos[0]+'">'+esc(TN[tipos[0]])+'</a>':'<span>post</span>');
  if(esp)cr+='<i>»</i><a class="k-esp" href="/especiales#'+esc(esp.slug)+'">'+esc(esp.n)+'</a>';
  if(meds.length>3)cr+='<i>»</i><span>'+meds.length+' medios</span>';
  else if(meds.length)cr+='<i>»</i>'+meds.map(function(m){return '<a href="'+fichaMedio(m)+'">'+esc(m.n)+'</a>';}).join(', ').replace(/, (<a [^>]*>[^<]*<\/a>)$/,' y $1');
@@ -492,6 +527,11 @@ function post(art,meta,cat,medido){
   var w=tr.scrollWidth,c=document.createElement('span');c.className='f-dup';c.setAttribute('aria-hidden','true');c.innerHTML=tr.innerHTML;
   [].forEach.call(c.querySelectorAll('a'),function(a){a.tabIndex=-1;});tr.appendChild(c);tr.style.setProperty('--dur',Math.max(8,w/40)+'s');tr.classList.add('gira');}
  var ruedaT;addEventListener('resize',function(){clearTimeout(ruedaT);ruedaT=setTimeout(function(){[].forEach.call(document.querySelectorAll('.fuente'),rueda);},200);});
+ // Actualidad Económica: la lista «[n] Tema | Autor: …» da el tema de cada informe y no se muestra
+ var AET={};if(s==='a')[].forEach.call(body.querySelectorAll('ul,ol'),function(l){var li=[].filter.call(l.children,function(x){return x.tagName==='LI';});
+  if(!li.length||!li.every(function(x){return /^\s*\[\d+\]/.test(x.textContent);}))return;
+  li.forEach(function(x){var m=x.textContent.replace(/\xa0/g,' ').match(/^\s*\[(\d+)\]\s*([^|]*)(.*)$/);if(m)AET[+m[1]]={t:m[2].trim().replace(/[.\s]+$/,''),au:((m[3].match(/Autor(?:a|es|as)?\s*:\s*([^|]*)/i)||[])[1]||'').trim()};});
+  var pr=l.previousElementSibling;if(pr&&pr.tagName==='P'&&/:\s*$/.test(pr.textContent.trim())&&pr.textContent.trim().length<140)pr.remove();l.remove();});
  // lista de trabajos («Medio, del 1 de noviembre | Autor: …» o «tipo | Autores: … | Medio»): son datos para el cuadro negro, no texto del post.
  // Se quitan también la frase que la presenta («Hemos destacado los siguientes trabajos:») y la línea final «» Todos los trabajos…», que pasa al cuadro.
  [].forEach.call(body.querySelectorAll('ul,ol'),function(l){var li=[].filter.call(l.children,function(x){return x.tagName==='LI';});
@@ -535,6 +575,25 @@ function post(art,meta,cat,medido){
     (md[2]?'<span class="caps" style="font-size:12px">'+esc(md[2].replace(/^,\s*/,''))+'</span>':'')+'</div></article>';
   });
   vis.innerHTML='<div class="mm-items">'+html+'</div>'; lay.classList.add('single');
+ } else if(s==='a'&&n){
+  // Actualidad Económica (#aeco): cabecera verde con su línea y cada domingo en una fila, con su fecha, número y tema en el eje
+  document.body.classList.add('v-ae');
+  var ftx=[].map.call(art.querySelectorAll('.fuente .f-tx'),function(x){return x.textContent;}).join(' '),FD=fechasTr(ftx,d),
+   nums=(ftx.match(/#\s*([\d.]+)(?:\s*[-–]\s*#?\s*([\d.]+))?/)||[]),M3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  var fe=function(i){var x=FD.length===n?FD[i]:'';return x?(+x.slice(8,10))+' '+MESES[+x.slice(5,7)-1]:'';};
+  ims.forEach(function(im,i){var T=AET[i+1]||{};lb.push({src:im.src,cap:(T.t?T.t+' · ':'')+(fe(i)?fe(i)+' · ':'')+'Actualidad Económica (El Mundo) · '+(i+1)+' de '+n});});
+  vis.innerHTML='<div class="ae-rows">'+ims.map(function(im,i){var T=AET[i+1]||{},r=im.el&&+im.el.getAttribute('data-orig-width')/+im.el.getAttribute('data-orig-height');
+   return '<article class="ae-sem" id="ae-'+(i+1)+'"><div class="ae-eje"><span class="ae-n">'+('0'+(i+1)).slice(-2)+'</span>'+(fe(i)?'<span class="ae-d">'+fe(i)+'</span>':'')+(T.t?'<span class="ae-t">'+esc(T.t)+'</span>':'')+(T.au?'<span class="ae-au">'+esc(T.au)+'</span>':'')+'</div>'+
+    '<button type="button" class="shot ae-ph" data-lb="'+i+'" aria-label="Ampliar el informe '+(i+1)+'"'+(r?' style="aspect-ratio:'+r.toFixed(3)+'"':'')+'><img loading="lazy" src="'+esc(im.src)+'" alt="'+esc(T.t||('Informe de Actualidad Económica, '+(i+1)+' de '+n))+'"><span class="zoom">Ampliar »</span></button></article>';}).join('')+'</div>';
+  lay.classList.add('single');
+  var r0=FD[0],r1=FD[FD.length-1],per=r0?(r0.slice(0,7)===r1.slice(0,7)?MESES[+r0.slice(5,7)-1]+' de '+r0.slice(0,4):MESES[+r0.slice(5,7)-1]+(r0.slice(0,4)!==r1.slice(0,4)?' de '+r0.slice(0,4):'')+' – '+MESES[+r1.slice(5,7)-1]+' de '+r1.slice(0,4)):'';
+  var aus=(mt&&mt[3]||[]).map(function(i){var a=cat.autores[i];return a&&(a.n||a);}).filter(Boolean);
+  var x=nuevoTop('ae-top');
+  x.top.innerHTML='<section class="ae-hd"><div class="wrap"><div class="crumbs caps"><a href="/">inconsolata</a><i>»</i><a href="/tagged/aeco">Actualidad Económica</a><i>»</i><a href="'+fichaMedio(medioN(cat,'El Mundo'))+'">El Mundo</a></div>'+
+   '<span class="ae-k">⩔ Serie · Actualidad Económica</span><h1 class="soft">'+(TIT[id]?destaca(TIT[id]):'Actualidad Económica')+(per?'<span>'+per+'</span>':'')+'</h1></div>'+
+   '<svg viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true"><polyline class="ae-l1" fill="none" stroke="#FFD400" stroke-width="4" vector-effect="non-scaling-stroke" points="0,70 120,62 240,66 360,40 480,48 600,30 720,44 840,20 960,34 1080,12 1200,22"/><polyline fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" vector-effect="non-scaling-stroke" points="0,80 120,74 240,78 360,64 480,70 600,58 720,66 840,52 960,60 1080,44 1200,50"/></svg></section>'+
+   '<div class="ae-meta"><div class="wrap"><div><b>'+n+'</b>'+(n===1?'informe':'informes')+'</div>'+(nums[1]?'<div><b>#'+nums[1]+(nums[2]?'–'+nums[2]:'')+'</b>'+(nums[2]?'números':'número')+'</div>':'')+
+   (aus.length?'<div><b>'+aus.map(function(a){return '<a href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(', ')+'</b>gráficos</div>':'')+'<div><b><a href="'+fichaMedio(medioN(cat,'El Mundo'))+'">El Mundo</a></b>medio</div></div></div>';
  } else if(n){
   var PIE=(AJ[id]&&AJ[id].pies)||{},pie=function(i){return String(PIE[i+1]||'').trim();},pieH=function(i,c){return pie(i)?'<p class="'+(c||'pie-aj')+'">'+esc(pie(i))+'</p>':'';};
   ims.forEach(function(im,i){lb.push({src:im.src,cap:(pie(i)?pie(i)+' · ':meds.length===1?meds[0].n+' · ':'')+'imagen '+(i+1)+' de '+n});});

@@ -20,8 +20,8 @@ function vistaP(p){if(p._pz)return {im:p._pz[0]||p.im,m:p._pz[2].length?p._pz[2]
  var x=z.find(function(x){return f(x)&&x[0];})||z.find(f);if(!x)return base;
  return {im:x[0]||p.im,m:x[2].length?x[2]:p.m,a:x[3],z:x};}
 function cartaP(A,p,i){var v=vistaP(p),auts=v.a.slice(0,3).map(function(j){return A.autores[j].n;});
- return '<a href="/post/'+esc(p.u)+(v.z&&(p.s==='m'||p.s==='x')&&p.pz?'#mm-'+(p.pz.indexOf(v.z)+1):'')+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
-  '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+((p.s==='m'||p.s==='x')&&SECN[p.s]?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'» '+esc(SECN[p.s]||''))+' · '+fcorta(fw(p))+'</span>'+
+ return '<a href="/post/'+esc(p.u)+(v.z&&(p.s==='m'||p.s==='x'||p.s==='a')&&p.pz?(p.s==='a'?'#ae-':'#mm-')+(p.pz.indexOf(v.z)+1):'')+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
+  '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+((p.s==='m'||p.s==='x'||p.s==='a')&&SECN[p.s]?'<span class="sec'+(p.s==='a'?' sec-ae':'')+'">'+esc(SECN[p.s])+'</span>':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'» '+esc(SECN[p.s]||''))+' · '+fcorta(fw(p))+'</span>'+
   '<span class="tt">'+esc(titP(p,v))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+(v.a.length>3?' y '+(v.a.length-3)+' más':'')+'</span>':'')+'</a>';}
 function barrasAnios(ps){var c={},mx=1,h='',ax='';ps.forEach(function(p){var y=+fw(p).slice(0,4);c[y]=(c[y]||0)+1;});
  for(var y=2011;y<=Y1;y++)mx=Math.max(mx,c[y]||0);var n=Y1-2010;
@@ -178,7 +178,7 @@ function autorFicha(A,cat,FM,AX,ai){CTXP={a:ai};var a=A.autores[ai],ps=ordenaFT(
  var ys=ps.map(function(p){return +fw(p).slice(0,4);}),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),ny=new Set(ys).size;
  // piezas de muestra: solo posts propios (no los recopilatorios de mucho más ni EXTRA!)
  // muestras: la pieza concreta del autor (imagen, medio y coautores de esa pieza), también las de mucho más y EXTRA!
- var W0=ps.map(function(p){var v=vistaP(p);return {u:p.u+(v.z&&(p.s==='m'||p.s==='x')?'#mm-'+((p.pz||[]).indexOf(v.z)+1):''),im:v.im,m:v.m,a:v.a,fw:p.fw,d:p.d,s:p.s,z:v.z};}).filter(function(w){return w.im&&w.a.length<=6&&((w.s!=='m'&&w.s!=='x')||w.z);}).reverse();
+ var W0=ps.map(function(p){var v=vistaP(p);return {u:p.u+(v.z&&(p.s==='m'||p.s==='x'||p.s==='a')?(p.s==='a'?'#ae-':'#mm-')+((p.pz||[]).indexOf(v.z)+1):''),im:v.im,m:v.m,a:v.a,fw:p.fw,d:p.d,s:p.s,z:v.z};}).filter(function(w){return w.im&&w.a.length<=6&&((w.s!=='m'&&w.s!=='x'&&w.s!=='a')||w.z);}).reverse();
  // prioridad: piezas firmadas solo por este autor y de un solo medio; después, solo por él; después, de un solo medio; al final, el resto (solo si faltan)
  var T=[[],[],[],[]];W0.forEach(function(p){var solo=p.a.length===1,um=p.m.length<=1;T[solo&&um?0:solo?1:um?2:3].push(p);});
  var W=[];T.forEach(function(t){if(W.length<3)W=W.concat(t);});

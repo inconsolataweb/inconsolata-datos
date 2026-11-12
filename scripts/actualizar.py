@@ -140,6 +140,8 @@ def seccion(tags, titulo):
         return 'muchomas'
     if 'extra!' in tl or 'extra' in tl:
         return 'extra'
+    if 'aeco' in tl:
+        return 'aeco'
     for s in ('detallitos', 'metablog', 'offtopic'):
         if s in tl:
             return s
@@ -199,7 +201,7 @@ ITEM_RE = re.compile(r'<i>\s*Trabajo\s*</i>\s*:\s*(.*?)\|\s*<i>\s*Medio\s*</i>\s
 TIPO_TAG = [('carto', r'cartograf'), ('port', r'^portadas?$'), ('publi', r'^publicidad$'), ('video', r'^v[ií]deos?$'),
             ('foto', r'^fotograf'), ('ilus', r'^ilustraci'), ('graf', r'^gr[aá]ficos?$'), ('online', r'^(online|interactivos?)$'),
             ('info', r'^infograf')]
-SEC = {'web': 'w', 'muchomas': 'm', 'extra': 'x', 'detallitos': 'd', 'metablog': 'b', 'offtopic': 'o', 'normal': ''}
+SEC = {'aeco': 'a', 'web': 'w', 'muchomas': 'm', 'extra': 'x', 'detallitos': 'd', 'metablog': 'b', 'offtopic': 'o', 'normal': ''}
 
 # ---------------------------------------------------------------- catálogos
 IDX = json.load(open(D('indice.json')))
@@ -245,6 +247,28 @@ def idx_de(lista, catalogo, n, nuevo):
 TIPO_N = {'infografia': 'info', 'cartografia': 'carto', 'mapa': 'carto', 'grafico': 'graf', 'ilustracion': 'ilus', 'portada': 'port', 'fotografia': 'foto', 'video': 'video', 'online': 'online'}
 MES_N = {m: i + 1 for i, m in enumerate(['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'])}
 FECHA_RE = re.compile(r'(\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?', re.I)
+
+def fechas_trabajo(texto, fecha_post):
+    """Todas las fechas citadas («del 24 de mayo; 7, 14 y 21 de junio de 2026»), en orden y sin repetir."""
+    from datetime import date
+    try:
+        fp = date.fromisoformat(fecha_post)
+    except Exception:
+        return []
+    out = []
+    # «7, 14, 21 y 28 de junio»: los días sueltos se apoyan en el mes que viene después
+    for grupo, mes, y in re.findall(r'((?:\d{1,2}\s*(?:,|y|e)\s*)*\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?', texto or '', re.I):
+        m = MES_N.get(mes.lower().replace('setiembre', 'septiembre'))
+        for d in re.findall(r'\d{1,2}', grupo):
+            try:
+                f = date(int(y) if y else fp.year, m, int(d))
+                if not y and (f - fp).days > 20:
+                    f = date(fp.year - 1, m, int(d))
+            except Exception:
+                continue
+            if (f - fp).days <= 20 and f.isoformat() not in out:
+                out.append(f.isoformat())
+    return sorted(out)
 
 def fecha_trabajo(texto, fecha_post):
     """Fecha de la pieza («Medio, del 1 de noviembre», «…del 30 de agosto; 6 y 13 de septiembre de 2026»): la más reciente
@@ -422,6 +446,27 @@ def clasificar(p):
             tit = mt_t.group(1).strip(' «»"\'“”.') if mt_t else ''
             piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et, fecha_trabajo(pt.split('Trabajo', 1)[-1], fecha), tit])
             ult = None
+    # Actualidad Económica (#aeco): cada imagen es el informe de un domingo; las fechas de la línea de fuente se reparten en orden
+    # y, si hay lista «[n] Tema | Autor: …», cada informe toma su tema y sus autores
+    if sec == 'aeco' and not piezas:
+        vis = [im for im in ims if not im.get('cover')] or ims
+        fs = fechas_trabajo(' '.join(lineas_fuente), fecha)
+        tit = {}
+        for li in re.findall(r'<li>(.*?)</li>', cuerpo, re.S):
+            mn = re.match(r'\s*\[(\d+)\]\s*(.*)', txt(li))
+            if mn:
+                F = mn.group(2).split('|')
+                tit[int(mn.group(1))] = (F[0].strip(' .'), ', '.join(f.split(':', 1)[1] for f in F[1:] if re.match(r'\s*Autor', f) and ':' in f))
+        md = [MED.index(m) for m in medios if m in MED][:1]
+        aa = sorted(AUT.index(a) for a in autores if a in AUT and a not in NO_AUTORES)
+        for k, im in enumerate(vis, 1):
+            t_, au = tit.get(k, ('', ''))
+            pa = set()
+            for n in nombres(au):
+                a_ = ALIAS['autores'].get(nz(n))
+                if a_ in AUT and a_ not in NO_AUTORES:
+                    pa.add(AUT.index(a_))
+            piezas.append([miniatura(im, 640), tipos[0] if tipos else 'info', md, sorted(pa) or aa, [], fs[k - 1] if len(fs) == len(vis) else '', t_])
     # EXTRA! con la lista «[n] texto<br>tipo | etiquetas | Autor: … | Medio, del 24 de septiembre»: una pieza por imagen, según su número
     if sec == 'extra' and not piezas:
         vis = [im for im in ims if not im.get('cover')] or ims

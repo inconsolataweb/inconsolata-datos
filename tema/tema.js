@@ -63,7 +63,7 @@ if(!window.INC_BV){
 (function(){var y=document.getElementById('y-now');if(y)y.textContent=new Date().getFullYear();})();
 var CDN=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'datos/';
 var LANZAMIENTO='2026-11-01';
-var TN={"info": "Infograf\u00eda", "carto": "Cartograf\u00eda", "port": "Portada", "graf": "Gr\u00e1fico", "ilus": "Ilustraci\u00f3n", "foto": "Fotograf\u00eda", "video": "V\u00eddeo", "publi": "Publicidad", "online": "Online"}, TS=["t-elecciones", "t-elecciones-en-eeuu", "t-guerras-y-conflictos", "t-guerra-en-ucrania", "t-conflicto-palestino-israeli", "t-guerra-en-siria", "t-guerra-en-iran", "t-terrorismo-y-atentados", "t-catastrofes-y-accidentes", "t-covid-19", "t-salud", "t-economia", "t-europa", "t-monarquia-y-realeza", "t-el-papa-y-el-vaticano", "t-cataluna-y-el-proces", "t-necrologicas", "t-historia", "t-resumenes-del-ano", "t-ciencia-y-espacio", "t-clima-y-medio-ambiente", "t-biodiversidad", "t-viajes", "t-tecnologia", "t-otros-deportes", "t-futbol", "t-juegos-olimpicos", "t-mundiales-y-eurocopas", "t-motor-y-ciclismo", "t-tenis", "t-cine", "t-musica", "t-television-y-series", "t-libros-y-literatura", "t-arte-y-arquitectura", "t-gastronomia", "t-redisenos", "t-tipografia", "t-humor-grafico", "t-titulares", "t-industria-y-crisis-de-medios", "t-datos-y-visualizacion", "t-politica-espanola", "t-migraciones"], SECN={m:'mucho m\u00e1s',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic',w:'especial web'};
+var TN={"info": "Infograf\u00eda", "carto": "Cartograf\u00eda", "port": "Portada", "graf": "Gr\u00e1fico", "ilus": "Ilustraci\u00f3n", "foto": "Fotograf\u00eda", "video": "V\u00eddeo", "publi": "Publicidad", "online": "Online"}, TS=["t-elecciones", "t-elecciones-en-eeuu", "t-guerras-y-conflictos", "t-guerra-en-ucrania", "t-conflicto-palestino-israeli", "t-guerra-en-siria", "t-guerra-en-iran", "t-terrorismo-y-atentados", "t-catastrofes-y-accidentes", "t-covid-19", "t-salud", "t-economia", "t-europa", "t-monarquia-y-realeza", "t-el-papa-y-el-vaticano", "t-cataluna-y-el-proces", "t-necrologicas", "t-historia", "t-resumenes-del-ano", "t-ciencia-y-espacio", "t-clima-y-medio-ambiente", "t-biodiversidad", "t-viajes", "t-tecnologia", "t-otros-deportes", "t-futbol", "t-juegos-olimpicos", "t-mundiales-y-eurocopas", "t-motor-y-ciclismo", "t-tenis", "t-cine", "t-musica", "t-television-y-series", "t-libros-y-literatura", "t-arte-y-arquitectura", "t-gastronomia", "t-redisenos", "t-tipografia", "t-humor-grafico", "t-titulares", "t-industria-y-crisis-de-medios", "t-datos-y-visualizacion", "t-politica-espanola", "t-migraciones"], SECN={a:'Actualidad Econ\u00f3mica',m:'mucho m\u00e1s',x:'EXTRA!',d:'detallitos',b:'metablog',o:'offtopic',w:'especial web'};
 var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 // la cortina de carga (tema.css) se retira cuando la vista ya est\u00e1 montada
@@ -84,10 +84,12 @@ function getS(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||
 function fecha(d){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+' de '+d.slice(0,4);}
 // fechas de los trabajos citadas en un texto (\u00abdel 1 de noviembre\u00bb, \u00abdel 30 de agosto; 6 y 13 de septiembre de 2026\u00bb), ordenadas;
 // sin a\u00f1o se entiende el del post (o el anterior si quedar\u00eda muy por delante de la publicaci\u00f3n)
-function fechasTr(t,d){var fp=new Date(d+'T12:00:00'),o={},re=/(\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?/gi,m;
- while((m=re.exec(t||''))){var mes=MESES.indexOf(m[2].toLowerCase().replace('setiembre','septiembre')),y=m[3]?+m[3]:fp.getFullYear(),f=new Date(y,mes,+m[1],12);
-  if(!m[3]&&(f-fp)/864e5>20)f=new Date(y-1,mes,+m[1],12);if((f-fp)/864e5>20||(fp-f)/864e5>3660)continue;
-  o[f.getFullYear()+'-'+('0'+(f.getMonth()+1)).slice(-2)+'-'+('0'+f.getDate()).slice(-2)]=1;}
+function fechasTr(t,d){var fp=new Date(d+'T12:00:00'),o={},re=/((?:\d{1,2}\s*(?:,|y|e)\s*)*\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s+(?:de|del)\s+(\d{4}))?/gi,m;
+ // \u00ab7, 14, 21 y 28 de junio\u00bb: los d\u00edas sueltos se apoyan en el mes que viene despu\u00e9s
+ while((m=re.exec(t||''))){var mes=MESES.indexOf(m[2].toLowerCase().replace('setiembre','septiembre'));
+  (m[1].match(/\d{1,2}/g)||[]).forEach(function(dd){var y=m[3]?+m[3]:fp.getFullYear(),f=new Date(y,mes,+dd,12);
+   if(!m[3]&&(f-fp)/864e5>20)f=new Date(y-1,mes,+dd,12);if((f-fp)/864e5>20||(fp-f)/864e5>3660)return;
+   o[f.getFullYear()+'-'+('0'+(f.getMonth()+1)).slice(-2)+'-'+('0'+f.getDate()).slice(-2)]=1;});}
  return Object.keys(o).sort();}
 function fechaRango(L){if(!L.length)return '';if(L.length===1)return fecha(L[0]);var a=L[0],b=L[L.length-1];
  if(a.slice(0,7)===b.slice(0,7))return (+a.slice(8,10))+'\u2013'+fecha(b);
@@ -428,7 +430,7 @@ function ls(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)|
 function deTarjeta(c,meta,cat){
  var id=rid(c),mt=meta[id],tags=(c.dataset.tags||'').toLowerCase().split('|').filter(Boolean);
  var tg=function(r){return tags.some(function(t){return r.test(t);});};
- var s=mt&&mt[0]?mt[0]:tg(/^especial ?web$/)?'w':tg(/^mucho ?m[a\u00e1]s$/)?'m':tg(/^extra!?$/)?'x':tg(/^detallitos$/)?'d':tg(/^metablog$/)?'b':'';
+ var s=mt&&mt[0]?mt[0]:tg(/^especial ?web$/)?'w':tg(/^mucho ?m[a\u00e1]s$/)?'m':tg(/^extra!?$/)?'x':tg(/^aeco$/)?'a':tg(/^detallitos$/)?'d':tg(/^metablog$/)?'b':'';
  var d=c.dataset.date||'';
  var ims=[],hr=(c.dataset.hr||'').trim().split(/\s+/).filter(Boolean),sm=(c.dataset.img||'').trim().split(/\s+/).filter(Boolean);
  hr.forEach(function(u,i){ims.push({big:u,sm:sm[i]||u});});
@@ -805,8 +807,8 @@ function vistaP(p){if(p._pz)return {im:p._pz[0]||p.im,m:p._pz[2].length?p._pz[2]
  var x=z.find(function(x){return f(x)&&x[0];})||z.find(f);if(!x)return base;
  return {im:x[0]||p.im,m:x[2].length?x[2]:p.m,a:x[3],z:x};}
 function cartaP(A,p,i){var v=vistaP(p),auts=v.a.slice(0,3).map(function(j){return A.autores[j].n;});
- return '<a href="/post/'+esc(p.u)+(v.z&&(p.s==='m'||p.s==='x')&&p.pz?'#mm-'+(p.pz.indexOf(v.z)+1):'')+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
-  '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+((p.s==='m'||p.s==='x')&&SECN[p.s]?'<span class="sec">'+esc(SECN[p.s])+'</span>':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'\u00bb '+esc(SECN[p.s]||''))+' \u00b7 '+fcorta(fw(p))+'</span>'+
+ return '<a href="/post/'+esc(p.u)+(v.z&&(p.s==='m'||p.s==='x'||p.s==='a')&&p.pz?(p.s==='a'?'#ae-':'#mm-')+(p.pz.indexOf(v.z)+1):'')+'" class="card" data-k="'+p.k.join(' ')+'"><span class="tape" aria-hidden="true"></span>'+(v.z?icoPz(v.z,'ico'):icoP(p.i,p.k[0],'ico'))+
+  '<div class="ph">'+(v.im?'<img loading="lazy" src="'+esc(v.im)+'" alt="" onerror="this.remove()">':'')+((p.s==='m'||p.s==='x'||p.s==='a')&&SECN[p.s]?'<span class="sec'+(p.s==='a'?' sec-ae':'')+'">'+esc(SECN[p.s])+'</span>':'')+'</div><span class="caps">'+(v.m.length?medsI(v.m):'\u00bb '+esc(SECN[p.s]||''))+' \u00b7 '+fcorta(fw(p))+'</span>'+
   '<span class="tt">'+esc(titP(p,v))+'</span>'+(auts.length?'<span class="by">por '+esc(auts.join(', '))+(v.a.length>3?' y '+(v.a.length-3)+' m\u00e1s':'')+'</span>':'')+'</a>';}
 function barrasAnios(ps){var c={},mx=1,h='',ax='';ps.forEach(function(p){var y=+fw(p).slice(0,4);c[y]=(c[y]||0)+1;});
  for(var y=2011;y<=Y1;y++)mx=Math.max(mx,c[y]||0);var n=Y1-2010;
@@ -963,7 +965,7 @@ function autorFicha(A,cat,FM,AX,ai){CTXP={a:ai};var a=A.autores[ai],ps=ordenaFT(
  var ys=ps.map(function(p){return +fw(p).slice(0,4);}),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),ny=new Set(ys).size;
  // piezas de muestra: solo posts propios (no los recopilatorios de mucho m\u00e1s ni EXTRA!)
  // muestras: la pieza concreta del autor (imagen, medio y coautores de esa pieza), tambi\u00e9n las de mucho m\u00e1s y EXTRA!
- var W0=ps.map(function(p){var v=vistaP(p);return {u:p.u+(v.z&&(p.s==='m'||p.s==='x')?'#mm-'+((p.pz||[]).indexOf(v.z)+1):''),im:v.im,m:v.m,a:v.a,fw:p.fw,d:p.d,s:p.s,z:v.z};}).filter(function(w){return w.im&&w.a.length<=6&&((w.s!=='m'&&w.s!=='x')||w.z);}).reverse();
+ var W0=ps.map(function(p){var v=vistaP(p);return {u:p.u+(v.z&&(p.s==='m'||p.s==='x'||p.s==='a')?(p.s==='a'?'#ae-':'#mm-')+((p.pz||[]).indexOf(v.z)+1):''),im:v.im,m:v.m,a:v.a,fw:p.fw,d:p.d,s:p.s,z:v.z};}).filter(function(w){return w.im&&w.a.length<=6&&((w.s!=='m'&&w.s!=='x'&&w.s!=='a')||w.z);}).reverse();
  // prioridad: piezas firmadas solo por este autor y de un solo medio; despu\u00e9s, solo por \u00e9l; despu\u00e9s, de un solo medio; al final, el resto (solo si faltan)
  var T=[[],[],[],[]];W0.forEach(function(p){var solo=p.a.length===1,um=p.m.length<=1;T[solo&&um?0:solo?1:um?2:3].push(p);});
  var W=[];T.forEach(function(t){if(W.length<3)W=W.concat(t);});
@@ -1558,7 +1560,7 @@ function post(art,meta,cat,medido){
  if(h1.classList.contains('auto'))h1.textContent=t; else h1.innerHTML=destaca(t); document.title=quita(t)+' \u00b7 inconsolata\u00bb';
  var bico=icoEsp(mt[0]==='m'||mt[0]==='x'?'':mt[5],'big-ico')||(tipos[0]?ico(tipos[0],'big-ico'):'');if(bico)art.querySelector('.title').insertAdjacentHTML('beforeend',bico);
  // migas
- var cr='<a href="/">inconsolata</a><i>\u00bb</i>'+(s&&s!=='m'&&s!=='x'?'<a href="/tagged/'+encodeURIComponent(SECN[s])+'">'+SECN[s]+'</a>':tipos[0]?'<a href="/buscador#k='+tipos[0]+'">'+esc(TN[tipos[0]])+'</a>':'<span>post</span>');
+ var cr='<a href="/">inconsolata</a><i>\u00bb</i>'+(s&&s!=='m'&&s!=='x'?'<a href="/tagged/'+(s==='a'?'aeco':encodeURIComponent(SECN[s]))+'">'+SECN[s]+'</a>':tipos[0]?'<a href="/buscador#k='+tipos[0]+'">'+esc(TN[tipos[0]])+'</a>':'<span>post</span>');
  if(esp)cr+='<i>\u00bb</i><a class="k-esp" href="/especiales#'+esc(esp.slug)+'">'+esc(esp.n)+'</a>';
  if(meds.length>3)cr+='<i>\u00bb</i><span>'+meds.length+' medios</span>';
  else if(meds.length)cr+='<i>\u00bb</i>'+meds.map(function(m){return '<a href="'+fichaMedio(m)+'">'+esc(m.n)+'</a>';}).join(', ').replace(/, (<a [^>]*>[^<]*<\/a>)$/,' y $1');
@@ -1590,6 +1592,11 @@ function post(art,meta,cat,medido){
   var w=tr.scrollWidth,c=document.createElement('span');c.className='f-dup';c.setAttribute('aria-hidden','true');c.innerHTML=tr.innerHTML;
   [].forEach.call(c.querySelectorAll('a'),function(a){a.tabIndex=-1;});tr.appendChild(c);tr.style.setProperty('--dur',Math.max(8,w/40)+'s');tr.classList.add('gira');}
  var ruedaT;addEventListener('resize',function(){clearTimeout(ruedaT);ruedaT=setTimeout(function(){[].forEach.call(document.querySelectorAll('.fuente'),rueda);},200);});
+ // Actualidad Econ\u00f3mica: la lista \u00ab[n] Tema | Autor: \u2026\u00bb da el tema de cada informe y no se muestra
+ var AET={};if(s==='a')[].forEach.call(body.querySelectorAll('ul,ol'),function(l){var li=[].filter.call(l.children,function(x){return x.tagName==='LI';});
+  if(!li.length||!li.every(function(x){return /^\s*\[\d+\]/.test(x.textContent);}))return;
+  li.forEach(function(x){var m=x.textContent.replace(/\xa0/g,' ').match(/^\s*\[(\d+)\]\s*([^|]*)(.*)$/);if(m)AET[+m[1]]={t:m[2].trim().replace(/[.\s]+$/,''),au:((m[3].match(/Autor(?:a|es|as)?\s*:\s*([^|]*)/i)||[])[1]||'').trim()};});
+  var pr=l.previousElementSibling;if(pr&&pr.tagName==='P'&&/:\s*$/.test(pr.textContent.trim())&&pr.textContent.trim().length<140)pr.remove();l.remove();});
  // lista de trabajos (\u00abMedio, del 1 de noviembre | Autor: \u2026\u00bb o \u00abtipo | Autores: \u2026 | Medio\u00bb): son datos para el cuadro negro, no texto del post.
  // Se quitan tambi\u00e9n la frase que la presenta (\u00abHemos destacado los siguientes trabajos:\u00bb) y la l\u00ednea final \u00ab\u00bb Todos los trabajos\u2026\u00bb, que pasa al cuadro.
  [].forEach.call(body.querySelectorAll('ul,ol'),function(l){var li=[].filter.call(l.children,function(x){return x.tagName==='LI';});
@@ -1633,6 +1640,25 @@ function post(art,meta,cat,medido){
     (md[2]?'<span class="caps" style="font-size:12px">'+esc(md[2].replace(/^,\s*/,''))+'</span>':'')+'</div></article>';
   });
   vis.innerHTML='<div class="mm-items">'+html+'</div>'; lay.classList.add('single');
+ } else if(s==='a'&&n){
+  // Actualidad Econ\u00f3mica (#aeco): cabecera verde con su l\u00ednea y cada domingo en una fila, con su fecha, n\u00famero y tema en el eje
+  document.body.classList.add('v-ae');
+  var ftx=[].map.call(art.querySelectorAll('.fuente .f-tx'),function(x){return x.textContent;}).join(' '),FD=fechasTr(ftx,d),
+   nums=(ftx.match(/#\s*([\d.]+)(?:\s*[-\u2013]\s*#?\s*([\d.]+))?/)||[]),M3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  var fe=function(i){var x=FD.length===n?FD[i]:'';return x?(+x.slice(8,10))+' '+MESES[+x.slice(5,7)-1]:'';};
+  ims.forEach(function(im,i){var T=AET[i+1]||{};lb.push({src:im.src,cap:(T.t?T.t+' \u00b7 ':'')+(fe(i)?fe(i)+' \u00b7 ':'')+'Actualidad Econ\u00f3mica (El Mundo) \u00b7 '+(i+1)+' de '+n});});
+  vis.innerHTML='<div class="ae-rows">'+ims.map(function(im,i){var T=AET[i+1]||{},r=im.el&&+im.el.getAttribute('data-orig-width')/+im.el.getAttribute('data-orig-height');
+   return '<article class="ae-sem" id="ae-'+(i+1)+'"><div class="ae-eje"><span class="ae-n">'+('0'+(i+1)).slice(-2)+'</span>'+(fe(i)?'<span class="ae-d">'+fe(i)+'</span>':'')+(T.t?'<span class="ae-t">'+esc(T.t)+'</span>':'')+(T.au?'<span class="ae-au">'+esc(T.au)+'</span>':'')+'</div>'+
+    '<button type="button" class="shot ae-ph" data-lb="'+i+'" aria-label="Ampliar el informe '+(i+1)+'"'+(r?' style="aspect-ratio:'+r.toFixed(3)+'"':'')+'><img loading="lazy" src="'+esc(im.src)+'" alt="'+esc(T.t||('Informe de Actualidad Econ\u00f3mica, '+(i+1)+' de '+n))+'"><span class="zoom">Ampliar \u00bb</span></button></article>';}).join('')+'</div>';
+  lay.classList.add('single');
+  var r0=FD[0],r1=FD[FD.length-1],per=r0?(r0.slice(0,7)===r1.slice(0,7)?MESES[+r0.slice(5,7)-1]+' de '+r0.slice(0,4):MESES[+r0.slice(5,7)-1]+(r0.slice(0,4)!==r1.slice(0,4)?' de '+r0.slice(0,4):'')+' \u2013 '+MESES[+r1.slice(5,7)-1]+' de '+r1.slice(0,4)):'';
+  var aus=(mt&&mt[3]||[]).map(function(i){var a=cat.autores[i];return a&&(a.n||a);}).filter(Boolean);
+  var x=nuevoTop('ae-top');
+  x.top.innerHTML='<section class="ae-hd"><div class="wrap"><div class="crumbs caps"><a href="/">inconsolata</a><i>\u00bb</i><a href="/tagged/aeco">Actualidad Econ\u00f3mica</a><i>\u00bb</i><a href="'+fichaMedio(medioN(cat,'El Mundo'))+'">El Mundo</a></div>'+
+   '<span class="ae-k">\u2a54 Serie \u00b7 Actualidad Econ\u00f3mica</span><h1 class="soft">'+(TIT[id]?destaca(TIT[id]):'Actualidad Econ\u00f3mica')+(per?'<span>'+per+'</span>':'')+'</h1></div>'+
+   '<svg viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true"><polyline class="ae-l1" fill="none" stroke="#FFD400" stroke-width="4" vector-effect="non-scaling-stroke" points="0,70 120,62 240,66 360,40 480,48 600,30 720,44 840,20 960,34 1080,12 1200,22"/><polyline fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" vector-effect="non-scaling-stroke" points="0,80 120,74 240,78 360,64 480,70 600,58 720,66 840,52 960,60 1080,44 1200,50"/></svg></section>'+
+   '<div class="ae-meta"><div class="wrap"><div><b>'+n+'</b>'+(n===1?'informe':'informes')+'</div>'+(nums[1]?'<div><b>#'+nums[1]+(nums[2]?'\u2013'+nums[2]:'')+'</b>'+(nums[2]?'n\u00fameros':'n\u00famero')+'</div>':'')+
+   (aus.length?'<div><b>'+aus.map(function(a){return '<a href="'+fichaAutor(a)+'">'+esc(a)+'</a>';}).join(', ')+'</b>gr\u00e1ficos</div>':'')+'<div><b><a href="'+fichaMedio(medioN(cat,'El Mundo'))+'">El Mundo</a></b>medio</div></div></div>';
  } else if(n){
   var PIE=(AJ[id]&&AJ[id].pies)||{},pie=function(i){return String(PIE[i+1]||'').trim();},pieH=function(i,c){return pie(i)?'<p class="'+(c||'pie-aj')+'">'+esc(pie(i))+'</p>':'';};
   ims.forEach(function(im,i){lb.push({src:im.src,cap:(pie(i)?pie(i)+' \u00b7 ':meds.length===1?meds[0].n+' \u00b7 ':'')+'imagen '+(i+1)+' de '+n});});

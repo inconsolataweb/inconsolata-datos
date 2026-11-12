@@ -356,8 +356,41 @@ html.lite .v-home .frames{display:flex!important;overflow-x:auto;scroll-snap-typ
 html.lite .v-home .frames .frame{flex:0 0 42%;scroll-snap-align:start}
 html.lite .v-home .proj h3{font-size:38px!important;overflow-wrap:anywhere}
 html.lite .legacy{font-size:13px}
+/* ===== Actualidad Econ\f3 mica (#aeco) ===== */
+:root{--ae:#0A7C66}
+body.v-ae .layout .aside{order:-1;margin-bottom:34px}
+body.v-ae .post>.title,body.v-ae .post .crumbs:not(.ae-hd .crumbs){display:none}
+.ae-hd{background:var(--ae);color:#fff;padding:34px 0 0;overflow:hidden;border-bottom:2px solid var(--ink)}
+.ae-hd .crumbs{color:#BFF2E2;margin-bottom:18px}.ae-hd .crumbs a{color:#fff}.ae-hd .crumbs i{color:var(--yellow)}
+.ae-k{display:block;font:800 12px 'Archivo',sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:#BFF2E2}
+.ae-hd h1{font-size:clamp(42px,6vw,84px);line-height:.95;margin:10px 0 18px;color:#fff}
+.ae-hd h1 em{color:var(--yellow)}
+.ae-hd h1 span{display:block;font-size:.46em;color:var(--yellow);margin-top:6px}
+.ae-hd svg{display:block;width:100%;height:90px}
+.ae-hd .ae-l1{stroke-dasharray:2400;stroke-dashoffset:2400;animation:aeLin 2.4s .3s ease-out forwards}
+@keyframes aeLin{to{stroke-dashoffset:0}}
+.ae-meta{background:#fff;border-bottom:2px solid var(--ink)}
+.ae-meta .wrap{display:flex;flex-wrap:wrap;gap:10px 40px;padding-top:16px;padding-bottom:16px}
+.ae-meta div>div{font:800 11px 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase}
+.ae-meta b{display:block;font:italic 900 30px/1.05 'Fraunces',serif;font-variation-settings:'SOFT' 100,'WONK' 1,'opsz' 144;color:var(--ae);letter-spacing:0;text-transform:none}
+.ae-meta b a{color:inherit;text-decoration:none}
+.ae-rows{display:flex;flex-direction:column}
+.ae-sem{display:grid;grid-template-columns:170px minmax(0,1fr);gap:28px;padding:30px 0;border-bottom:1px solid #CFC8B8}
+.ae-sem:first-child{padding-top:6px}
+.ae-eje{border-right:3px solid var(--ae);padding-right:18px;text-align:right;position:relative;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.ae-eje::after{content:'';position:absolute;right:-10px;top:8px;width:17px;height:17px;border-radius:50%;background:var(--yellow);border:3px solid var(--ae)}
+.ae-n{font:italic 900 46px/1 'Fraunces',serif;color:var(--ae)}
+.ae-d{font:800 11px 'Archivo',sans-serif;letter-spacing:2px;text-transform:uppercase}
+.ae-t{font:600 17px/1.25 'Fraunces',serif;margin-top:6px}
+.ae-au{font:600 13px/1.3 'Archivo',sans-serif;color:var(--muted)}
+.ae-ph{display:block;padding:0;border:2px solid var(--ink);box-shadow:7px 7px 0 var(--ink);background:#fff;cursor:zoom-in;position:relative;width:100%}
+.ae-ph img{display:block;width:100%;height:100%;object-fit:contain}
+@media (max-width:760px){.ae-sem{grid-template-columns:1fr;gap:14px;padding:22px 0}.ae-eje{text-align:left;align-items:flex-start;border-right:0;border-left:3px solid var(--ae);padding:0 0 0 16px;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:4px 12px}.ae-eje::after{left:-10px;right:auto}.ae-n{font-size:34px}.ae-t{flex-basis:100%;margin:0}.ae-hd h1{font-size:40px}.ae-meta b{font-size:24px}}
+@media (prefers-reduced-motion:reduce){.ae-hd .ae-l1{animation:none;stroke-dashoffset:0}}
 .card .ph{position:relative}
 .card .ph .sec{position:absolute;top:8px;left:8px;background:var(--ink);color:var(--yellow);font:800 11px 'Archivo',sans-serif;letter-spacing:1.5px;text-transform:uppercase;padding:5px 8px;z-index:1}
+
+.card .ph .sec.sec-ae{background:var(--ae);color:#fff}
 html.lite .card .ph .sec{top:3px;left:3px;font-size:7.5px;letter-spacing:.5px;padding:2px 4px}
 .ls-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:30px 0 0}
 .ls-bar select{font:700 15px 'Archivo',sans-serif;border:2px solid var(--ink);background:#fff;color:var(--ink);padding:9px 34px 9px 12px;min-height:44px;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) 19px,calc(100% - 12px) 19px;background-size:6px 6px;background-repeat:no-repeat;cursor:pointer}

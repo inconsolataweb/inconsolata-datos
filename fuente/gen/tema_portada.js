@@ -19,7 +19,7 @@ function ls(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)|
 function deTarjeta(c,meta,cat){
  var id=rid(c),mt=meta[id],tags=(c.dataset.tags||'').toLowerCase().split('|').filter(Boolean);
  var tg=function(r){return tags.some(function(t){return r.test(t);});};
- var s=mt&&mt[0]?mt[0]:tg(/^especial ?web$/)?'w':tg(/^mucho ?m[aá]s$/)?'m':tg(/^extra!?$/)?'x':tg(/^detallitos$/)?'d':tg(/^metablog$/)?'b':'';
+ var s=mt&&mt[0]?mt[0]:tg(/^especial ?web$/)?'w':tg(/^mucho ?m[aá]s$/)?'m':tg(/^extra!?$/)?'x':tg(/^aeco$/)?'a':tg(/^detallitos$/)?'d':tg(/^metablog$/)?'b':'';
  var d=c.dataset.date||'';
  var ims=[],hr=(c.dataset.hr||'').trim().split(/\s+/).filter(Boolean),sm=(c.dataset.img||'').trim().split(/\s+/).filter(Boolean);
  hr.forEach(function(u,i){ims.push({big:u,sm:sm[i]||u});});
