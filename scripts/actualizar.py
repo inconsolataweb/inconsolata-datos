@@ -37,6 +37,15 @@ def api_posts():
                 yield p
         return
     key = os.environ['TUMBLR_API_KEY']
+    dep = os.environ.get('DEPURA', '')
+    if dep.isdigit():
+        # depuración: vuelca ese post aunque sea antiguo
+        try:
+            with urllib.request.urlopen(f'https://api.tumblr.com/v2/blog/{BLOG}.tumblr.com/posts?api_key={key}&id={dep}', timeout=60) as r:
+                for q in json.load(r)['response']['posts']:
+                    print('DEPURA_JSON', json.dumps(q, ensure_ascii=False))
+        except Exception as e:
+            print('DEPURA error', e)
     off = 0
     while True:
         u = f'https://api.tumblr.com/v2/blog/{BLOG}.tumblr.com/posts?api_key={key}&limit=20&offset={off}&reblog_info=false'
