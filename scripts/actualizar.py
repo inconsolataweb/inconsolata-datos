@@ -16,7 +16,8 @@ D = lambda f: os.path.join(RAIZ, 'datos', f)
 BLOG = 'saulcastillo'
 RELEER = int(os.environ.get('RELEER') or 40)   # cuántos posts recientes se vuelven a leer siempre (ediciones); RELEER=99999 relee todo
 EXCLUIR = {'xaora', 'invitados', 'talie'}
-NO_AUTORES = {'Sao Paulo', 'Nobel de Medicina'}   # nombres que se colaron como autores y no lo son
+# nombres que se colaron como autores y no lo son (revisados a mano): se quitan de posts y piezas
+NO_AUTORES = set(json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'datos', 'no_autores.json'))))
 SERIES = ['aquí·allí', 'a fondo', 'sala de los horrores', 'teletipos', 'epílogo', 'inconsolab', 'entrevistas', 'audios', 'medios regionales', 'invitados']
 
 def nz(s):
@@ -625,6 +626,9 @@ def main():
     malos = {AUT.index(n) for n in NO_AUTORES if n in AUT}
     for q in posts:
         q['a'] = [i for i in q['a'] if i not in malos]
+        for z in q.get('pz') or []:
+            if len(z) > 3 and isinstance(z[3], list):
+                z[3] = [i for i in z[3] if i not in malos]
     # especiales: posts con su etiqueta
     for e in ESP:
         ks = {nz(t).replace(' ', '') for t in e['tags']}
@@ -751,7 +755,7 @@ def escribir_meta(idx):
                     'av': asset('avatares', m['n']), 'avw': asset('avatar_blanco', m['n']) or asset('avatares', m['n']),
                     'pais': f.get('pais', ''), 'cc': f.get('cc', '')})
     MI = {m['n']: i for i, m in enumerate(idx['medios'])}
-    cat = {'medios': med, 'autores': [a['n'] for a in idx['autores']], 'am': [MI.get((a.get('m') or [''])[0], -1) for a in idx['autores']],
+    cat = {'medios': med, 'autores': ['' if a['n'] in NO_AUTORES else a['n'] for a in idx['autores']], 'am': [MI.get((a.get('m') or [''])[0], -1) for a in idx['autores']],
            'esp': {e['slug']: e['titulo'] for e in ESP},
            'espi': iconos_especiales(),
            # etiquetas de cada especial (para reconocer las piezas sueltas de los mucho más/EXTRA!): {slug: [tema, etiqueta, …]}
