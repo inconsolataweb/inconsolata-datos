@@ -858,11 +858,12 @@ def escribir_portada(idx, frames, webs=None):
         viejo = {q['i']: q['pz'] for q in json.load(open(D('archivo.json')))['posts'] if q.get('pz')}
     except Exception:
         viejo = {}
+    malos_a = {i for i, a in enumerate(idx['autores']) if a['n'] in NO_AUTORES}
     def con_pz(q):
         o = {k: v for k, v in q.items() if k not in ('x', 'b', 'r')}
         pz = PZ.get(q['i']) or viejo.get(q['i'])
         if pz:
-            o['pz'] = pz
+            o['pz'] = [z[:3] + [[i for i in z[3] if i not in malos_a]] + z[4:] if len(z) > 3 and isinstance(z[3], list) else z for z in pz]
         return o
     arch = {'posts': [con_pz(q) for q in posts],
             'medios': idx['medios'], 'autores': idx['autores'], 'temas': idx['temas']}
