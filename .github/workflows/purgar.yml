@@ -5,7 +5,7 @@ name: Refrescar jsDelivr
 on:
   push:
     branches: [main]
-    paths: ['assets/**', 'datos/**']
+    paths: ['assets/**', 'datos/**', 'tema/**']
 
 jobs:
   purgar:
@@ -18,4 +18,11 @@ jobs:
         run: |
           git diff --name-only HEAD~1 HEAD -- assets datos | while read f; do
             curl -s "https://purge.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/$f" > /dev/null || true
+          done
+      - name: Precalentar la versión nueva en jsDelivr
+        run: |
+          # la web carga código y datos fijados a cada commit: se piden aquí para que el primer visitante no espere a que la CDN los prepare
+          v=$(git rev-parse HEAD)
+          for f in tema/tema.css tema/tema.js datos/meta.json datos/catalogo.json datos/titulos.json datos/ajustes_posts.json datos/portada.json datos/avisos.json datos/portada_manual.json datos/archivo.json datos/indice.json; do
+            curl -s -o /dev/null --max-time 30 "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@$v/$f" || true
           done
