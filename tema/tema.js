@@ -70,17 +70,25 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return
 function monta(){var h=document.documentElement;if(h.classList.contains('montado'))return;requestAnimationFrame(function(){h.classList.add('montado');});}
 // datos: fijados al commit (jsDelivr @commit no cambia nunca), as\u00ed se pueden guardar en el navegador entre visitas sin quedarse viejos;
 // los que el arranque ya pidi\u00f3 en paralelo (INC_PRE) se aprovechan
+// reserva de la CDN: si jsDelivr falla o tarda m\u00e1s de 4 s con un archivo de datos, se pide tambi\u00e9n a GitHub y vale el primero que llegue
+var RAW='https://raw.githubusercontent.com/inconsolataweb/inconsolata-datos/'+(((window.INC_BASE||'').split('@')[1]||'main/').replace(/\/$/,''))+'/datos/';
+function pide(u){return fetch(u).then(function(r){if(!r.ok)throw new Error(u+' '+r.status);return r.json();});}
+function lento(p,f){return new Promise(function(ok,ko){var fin=0,vivos=1,dos=0,t,
+  bien=function(j){if(!fin){fin=1;clearTimeout(t);ok(j);}},mal=function(e){vivos--;if(fin)return;if(!dos)otra();else if(!vivos)ko(e);},
+  otra=function(){if(dos||fin)return;dos=1;vivos++;clearTimeout(t);pide(RAW+f+'.json').then(bien,mal);};
+  t=setTimeout(otra,4000);p.then(bien,mal);});}
+function trae(f){return lento(pide(CDN+f+'.json'),f);}
 function get(f){var v=((window.INC_BASE||'').split('@')[1]||'').replace(/\/$/,''),fijo=/^[0-9a-f]{7,40}$/.test(v)&&f.indexOf('/')<0;
  if(fijo){try{if(localStorage.getItem('inc-dv:'+f)===v){var lc=JSON.parse(localStorage.getItem('inc-d:'+f)||'null');if(lc)return Promise.resolve(lc);}
   var sc=JSON.parse(sessionStorage.getItem('inc-s:'+f)||'null');if(sc&&sc.v===v)return Promise.resolve(sc.d);}catch(e){}}
- var pre=window.INC_PRE&&INC_PRE[f],red=function(){return fetch(CDN+f+'.json').then(function(r){if(!r.ok)throw new Error(f+' '+r.status);return r.json();});};
- if(fijo||pre)return (pre?pre.catch(red):red()).then(function(j){
+ var pre=window.INC_PRE&&INC_PRE[f],red=function(){return trae(f);};
+ if(fijo||pre)return (pre?lento(pre,f):red()).then(function(j){
   if(fijo){var s=JSON.stringify(j),ok=false;if(s.length<1.5e6){try{localStorage.setItem('inc-d:'+f,s);localStorage.setItem('inc-dv:'+f,v);ok=true;}catch(e){try{localStorage.removeItem('inc-d:'+f);localStorage.removeItem('inc-dv:'+f);}catch(x){}}}
    if(!ok){try{sessionStorage.setItem('inc-s:'+f,JSON.stringify({v:v,d:j}));}catch(e){}}}
   return j;});
  return getS(f);}
 function getS(f){var k='inc-'+f;try{var c=JSON.parse(sessionStorage.getItem(k)||'null');if(c)return Promise.resolve(c);}catch(e){}
- return fetch(CDN+f+'.json').then(function(r){return r.json();}).then(function(j){try{sessionStorage.setItem(k,JSON.stringify(j));}catch(e){}return j;});}
+ return trae(f).then(function(j){try{sessionStorage.setItem(k,JSON.stringify(j));}catch(e){}return j;});}
 function fecha(d){return +d.slice(8,10)+' de '+MESES[+d.slice(5,7)-1]+' de '+d.slice(0,4);}
 // fechas de los trabajos citadas en un texto (\u00abdel 1 de noviembre\u00bb, \u00abdel 30 de agosto; 6 y 13 de septiembre de 2026\u00bb), ordenadas;
 // sin a\u00f1o se entiende el del post (o el anterior si quedar\u00eda muy por delante de la publicaci\u00f3n)
