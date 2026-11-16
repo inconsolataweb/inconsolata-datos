@@ -62,5 +62,5 @@ jobs:
           # la web carga código y datos fijados a cada commit: se piden aquí para que el primer visitante no espere a que la CDN los prepare
           v=$(git rev-parse HEAD)
           for f in tema/tema.css tema/tema.js datos/meta.json datos/catalogo.json datos/titulos.json datos/ajustes_posts.json datos/portada.json datos/avisos.json datos/portada_manual.json datos/archivo.json datos/indice.json; do
-            curl -s -o /dev/null --max-time 30 "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@$v/$f" || true
+            curl -s -o /dev/null --max-time 60 -w "%{http_code} %{time_total}s $f\n" "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@$v/$f" || true
           done
