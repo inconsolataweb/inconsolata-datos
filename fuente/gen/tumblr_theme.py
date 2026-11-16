@@ -552,6 +552,8 @@ function post(art,meta,cat,medido){
   var nx=l.nextElementSibling,cola='';if(nx&&nx.tagName==='P'&&/^[\s\xa0]*»/.test(nx.textContent)&&!nx.querySelector('b,strong')){cola=nx.innerHTML.replace(/^[\s\xa0]*(»|&raquo;)\s*/,'');nx.remove();}
   var p=document.createElement('p');p.innerHTML='» '+it.join('; ')+(cola?'. '+cola:'');
   l.replaceWith(p);hazFuente(p);});
+ // la misma línea de datos en un párrafo suelto («infografía | tema | Autor: …»): tampoco es texto del post; lo que dice ya está en la ficha
+ [].forEach.call(body.querySelectorAll('p'),function(p){var t=p.textContent.replace(/\xa0/g,' ').trim();if(t.length<260&&!p.querySelector('img,a')&&!/^»/.test(t)&&/\|\s*Autor(a|es|as)?\s*:/i.test(t))p.remove();});
  [].forEach.call(body.querySelectorAll('p'),function(p){if(/^[\s\xa0]*»/.test(p.textContent)&&!p.closest('.fuente'))hazFuente(p);});
  if(!body.querySelector('.fuente')&&s!=='m'&&s!=='x'){
   var ps=[].filter.call(body.querySelectorAll('p'),function(p){return !p.querySelector('img');});

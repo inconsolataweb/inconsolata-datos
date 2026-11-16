@@ -1610,6 +1610,8 @@ function post(art,meta,cat,medido){
   var nx=l.nextElementSibling,cola='';if(nx&&nx.tagName==='P'&&/^[\s\xa0]*\u00bb/.test(nx.textContent)&&!nx.querySelector('b,strong')){cola=nx.innerHTML.replace(/^[\s\xa0]*(\u00bb|&raquo;)\s*/,'');nx.remove();}
   var p=document.createElement('p');p.innerHTML='\u00bb '+it.join('; ')+(cola?'. '+cola:'');
   l.replaceWith(p);hazFuente(p);});
+ // la misma l\u00ednea de datos en un p\u00e1rrafo suelto (\u00abinfograf\u00eda | tema | Autor: \u2026\u00bb): tampoco es texto del post; lo que dice ya est\u00e1 en la ficha
+ [].forEach.call(body.querySelectorAll('p'),function(p){var t=p.textContent.replace(/\xa0/g,' ').trim();if(t.length<260&&!p.querySelector('img,a')&&!/^\u00bb/.test(t)&&/\|\s*Autor(a|es|as)?\s*:/i.test(t))p.remove();});
  [].forEach.call(body.querySelectorAll('p'),function(p){if(/^[\s\xa0]*\u00bb/.test(p.textContent)&&!p.closest('.fuente'))hazFuente(p);});
  if(!body.querySelector('.fuente')&&s!=='m'&&s!=='x'){
   var ps=[].filter.call(body.querySelectorAll('p'),function(p){return !p.querySelector('img');});
