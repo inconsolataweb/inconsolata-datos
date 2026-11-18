@@ -224,7 +224,7 @@ h2 em{font-weight:400;color:var(--rojo)}
   <div class="hx">
    <span class="caps k">inconsolata» · Especial · Time</span>
    <h1 id="t">Estados Unidos, <em>250 años</em> década a década</h1>
-   <p>La revista <b>Time</b> celebra el 250º aniversario de la independencia con una edición especial que cuenta la historia del país en 26 dobles páginas, una por década.</p>
+   <p>La revista <b>Time</b> celebra el 250º aniversario de la independencia con una edición especial que cuenta la historia del país década a década, con cuatro páginas para cada una.</p>
    <div class="ej" aria-label="De 1776 a 2026"><span>1776</span><i></i><span>2026</span></div>
    <a class="cta" href="#d1770">Empezar en 1776 »</a>
   </div>
@@ -239,7 +239,7 @@ h2 em{font-weight:400;color:var(--rojo)}
    <span class="caps k-r">Un cumpleaños de papel</span>
    <h2 id="t-in">La historia de un país <em>en 116 páginas</em></h2>
    <p class="lead">Para celebrar los 250 años de la Declaración de Independencia, firmada el 4 de julio de 1776, <b>Time</b> ha publicado una edición especial, <em>America at 250: The People, the Progress, the Promise</em>, que recorre la historia de Estados Unidos desde la década de 1770 hasta hoy.</p>
-   <p class="lead">La revista abre con el monte Rushmore y dedica a cada década una doble página con el mismo esquema: un gran cajetín rojo con la década, una imagen de época que domina la composición y una barra de datos con la bandera vigente, el número de estados, la población al empezar la década y lo que costaba algo cotidiano en aquellos años, de un caballo en 1780 a una vivienda en 2026.</p>
+   <p class="lead">La revista abre con el monte Rushmore y dedica cuatro páginas a cada década, dos dobles páginas que se abren siempre con el mismo esquema: un gran cajetín rojo con la década, una imagen de época que domina la composición y una barra de datos con la bandera vigente, el número de estados, la población al empezar la década y lo que costaba algo cotidiano en aquellos años, de un caballo en 1780 a una vivienda en 2026.</p>
    <p class="lead">El número se completa con una página de las banderas que ha tenido el país y un mapa de cuándo entró cada estado en la Unión.</p>
    <div class="cifras">
     <div><b>26</b><span class="caps">Décadas, de 1770 a 2020</span></div>
@@ -259,7 +259,7 @@ h2 em{font-weight:400;color:var(--rojo)}
  <div class="in cr-h">
   <span class="caps k-r">Década a década</span>
   <h2 id="t-cr">De 13 estados <em>a 50</em></h2>
-  <p class="lead">Las 26 dobles páginas de la revista, en orden. A medida que avanzas, el marcador muestra la bandera de cada década, cuántos estados formaban la Unión, cuánta gente vivía en el país y lo que costaban las cosas.</p>
+  <p class="lead">La doble página con la que arranca cada década, en orden. A medida que avanzas, el marcador muestra la bandera de cada década, cuántos estados formaban la Unión, cuánta gente vivía en el país y lo que costaban las cosas.</p>
  </div>
  <nav class="regla" aria-label="Décadas"><a class="rl-i" href="/" aria-label="Volver a inconsolata»">inc»</a><div class="rl" id="regla"></div></nav>
  <div class="in cr-g">
@@ -386,7 +386,7 @@ D.forEach(function(d,i){var n=i+1,id='d'+d[0];
  h+='<article class="dec" id="'+id+'" data-i="'+i+'" aria-labelledby="h-'+id+'"><div class="dec-h"><span class="dec-s" aria-hidden="true">'+d[0]+'<small>s</small></span><div><span class="caps">'+pad(n)+' / 26 · Década de '+d[0]+'</span><h3 id="h-'+id+'" lang="en">'+d[3]+'</h3></div></div>'+
   '<p class="es">'+d[4]+'</p>'+
   '<div class="dt"><svg viewBox="0 0 190 100" aria-hidden="true" data-n="'+d[1]+'"></svg><div><b>'+d[1]+'</b><span>estados</span></div><div><b>'+fmt(d[2])+'</b><span>millones de hab.</span></div><div class="pr"><b>'+d[6]+'</b><span>'+d[5]+'</span></div></div>'+
-  '<button type="button" class="zoom" data-d="'+i+'" aria-label="Ampliar la doble página de la década de '+d[0]+'"><img loading="lazy" src="'+B+'d/'+pad(n)+'.jpg" alt="Doble página de la década de '+d[0]+' en la edición especial de Time: '+d[3].replace(/"/g,'&quot;')+'" width="1200" height="817" onerror="reint(this)"></button></article>';});
+  '<button type="button" class="zoom" data-d="'+i+'" aria-label="Ampliar la doble página que abre la década de '+d[0]+'"><img loading="lazy" src="'+B+'d/'+pad(n)+'.jpg" alt="Doble página que abre la década de '+d[0]+' en la edición especial de Time: '+d[3].replace(/"/g,'&quot;')+'" width="1200" height="817" onerror="reint(this)"></button></article>';});
 decs.innerHTML=h;regla.innerHTML=hr;
 [].forEach.call(decs.querySelectorAll('.dt svg'),function(s){bandera(s,+s.dataset.n,false);});
 
