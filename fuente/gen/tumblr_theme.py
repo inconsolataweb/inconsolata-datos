@@ -782,6 +782,11 @@ _H = os.path.dirname(os.path.abspath(__file__))
 _CAT = next(p for p in (os.path.join(_H, '..', '..', 'datos', 'catalogo.json'), '/home/claude/inconsolata-datos/datos/catalogo.json') if os.path.exists(p))
 _TEM = [t['n'] for t in json.load(open(_CAT))['temas']]
 BIENVENIDA = r'''
+// imágenes del repositorio que no llegan (jsDelivr tarda en preparar cada versión nueva y a veces da 404): se reintenta con @main y, si no, se piden a GitHub directamente
+document.addEventListener('error',function(e){var i=e.target;if(!i||i.tagName!=='IMG')return;
+ var m=(i.getAttribute('src')||'').match(/^https:\/\/cdn\.jsdelivr\.net\/gh\/([^/]+)\/([^@/]+)@([^/]+)\/([^?#]*)/),n=+(i.dataset.rt||0);if(!m||n>1)return;
+ i.dataset.rt=n+1;e.stopPropagation();
+ i.src=n===0&&m[3]!=='main'?'https://cdn.jsdelivr.net/gh/'+m[1]+'/'+m[2]+'@main/'+m[4]:'https://raw.githubusercontent.com/'+m[1]+'/'+m[2]+'/'+m[3]+'/'+m[4];},true);
 // /bienvenida: la página de presentación ocupa toda la ventana (se sirve desde los datos, igual que el resto del código)
 // páginas especiales a pantalla completa (/bienvenida, /eps50…): se sirven desde assets/<nombre>/index.html; %%B%% es su carpeta
 var INC_PE=(location.pathname.match(/^\/(bienvenida|eps50|america250)(?:\.html)?\/?$/)||[])[1]||'';
