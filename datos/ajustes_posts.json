@@ -112,6 +112,10 @@
   "enlace": "https://inconsolata.com/america250",
   "ruta": "Time",
   "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/america250/portada.jpg",
-  "imagen_r": 0.733
+  "imagen_r": 0.733,
+  "texto": "La revista Time celebra el 250º aniversario de Estados Unidos con una edición especial que recorre la historia del país década a década, de la Declaración de Independencia a la covid-19.",
+  "mas": [
+   "historia"
+  ]
  }
 }
