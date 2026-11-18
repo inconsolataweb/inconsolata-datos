@@ -90,6 +90,16 @@ iframe.tmblr-iframe,iframe[class*="tmblr-iframe"]{top:auto!important;bottom:10px
 @keyframes mfSube{to{transform:translateY(-50%)}}
 /* banda con el patrón de estrellas y franjas (p. ej. /america250) */
 .ew-mf .ewpt{background:#334589 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='144' height='90' viewBox='0 0 144 90'%3E%3Crect width='144' height='90' fill='%23334589'/%3E%3Cg fill='%23C8372D'%3E%3Crect x='14' y='9' width='44' height='8'/%3E%3Crect x='14' y='25' width='44' height='8'/%3E%3Crect x='86' y='54' width='44' height='8'/%3E%3Crect x='86' y='70' width='44' height='8'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Cpath transform='translate(108 23) scale(15)' d='M0 -1 L.225 -.309 L.951 -.309 L.363 .118 L.588 .809 L0 .382 L-.588 .809 L-.363 .118 L-.951 -.309 L-.225 -.309Z'/%3E%3Cpath transform='translate(36 68) scale(15)' d='M0 -1 L.225 -.309 L.951 -.309 L.363 .118 L.588 .809 L0 .382 L-.588 .809 L-.363 .118 L-.951 -.309 L-.225 -.309Z'/%3E%3C/g%3E%3C/svg%3E") 0 0/108px 67.5px}
+.v-home .ew.ew-mf.ew-pt .ew-in{grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:64px;padding-bottom:90px}
+.v-home .ew-cv{display:block;transform:rotate(3deg);transition:transform .25s;justify-self:end;width:100%;max-width:400px}
+.v-home .ew-cv:hover{transform:rotate(1deg) translateY(-6px)}
+.v-home .ew-cv img{display:block;width:100%;height:auto;box-shadow:0 34px 70px rgba(5,8,25,.6)}
+.lt-web.ew-pt{display:grid;grid-template-columns:minmax(0,1fr) 34%;column-gap:16px;align-items:start;justify-items:start}
+.lt-web.ew-pt>*{grid-column:1/-1}.lt-web.ew-pt>.ewmf{grid-column:auto}
+.lt-web.ew-pt .lt-kk,.lt-web.ew-pt .lt-ht{grid-column:1}
+.lt-web.ew-pt .lt-cv{display:block;grid-column:2;grid-row:1/3;width:100%;margin:4px 0 12px;transform:rotate(3deg)}
+.lt-web.ew-pt .lt-cv img{display:block;width:100%;height:auto;box-shadow:0 14px 30px rgba(5,8,25,.55)}
+@media (max-width:900px){.v-home .ew.ew-mf.ew-pt .ew-in{grid-template-columns:minmax(0,1fr) minmax(0,260px);gap:32px}}
 .ew-mf .ewpt::after{background:linear-gradient(90deg,rgba(20,28,62,.94) 0,rgba(20,28,62,.8) 45%,rgba(20,28,62,.3) 100%)}
 @media (prefers-reduced-motion:reduce){.ew-mf .ewmf-p{animation:none}}
 .v-home .ew.ew-mf .ew-in{grid-template-columns:minmax(0,1fr);max-width:none;padding-bottom:110px}
