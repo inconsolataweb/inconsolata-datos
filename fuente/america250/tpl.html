@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="La revista Time celebra los 250 años de Estados Unidos con una edición especial que recorre la historia del país década a década.">
+<meta property="og:title" content="Estados Unidos, 250 años década a década · inconsolata»">
+<meta property="og:description" content="La revista Time celebra los 250 años de Estados Unidos con una edición especial que recorre la historia del país década a década.">
+<meta property="og:image" content="%%B%%portada.jpg">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/marca/favicon.ico" sizes="any">
+<title>Estados Unidos, 250 años década a década · inconsolata»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap">
+<script>
+// si una imagen no llega (jsDelivr a veces falla en frío), se reintenta y, si no, se pide a GitHub directamente
+function reint(i){var n=+(i.dataset.n||0);i.dataset.n=n+1;var s=i.getAttribute('src');
+ if(n===0)setTimeout(function(){i.src=s+(s.indexOf('?')<0?'?':'&')+'r=1';},600);
+ else if(n===1)i.src=s.replace(/^https:\/\/cdn\.jsdelivr\.net\/gh\/([^/]+)\/([^@]+)@([^/]+)\/([^?]*).*$/,'https://raw.githubusercontent.com/$1/$2/$3/$4');}
+</script>
+<style>
+:root{--azul:#1E2C5E;--patron:#334589;--rojo:#C8312C;--rojo-o:#A32420;--oro:#D2A93B;--papel:#F4EFE4;--papel2:#EAE3D3;--tinta:#16161A;--gris:#5C5A55;--linea:#D5CDBC;
+ --serif:'Libre Caslon Text',Georgia,'Times New Roman',serif;--util:'Archivo','Helvetica Neue',Arial,sans-serif;--g:max(16px,env(safe-area-inset-left,0px));color-scheme:light;
+ --pat:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='144' height='90' viewBox='0 0 144 90'%3E%3Crect width='144' height='90' fill='%23334589'/%3E%3Cg fill='%23C8372D'%3E%3Crect x='14' y='9' width='44' height='8'/%3E%3Crect x='14' y='25' width='44' height='8'/%3E%3Crect x='86' y='54' width='44' height='8'/%3E%3Crect x='86' y='70' width='44' height='8'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Cpath transform='translate(108 23) scale(15)' d='M0 -1 L.225 -.309 L.951 -.309 L.363 .118 L.588 .809 L0 .382 L-.588 .809 L-.363 .118 L-.951 -.309 L-.225 -.309Z'/%3E%3Cpath transform='translate(36 68) scale(15)' d='M0 -1 L.225 -.309 L.951 -.309 L.363 .118 L.588 .809 L0 .382 L-.588 .809 L-.363 .118 L-.951 -.309 L-.225 -.309Z'/%3E%3C/g%3E%3C/svg%3E")}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{overflow-x:clip}
+body{margin:0;background:var(--papel);color:var(--tinta);font:18px/1.62 var(--serif);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+.caps{font-family:var(--util);font-size:12px;font-weight:800;letter-spacing:2.4px;text-transform:uppercase;font-stretch:110%}
+.in{max-width:1240px;margin:0 auto;padding:0 var(--g)}
+:focus-visible{outline:3px solid var(--oro);outline-offset:3px}
+.zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;color:inherit;text-align:left;font:inherit}
+.dec-s small,.mk-d small{font-size:.5em;margin-left:.04em}
+
+/* barra */
+.top{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:12px var(--g);color:#fff;mix-blend-mode:difference;pointer-events:none;transition:opacity .25s}
+body.enc .top{opacity:0}body.enc .top a{pointer-events:none}
+.top a{text-decoration:none;pointer-events:auto}
+.lg{font:italic 700 26px/1 var(--serif)}
+.top .caps{font-size:11px}
+
+/* portada: el patrón de la revista a pantalla completa */
+.hero{position:relative;min-height:100vh;min-height:100svh;background:var(--pat) 0 0/108px 67.5px;display:flex;align-items:center;overflow:hidden;padding:84px 0 96px}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(20,28,62,.55) 0,rgba(20,28,62,.15) 60%,rgba(20,28,62,.45) 100%)}
+.hero .in{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,72px);align-items:center;width:100%}
+.hx{background:var(--azul);color:#fff;padding:clamp(26px,4vw,52px);border-top:8px solid var(--rojo);box-shadow:0 30px 80px rgba(8,12,30,.45)}
+.hx .k{color:var(--oro)}
+.hx h1{margin:18px 0 20px;font:700 clamp(38px,5.2vw,74px)/1 var(--serif);letter-spacing:-.015em}
+.hx h1 em{font-weight:400;color:var(--oro)}
+.hx p{margin:0 0 26px;font-size:clamp(17px,1.6vw,20px);line-height:1.5;color:#E8EAF3;max-width:34em}
+.hx .ej{display:flex;align-items:center;gap:14px;font:700 clamp(30px,4vw,48px)/1 var(--serif);color:var(--oro);border-top:1px solid rgba(255,255,255,.25);padding-top:22px}
+.hx .ej i{flex:1;height:2px;background:linear-gradient(90deg,var(--oro),var(--rojo));position:relative}
+.hx .ej i::after{content:'★';position:absolute;left:50%;top:50%;transform:translate(-50%,-55%);font:normal 18px/1 var(--util);color:#fff;background:var(--azul);padding:0 8px}
+.cta{display:inline-flex;gap:10px;align-items:center;margin-top:26px;background:var(--rojo);color:#fff;text-decoration:none;padding:15px 22px;font:800 13px var(--util);letter-spacing:2px;text-transform:uppercase;box-shadow:5px 5px 0 #0c1430}
+.cta:hover{background:var(--rojo-o)}
+.cv{justify-self:center;width:min(100%,430px);transform:rotate(3deg);transition:transform .3s}
+.cv:hover{transform:rotate(1deg) translateY(-6px)}
+.cv img{box-shadow:0 40px 70px rgba(5,8,25,.6),0 0 0 1px rgba(0,0,0,.1);background:#fff;aspect-ratio:1928/2630}
+.cv .caps{display:block;color:#fff;margin-top:16px;text-align:center;font-size:11px;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.baja{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);color:#fff;text-decoration:none;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:6px;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.baja i{width:2px;height:26px;background:#fff;animation:baja 1.8s ease-in-out infinite;transform-origin:top}
+@keyframes baja{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* intro */
+.intro{padding:clamp(70px,9vw,120px) 0}
+.intro .in{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(30px,6vw,90px);align-items:start}
+.k-r{color:var(--rojo)}
+h2{font:700 clamp(36px,4.6vw,60px)/1.02 var(--serif);margin:14px 0 26px;letter-spacing:-.01em}
+h2 em{font-weight:400;color:var(--rojo)}
+.lead{font-size:clamp(18px,1.5vw,20px);margin:0 0 18px}
+.lead em{font-style:italic}
+.cifras{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:38px;border-top:3px solid var(--tinta);border-bottom:1px solid var(--tinta)}
+.cifras div{padding:18px 14px 16px 0;border-right:1px solid var(--linea)}
+.cifras div+div{padding-left:16px}.cifras div:last-child{border-right:0}
+.cifras b{display:block;font:700 clamp(30px,3.6vw,46px)/1 var(--serif);color:var(--azul)}
+.cifras b small{font-size:.55em;color:var(--rojo)}
+.cifras .caps{display:block;margin-top:8px;font-size:10.5px;letter-spacing:1.6px;color:var(--gris);line-height:1.35}
+.ap{position:relative}
+.ap .zoom{transform:rotate(-2deg);transition:transform .3s}
+.ap .zoom:hover{transform:rotate(-.5deg) translateY(-4px)}
+.ap img{box-shadow:18px 22px 0 var(--papel2),0 24px 50px rgba(20,20,26,.25);aspect-ratio:1941/2632;background:#cdd6e6}
+.ap figcaption{font:600 13px/1.45 var(--util);color:var(--gris);margin-top:28px;max-width:30em}
+
+/* décadas */
+.crono{background:#fff;border-top:3px solid var(--tinta);position:relative}
+.cr-h{padding:clamp(60px,8vw,100px) 0 28px}
+.cr-h .lead{max-width:40em}
+.regla{position:sticky;top:0;z-index:20;background:var(--tinta);color:#fff}
+.regla{display:flex;align-items:stretch}
+.rl-i{flex:0 0 auto;display:flex;align-items:center;padding:0 18px 0 var(--g);font:italic 700 22px/1 var(--serif);color:#fff;text-decoration:none;border-right:1px solid #33343c}
+.rl{flex:1;min-width:0;display:flex;align-items:stretch;overflow-x:auto;scrollbar-width:none;padding-right:var(--g)}
+.rl::-webkit-scrollbar{display:none}
+.rl a{flex:1 0 auto;min-width:44px;text-decoration:none;font:700 12px/1 var(--util);letter-spacing:.5px;padding:15px 6px 13px;text-align:center;color:#A9ACB8;border-bottom:3px solid transparent;position:relative;font-variant-numeric:tabular-nums}
+.rl a::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:1px;background:#33343c}
+.rl a:first-child::before{display:none}
+.rl a:hover{color:#fff}
+.rl a[aria-current=true]{color:#fff;border-bottom-color:var(--rojo);background:#25262d}
+.cr-g{display:grid;grid-template-columns:330px minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:start;padding-top:44px;padding-bottom:90px}
+
+/* el marcador: bandera, estados, población y precios de la década visible */
+.mk{position:sticky;top:76px;background:var(--azul);color:#fff;padding:24px 24px 22px;border-top:8px solid var(--rojo);box-shadow:10px 10px 0 var(--papel2)}
+.mk .caps{color:#B7BEDA;font-size:10.5px}
+.mk-d{display:block;font:700 76px/1 var(--serif);margin:6px 0 18px;letter-spacing:-.02em;font-variant-numeric:lining-nums}
+.mk-f{display:block;width:100%;height:auto;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.mk-f .st{fill:#fff;transition:transform .7s cubic-bezier(.5,0,.2,1),opacity .4s}
+.mk-n{display:flex;align-items:baseline;gap:10px;margin:18px 0 0;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.2)}
+.mk-n b{font:700 58px/1 var(--serif);color:var(--oro);font-variant-numeric:tabular-nums}
+.mk-n span{font:700 13px/1.25 var(--util);text-transform:uppercase;letter-spacing:1.6px}
+.mk-p{padding:14px 0 16px;border-bottom:1px solid rgba(255,255,255,.2)}
+.mk-p b{display:block;font:700 26px/1.1 var(--serif);margin-top:6px}
+.mk-p b span{font:600 14px var(--util);color:#D3D8EA}
+.barra{height:8px;background:rgba(255,255,255,.14);margin-top:10px;position:relative;overflow:hidden}
+.barra i{position:absolute;left:0;top:0;bottom:0;background:var(--oro);transition:width .7s cubic-bezier(.5,0,.2,1);width:1%}
+.mk-c{padding-top:14px}
+.mk-c b{display:block;font:400 italic 19px/1.3 var(--serif);margin-top:6px}
+.mk-c strong{display:block;font:700 30px/1.1 var(--serif);color:var(--oro);margin-top:4px}
+.mk-b{display:flex;gap:8px;margin-top:18px}
+.mk-b button{flex:1;background:transparent;border:1.5px solid rgba(255,255,255,.5);color:#fff;font:800 11px var(--util);letter-spacing:1.6px;text-transform:uppercase;padding:10px 6px;cursor:pointer}
+.mk-b button:hover:not(:disabled){background:#fff;color:var(--azul)}
+.mk-b button:disabled{opacity:.3;cursor:default}
+
+.decs{display:flex;flex-direction:column}
+.dec{padding:0 0 64px;margin-bottom:64px;border-bottom:1px solid var(--linea);scroll-margin-top:70px}
+.dec:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
+.dec-h{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:end;margin-bottom:22px}
+.dec-s{display:block;color:var(--azul);font:700 clamp(46px,5.4vw,70px)/.9 var(--serif);letter-spacing:-.03em;font-variant-numeric:lining-nums;padding-right:22px;border-right:4px solid var(--rojo)}
+.dec-s small{color:var(--rojo)}
+.dec-h .caps{color:var(--gris);font-size:11px}
+.dec h3{font:700 clamp(25px,2.6vw,36px)/1.12 var(--serif);margin:6px 0 0}
+.dec .es{margin:0 0 22px;font-size:18px;color:#34343a;max-width:38em}
+.dec .zoom{position:relative;background:#ebe7dd}
+.dec .zoom img{width:100%;aspect-ratio:2208/1503;box-shadow:0 1px 0 rgba(0,0,0,.08),0 18px 40px rgba(20,20,26,.16);transition:transform .25s,box-shadow .25s}
+.dec .zoom:hover img{transform:translateY(-3px);box-shadow:0 1px 0 rgba(0,0,0,.08),0 26px 50px rgba(20,20,26,.22)}
+.dec .zoom::after{content:'Ampliar la doble página +';position:absolute;right:12px;bottom:12px;background:var(--tinta);color:#fff;font:800 11px var(--util);letter-spacing:1.5px;text-transform:uppercase;padding:9px 12px;opacity:0;transition:opacity .2s}
+.dec .zoom:hover::after,.dec .zoom:focus-visible::after{opacity:1}
+.dt{display:none}
+
+/* banderas */
+.bnd{background:var(--papel);padding:clamp(70px,9vw,120px) 0;border-top:3px solid var(--tinta)}
+.bnd .in{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:clamp(30px,6vw,90px);align-items:center}
+.bnd .zoom img{box-shadow:0 24px 50px rgba(20,20,26,.2);background:#fff;aspect-ratio:1877/2563}
+.gr{display:flex;gap:28px;margin:30px 0 0;flex-wrap:wrap}
+.gr div{border-top:3px solid var(--rojo);padding-top:10px;min-width:130px}
+.gr b{display:block;font:700 54px/1 var(--serif);color:var(--azul)}
+.gr .caps{font-size:10.5px;color:var(--gris);letter-spacing:1.5px}
+
+/* mapa */
+.mapa{background:#fff;padding:clamp(70px,9vw,120px) 0;border-top:3px solid var(--tinta)}
+.mapa .cab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,70px);align-items:end;margin-bottom:36px}
+.mapa .cab p{margin:0}
+.ley{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px;font:600 14px var(--util)}
+.ley span{display:inline-flex;align-items:center;gap:8px}.ley i{width:14px;height:14px;display:inline-block}
+.mapa .zoom img{border:1px solid var(--linea);aspect-ratio:1666/1237;background:#efede9}
+
+/* fin */
+.fin{background:var(--pat) 0 0/108px 67.5px;padding:clamp(70px,9vw,110px) 0 clamp(60px,8vw,90px);position:relative;border-top:3px solid var(--tinta)}
+.fin::before{content:'';position:absolute;inset:0;background:rgba(20,28,62,.55)}
+.fin .in{position:relative}
+.fuente{display:flex;align-items:center;justify-content:space-between;gap:18px;background:var(--tinta);color:#fff;font:600 17px/1.4 var(--util);padding:18px 22px;max-width:900px;margin:0 auto 34px;box-shadow:6px 6px 0 var(--rojo)}
+.fuente .q{color:var(--oro);font-weight:900;margin-right:8px}
+.fuente img{width:44px;height:44px;flex:0 0 44px}
+.ficha{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(20px,4vw,44px);align-items:center;background:#fff;border:2px solid var(--tinta);box-shadow:10px 10px 0 var(--rojo);padding:clamp(22px,4vw,38px);max-width:900px;margin:0 auto;text-decoration:none}
+.ficha .lo{width:clamp(100px,15vw,160px);aspect-ratio:1;border:2px solid var(--tinta);display:flex;align-items:center;justify-content:center;background:#fff;padding:14px}
+.ficha .nm{display:block;font:700 clamp(40px,6vw,64px)/1 var(--serif);margin:6px 0 8px}
+.ficha .d{font:600 15px var(--util);color:var(--gris)}
+.ficha .ver{display:inline-block;margin-top:14px;font:800 12px var(--util);letter-spacing:2px;text-transform:uppercase;border-bottom:3px solid var(--rojo)}
+.btns{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:44px}
+.btn{display:inline-block;background:var(--rojo);color:#fff;text-decoration:none;font:800 13px var(--util);letter-spacing:2px;text-transform:uppercase;padding:15px 20px;box-shadow:5px 5px 0 var(--tinta)}
+.btn.b2{background:#fff;color:var(--tinta)}
+.cred{font:600 13px/1.5 var(--util);color:var(--gris);padding:26px var(--g) 40px;text-align:center;background:var(--papel);margin:0}
+
+/* visor */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(12,14,24,.96);display:flex;flex-direction:column}
+.lb[hidden]{display:none}
+.lb-v{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:54px 64px 10px;overflow:hidden}
+.lb-v img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;box-shadow:0 20px 60px rgba(0,0,0,.6);cursor:zoom-in;background:#fff}
+.lb.z .lb-v{overflow:auto;display:block;padding:54px 0 10px}
+.lb.z .lb-v img{max-width:none;max-height:none;width:auto;cursor:zoom-out;margin:0 auto}
+.lb-c{color:#fff;font:600 14px/1.4 var(--util);text-align:center;padding:8px 60px 16px;min-height:44px}
+.lb-c b{color:var(--oro)}
+.lb button{position:absolute;background:none;border:0;color:#fff;font:700 40px/1 var(--serif);cursor:pointer;padding:10px 16px;z-index:2}
+.lb .x{top:6px;right:8px;font-size:34px}.lb .a{left:4px;top:50%;transform:translateY(-50%)}.lb .s{right:4px;top:50%;transform:translateY(-50%)}
+.lb .zz{top:12px;left:12px;font:800 11px var(--util);letter-spacing:1.5px;text-transform:uppercase;border:1.5px solid rgba(255,255,255,.5);padding:9px 12px}
+
+@media (max-width:980px){
+ .cr-g{grid-template-columns:minmax(0,1fr)}
+ .mk{display:none}
+ .dt{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:0;margin:0 0 18px;border-top:2px solid var(--tinta);border-bottom:1px solid var(--linea);font-family:var(--util)}
+ .dt>*{padding:10px 10px 10px 0}.dt>*+*{padding-left:12px;border-left:1px solid var(--linea)}
+ .dt svg{width:54px;height:auto;display:block;margin-top:3px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+ .dt b{display:block;font:700 20px/1.1 var(--serif);color:var(--azul)}
+ .dt span{display:block;font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--gris);line-height:1.3;margin-top:3px}
+ .dt .pr b{font-size:16px;color:var(--rojo)}
+}
+@media (max-width:820px){
+ .hero{align-items:flex-start;padding-top:70px}
+ .hero .in,.intro .in,.bnd .in,.mapa .cab{grid-template-columns:minmax(0,1fr)}
+ .cv{width:min(72%,320px);order:-1;margin-bottom:-10px}
+ .cifras{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .cifras div:nth-child(2){border-right:0}.cifras div:nth-child(3){padding-left:0}
+ .cifras div:nth-child(n+3){border-top:1px solid var(--linea)}
+ .ap{max-width:440px}
+ .ficha{grid-template-columns:1fr;justify-items:start}
+ .lb-v{padding:54px 8px 10px}
+ .lb .a,.lb .s{top:auto;bottom:4px;transform:none}
+ .dec-h{grid-template-columns:minmax(0,1fr);gap:12px}
+ .dec-s{justify-self:start;border-right:0;padding-right:0;padding-bottom:10px;border-bottom:4px solid var(--rojo)}
+}
+@media (max-width:520px){
+ .dt{grid-template-columns:auto minmax(0,1fr) minmax(0,1fr)}
+ .dt .pr{grid-column:1/-1;border-left:0;padding-left:0;border-top:1px solid var(--linea)}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.baja i{animation:none}.mk-f .st,.barra i{transition:none}}
+</style>
+</head>
+<body>
+<header class="top"><a href="/" aria-label="Volver a inconsolata»" class="lg">inc»</a><a class="caps" href="/">« Volver a la portada</a></header>
+
+<main>
+<section class="hero" aria-labelledby="t">
+ <div class="in">
+  <div class="hx">
+   <span class="caps k">inconsolata» · Especial · Time</span>
+   <h1 id="t">Estados Unidos, <em>250 años</em> década a década</h1>
+   <p>La revista <b>Time</b> celebra el 250º aniversario de la independencia con una edición especial que cuenta la historia del país en 26 dobles páginas, una por década.</p>
+   <div class="ej" aria-label="De 1776 a 2026"><span>1776</span><i></i><span>2026</span></div>
+   <a class="cta" href="#d1770">Empezar en 1776 »</a>
+  </div>
+  <button type="button" class="zoom cv" data-g="portada" aria-label="Ampliar la portada de la edición especial de Time"><img src="%%B%%portada.jpg" alt="Portada de la edición especial de Time «America at 250»" width="1100" height="1501" onerror="reint(this)"><span class="caps">Time · Special Edition · America at 250</span></button>
+ </div>
+ <a class="baja caps" href="#intro">Entrar<i></i></a>
+</section>
+
+<section class="intro" id="intro" aria-labelledby="t-in">
+ <div class="in">
+  <div>
+   <span class="caps k-r">Un cumpleaños de papel</span>
+   <h2 id="t-in">La historia de un país <em>en 116 páginas</em></h2>
+   <p class="lead">Para celebrar los 250 años de la Declaración de Independencia, firmada el 4 de julio de 1776, <b>Time</b> ha publicado una edición especial, <em>America at 250: The People, the Progress, the Promise</em>, que recorre la historia de Estados Unidos desde la década de 1770 hasta hoy.</p>
+   <p class="lead">La revista abre con el monte Rushmore y dedica a cada década una doble página con el mismo esquema: un gran cajetín rojo con la década, una imagen de época que domina la composición y una barra de datos con la bandera vigente, el número de estados, la población al empezar la década y lo que costaba algo cotidiano en aquellos años, de un caballo en 1780 a una vivienda en 2026.</p>
+   <p class="lead">El número se completa con una página de las banderas que ha tenido el país y un mapa de cuándo entró cada estado en la Unión.</p>
+   <div class="cifras">
+    <div><b>26</b><span class="caps">Décadas, de 1770 a 2020</span></div>
+    <div><b>116</b><span class="caps">Páginas</span></div>
+    <div><b>13<small>→</small>50</b><span class="caps">Estados</span></div>
+    <div><b>342</b><span class="caps">Millones de habitantes hoy</span></div>
+   </div>
+  </div>
+  <figure class="ap" style="margin:0">
+   <button type="button" class="zoom" data-g="apertura" aria-label="Ampliar la página de apertura"><img loading="lazy" src="%%B%%apertura.jpg" alt="Página de apertura de la edición especial: el monte Rushmore bajo el título «America at 250»" width="1300" height="1763" onerror="reint(this)"></button>
+   <figcaption>La apertura: el monte Rushmore, en las Black Hills de Dakota del Sur, con Washington, Jefferson, Theodore Roosevelt y Lincoln.</figcaption>
+  </figure>
+ </div>
+</section>
+
+<section class="crono" aria-labelledby="t-cr">
+ <div class="in cr-h">
+  <span class="caps k-r">Década a década</span>
+  <h2 id="t-cr">De 13 estados <em>a 50</em></h2>
+  <p class="lead">Las 26 dobles páginas de la revista, en orden. A medida que avanzas, el marcador muestra la bandera de cada década, cuántos estados formaban la Unión, cuánta gente vivía en el país y lo que costaban las cosas.</p>
+ </div>
+ <nav class="regla" aria-label="Décadas"><a class="rl-i" href="/" aria-label="Volver a inconsolata»">inc»</a><div class="rl" id="regla"></div></nav>
+ <div class="in cr-g">
+  <aside class="mk" id="mk" aria-live="polite" aria-label="Datos de la década">
+   <span class="caps">Década</span>
+   <span class="mk-d" id="mk-d">1770<small>s</small></span>
+   <svg class="mk-f" id="mk-f" viewBox="0 0 190 100" role="img" aria-label="Bandera de Estados Unidos"></svg>
+   <div class="mk-n"><b id="mk-n">13</b><span>estados en<br>la Unión</span></div>
+   <div class="mk-p"><span class="caps">Población al empezar la década</span><b id="mk-p">2,6 <span>millones</span></b><div class="barra"><i id="mk-bar"></i></div></div>
+   <div class="mk-c"><span class="caps">Lo que costaba</span><b id="mk-c"></b><strong id="mk-cp"></strong></div>
+   <div class="mk-b"><button type="button" id="mk-a">« Anterior</button><button type="button" id="mk-s">Siguiente »</button></div>
+  </aside>
+  <div class="decs" id="decs"></div>
+ </div>
+</section>
+
+<section class="bnd" aria-labelledby="t-bn">
+ <div class="in">
+  <button type="button" class="zoom" data-g="banderas" aria-label="Ampliar la página de las banderas"><img loading="lazy" src="%%B%%banderas.jpg" alt="Página «A Flag for All Times»: las 32 banderas de Estados Unidos desde 1777" width="1480" height="2021" onerror="reint(this)"></button>
+  <div>
+   <span class="caps k-r">A Flag for All Times</span>
+   <h2 id="t-bn">Una bandera <em>para cada época</em></h2>
+   <p class="lead">Desde la Resolución de la Bandera de 1777, que pedía «trece franjas, alternando rojo y blanco» y «trece estrellas, blancas en un campo azul», Estados Unidos ha tenido 27 versiones oficiales de su bandera y muchas variantes.</p>
+   <p class="lead">A menudo, aunque no siempre, la bandera cambiaba al entrar un nuevo estado en la Unión, y durante años convivieron diseños con las estrellas en círculo, en estrella o en filas. En 1912 se fijó un único modelo oficial. El que más tiempo ha durado es el actual, que ondea desde 1960.</p>
+   <div class="gr">
+    <div><b>27</b><span class="caps">Versiones oficiales</span></div>
+    <div><b>1912</b><span class="caps">Primer diseño único</span></div>
+    <div><b>66</b><span class="caps">Años de la bandera actual</span></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="mapa" aria-labelledby="t-ma">
+ <div class="in">
+  <div class="cab">
+   <div><span class="caps k-r">When Each State Was Admitted to the Union</span><h2 id="t-ma" style="margin-bottom:0">Cuándo entró <em>cada estado</em></h2></div>
+   <div>
+    <p class="lead">Las trece colonias ratificaron la Constitución entre 1787 y 1790. El resto se fue sumando a la Unión a lo largo de casi dos siglos, de Vermont en 1791 a Alaska y Hawái en 1959.</p>
+    <div class="ley"><span><i style="background:#3D7DC4"></i>Los 13 primeros</span><span><i style="background:#E3473B"></i>Hasta la guerra civil</span><span><i style="background:#F5C443"></i>Hasta final del siglo XIX</span><span><i style="background:#A3CC6A"></i>Después de 1900</span></div>
+   </div>
+  </div>
+  <button type="button" class="zoom" data-g="mapa" aria-label="Ampliar el mapa"><img loading="lazy" src="%%B%%mapa.jpg" alt="Mapa de Estados Unidos con la fecha de entrada de cada estado en la Unión" width="1666" height="1237" onerror="reint(this)"></button>
+ </div>
+</section>
+
+<section class="fin" aria-label="Time en inconsolata»">
+ <div class="in">
+  <p class="fuente"><span><span class="q">»</span>Time (Special Edition) «America at 250: The People, the Progress, the Promise», 2026</span><img src="https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/medios/time-avatar-w.png" alt="" onerror="reint(this)"></p>
+  <a class="ficha" href="/medios#time">
+   <span class="lo"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Time_Magazine_logo.svg?width=500" alt=""></span>
+   <span><span class="caps" style="color:var(--rojo)">Ficha » medio</span><span class="nm">Time</span><span class="d">Revista semanal · Estados Unidos · en inconsolata» desde 2011</span><br><span class="ver">Ver su ficha »</span></span>
+  </a>
+  <div class="btns">
+   <a class="btn" href="/medios#time">Time en inconsolata» »</a>
+   <a class="btn b2" href="/">Volver a la portada »</a>
+  </div>
+ </div>
+</section>
+<p class="cred">Imágenes: Time, edición especial «America at 250: The People, the Progress, the Promise» (2026).</p>
+</main>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Imagen ampliada">
+ <button type="button" class="zz" aria-pressed="false">Tamaño real</button><button type="button" class="x" aria-label="Cerrar">×</button>
+ <div class="lb-v"><img alt="" onerror="reint(this)"></div>
+ <p class="lb-c" aria-live="polite"></p>
+ <button type="button" class="a" aria-label="Anterior">‹</button><button type="button" class="s" aria-label="Siguiente">›</button>
+</div>
+
+<script>
+(function(){
+var B='%%B%%';
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+// década: [años, estados, población (millones), titular, entradilla, producto, precio]
+var D=[
+[1770,13,2.6,'Two Documents and the Birth of a Nation','El panfleto «Common Sense» y la Declaración de Independencia inspiraron a un nuevo país.','Salario anual (1774)','£13,85'],
+[1780,13,2.8,'‘Long live George Washington, President of the United States’','En Filadelfia, los delegados dieron al país un nuevo Gobierno, crearon el colegio electoral y eligieron a su primer presidente.','Un caballo (1780)','£15–£25'],
+[1790,15,3.9,'Creating the Capital, for Then and for Always','George Washington encargó el diseño de Washington D. C. mientras se construía la nación.','Un bushel de trigo (1790)','75¢'],
+[1800,16,5.3,'A Westward Journey: Promise and Adventure','Lewis y Clark llegaron adonde ningún estadounidense había llegado antes.','Un par de zapatos (1801)','$1,75–$2,50'],
+[1810,17,7.2,'The Underground Railroad','Pese a los peligros, miles de esclavos huyeron hacia el norte en busca de la libertad.','Un jarabe para la tos (1819)','50¢ el frasco'],
+[1820,23,9.6,'A Canal, Steamboats, Roads, and the Expansion of the United States','La apertura del canal de Erie impulsó el desarrollo de todo el territorio.','Un acre de tierra (1820)','$1,25'],
+[1830,24,12.9,'The Spread of Religiosity','Las reuniones religiosas al aire libre atrajeron a miles de personas e impulsaron movimientos de reforma social.','Un sombrero de castor (1830)','$3,50'],
+[1840,26,17.0,'Mexico and America Go to War','Estados Unidos atacó a su vecino del sur y conquistó 525.000 millas cuadradas de territorio.','Un bushel de judías (1841)','$1,50–$2'],
+[1850,31,23.2,'The Loss of Native American Lands','El empeño en colonizar el Oeste expulsó a las tribus de los territorios que habían recorrido durante siglos.','Superficie media de una casa (1850)','888 pies²'],
+[1860,33,31.4,'The Toil and Consequence of the Civil War','Once estados se separaron de la Unión y la guerra costó la vida a 620.000 estadounidenses.','Una onza de oro (1860)','$20,65'],
+[1870,37,38.3,'Reconstruction','El país intentó afrontar la transformación que había provocado la guerra civil.','Una libra de mantequilla (1870)','15¢'],
+[1880,38,50.2,'For Some, a Land of Opportunity','Millones de personas llegaron buscando calles empedradas de oro mientras la ley cerraba la puerta a otras.','Vino importado (1886)','$3–$4 el galón'],
+[1890,44,63,'Making an Impact for the Needy','Activistas y periodistas denunciaron injusticias que llevaron a cambios económicos y sociales.','Una docena de huevos (1890)','21¢'],
+[1900,45,76.2,'Teddy Roosevelt, Carrying His Big Stick','El presidente implicó a Estados Unidos en todo el hemisferio occidental.','Sirope de arce (1900)','90¢ el galón'],
+[1910,46,91.9,'America Joins the Fight in Europe','Año y medio de combates en la I Guerra Mundial se llevó por delante a más de 116.000 estadounidenses.','Un fonógrafo Edison (1910)','$65'],
+[1920,48,106,'Ain’t We Got Fun!','Con una guerra mundial a sus espaldas, el país se entregó a una nueva prosperidad.','Una lavadora (1920)','$81,50'],
+[1930,48,123.2,'The Great Depression and the New Deal','El presidente Franklin D. Roosevelt transformó la vida del país.','Un Ford Roadster (1931)','$498'],
+[1940,48,132.2,'December 7, 1941','El ataque sorpresa de Japón contra Pearl Harbor metió a Estados Unidos en la II Guerra Mundial.','Un tubo de pasta de dientes (1940)','47¢'],
+[1950,48,151.3,'The Cold War and the Red Scare','Estados Unidos salió de la II Guerra Mundial y empezó a enfrentarse a un nuevo enemigo.','Un televisor (1952)','$199,95'],
+[1960,50,179.3,'To the Moon and Back','Las misiones Apolo captaron la atención del mundo entero.','Salario mínimo federal (1960)','$1 la hora'],
+[1970,50,203.2,'The Watergate Scandal','Un intento de espiar la sede de sus rivales acabó con la presidencia de Richard Nixon.','Una barra de pan (1970)','25¢'],
+[1980,50,226.5,'A New Dawn','Ronald Reagan presentó su presidencia como un nuevo amanecer para el país.','Una entrada de cine (1980)','$2,69'],
+[1990,50,248.7,'The Persian Gulf','El presidente George H. W. Bush reunió una coalición de países y expulsó a Irak de Kuwait.','Un vídeo VHS (1990)','$100–$300'],
+[2000,50,281.4,'The Birth of the Global War on Terror','Una mañana devastadora puso al país en el camino de 20 años de combates.','Un ordenador (2000)','$3.089'],
+[2010,50,308.7,'#ListenToUs','Movimientos sociales con mensajes y objetivos muy distintos recorrieron el país.','Una libra de café (2010)','$3,85'],
+[2020,50,342,'A Deadly Virus Emerges','La covid-19 sembró el miedo, se cobró vidas, cambió la forma de relacionarnos y ahondó la división política.','Precio medio de una vivienda (febrero de 2026)','$401.800']];
+var pad=function(n){return (n<10?'0':'')+n;},fmt=function(p){return String(p).replace('.',',');};
+
+// bandera: 13 franjas y un cantón con N estrellas; las estrellas se recolocan al cambiar de década
+var CW=76,CH=100*7/13,SP='M0 -1 L.225 -.309 L.951 -.309 L.363 .118 L.588 .809 L0 .382 L-.588 .809 L-.363 .118 L-.951 -.309 L-.225 -.309Z';
+function pos(N){var P=[],i,j;
+ if(N===13){for(i=0;i<13;i++){var a=-Math.PI/2+i*2*Math.PI/13;P.push([CW/2+Math.cos(a)*CH*.36,CH/2+Math.sin(a)*CH*.36,CH*.065]);}return P;}
+ if(N===50){for(j=0;j<9;j++){var c=j%2?5:6;for(i=0;i<c;i++)P.push([(j%2?2*i+2:2*i+1)*CW/12,(j+1)*CH/10,CH*.05]);}return P;}
+ var best=null;for(var r=3;r<=9;r++){var cc=Math.ceil(N/r),q=Math.abs(cc/r-1.45)+(cc*r-N)*.02;if(!best||q<best[0])best=[q,r,cc];}
+ var R=best[1],C=best[2],s=Math.min(CW/C,CH/R)*.36,k=0;
+ for(j=0;j<R;j++){var n=Math.min(C,N-k);for(i=0;i<n;i++){P.push([(i+.5+(C-n)/2)*CW/C,(j+.5)*CH/R,s]);k++;}}return P;}
+function bandera(svg,N,anim){var h='';for(var f=0;f<13;f++)h+='<rect y="'+(f*100/13)+'" width="190" height="'+(100/13+.05)+'" fill="'+(f%2?'#fff':'#B22234')+'"/>';
+ h+='<rect width="'+CW+'" height="'+CH+'" fill="#3C3B6E"/>';
+ if(anim){for(var i=0;i<50;i++)h+='<path class="st" d="'+SP+'" style="transform:translate('+CW/2+'px,'+CH/2+'px) scale(0);opacity:0"/>';}
+ else pos(N).forEach(function(p){h+='<path fill="#fff" d="'+SP+'" transform="translate('+p[0].toFixed(2)+' '+p[1].toFixed(2)+') scale('+p[2].toFixed(2)+')"/>';});
+ svg.innerHTML=h;}
+function estrellas(svg,N){var P=pos(N),S=svg.querySelectorAll('.st');
+ for(var i=0;i<S.length;i++){var p=P[i];S[i].style.transform=p?'translate('+p[0]+'px,'+p[1]+'px) scale('+p[2]+')':'translate('+CW/2+'px,'+CH/2+'px) scale(0)';S[i].style.opacity=p?1:0;}}
+
+// décadas
+var decs=document.getElementById('decs'),regla=document.getElementById('regla'),h='',hr='';
+D.forEach(function(d,i){var n=i+1,id='d'+d[0];
+ hr+='<a href="#'+id+'" data-i="'+i+'">'+d[0]+'</a>';
+ h+='<article class="dec" id="'+id+'" data-i="'+i+'" aria-labelledby="h-'+id+'"><div class="dec-h"><span class="dec-s" aria-hidden="true">'+d[0]+'<small>s</small></span><div><span class="caps">'+pad(n)+' / 26 · Década de '+d[0]+'</span><h3 id="h-'+id+'" lang="en">'+d[3]+'</h3></div></div>'+
+  '<p class="es">'+d[4]+'</p>'+
+  '<div class="dt"><svg viewBox="0 0 190 100" aria-hidden="true" data-n="'+d[1]+'"></svg><div><b>'+d[1]+'</b><span>estados</span></div><div><b>'+fmt(d[2])+'</b><span>millones de hab.</span></div><div class="pr"><b>'+d[6]+'</b><span>'+d[5]+'</span></div></div>'+
+  '<button type="button" class="zoom" data-d="'+i+'" aria-label="Ampliar la doble página de la década de '+d[0]+'"><img loading="lazy" src="'+B+'d/'+pad(n)+'.jpg" alt="Doble página de la década de '+d[0]+' en la edición especial de Time: '+d[3].replace(/"/g,'&quot;')+'" width="1200" height="817" onerror="reint(this)"></button></article>';});
+decs.innerHTML=h;regla.innerHTML=hr;
+[].forEach.call(decs.querySelectorAll('.dt svg'),function(s){bandera(s,+s.dataset.n,false);});
+
+// marcador
+var mf=document.getElementById('mk-f'),cur=-1,MAX=342;bandera(mf,13,true);
+var RA=regla.querySelectorAll('a');
+function marca(i){if(i===cur)return;cur=i;var d=D[i];
+ document.getElementById('mk-d').innerHTML=d[0]+'<small>s</small>';
+ document.getElementById('mk-n').textContent=d[1];
+ document.getElementById('mk-p').innerHTML=fmt(d[2])+' <span>millones</span>';
+ document.getElementById('mk-bar').style.width=Math.max(1,d[2]/MAX*100)+'%';
+ document.getElementById('mk-c').textContent=d[5];document.getElementById('mk-cp').textContent=d[6];
+ mf.setAttribute('aria-label','Bandera con '+d[1]+' estrellas');
+ estrellas(mf,d[1]);
+ document.getElementById('mk-a').disabled=i===0;document.getElementById('mk-s').disabled=i===D.length-1;
+ [].forEach.call(RA,function(a,k){a.setAttribute('aria-current',k===i?'true':'false');});
+ var a=RA[i],r=a.parentNode;if(r.scrollWidth>r.clientWidth)r.scrollTo({left:a.offsetLeft-r.clientWidth/2+a.offsetWidth/2,behavior:reduce?'auto':'smooth'});}
+requestAnimationFrame(function(){requestAnimationFrame(function(){marca(0);});});
+var AR=decs.querySelectorAll('.dec');
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(E){E.forEach(function(e){if(e.isIntersecting)marca(+e.target.dataset.i);});},{rootMargin:'-40% 0px -55% 0px'});
+ [].forEach.call(AR,function(a){io.observe(a);});}
+// con la regla fija arriba, la barra del sitio se aparta para no pisarla
+var cr=document.querySelector('.crono'),enc=function(){var r=cr.getBoundingClientRect();document.body.classList.toggle('enc',r.top<=4&&r.bottom>60);};addEventListener('scroll',enc,{passive:true});enc();
+function ve(i){AR[i].scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});}
+document.getElementById('mk-a').addEventListener('click',function(){if(cur>0)ve(cur-1);});
+document.getElementById('mk-s').addEventListener('click',function(){if(cur<D.length-1)ve(cur+1);});
+
+// visor
+var G={portada:[{s:B+'portada.jpg',c:'<b>Portada.</b> Time, edición especial «America at 250»'}],apertura:[{s:B+'apertura.jpg',c:'<b>Apertura.</b> El monte Rushmore'}],
+ banderas:[{s:B+'banderas.jpg',c:'<b>A Flag for All Times.</b> Las banderas de Estados Unidos desde 1777'}],mapa:[{s:B+'mapa.jpg',c:'<b>When Each State Was Admitted to the Union.</b> La fecha de entrada de cada estado'}],
+ d:D.map(function(d,i){return {s:B+'d/'+pad(i+1)+'g.jpg',c:'<b>'+d[0]+'s.</b> '+d[3]+' · '+(i+1)+' de 26'};})};
+var lb=document.getElementById('lb'),li=lb.querySelector('img'),lc=lb.querySelector('.lb-c'),zz=lb.querySelector('.zz'),L=[],gi=0,vuelta=null;
+function abre(l,i){L=l;gi=i;vuelta=document.activeElement;pon();lb.hidden=false;document.body.style.overflow='hidden';lb.querySelector('.x').focus();
+ lb.querySelector('.a').hidden=lb.querySelector('.s').hidden=l.length<2;}
+function zoom(z){lb.classList.toggle('z',z);zz.setAttribute('aria-pressed',z);zz.textContent=z?'Ajustar':'Tamaño real';}
+function pon(){zoom(false);li.removeAttribute('data-n');li.src=L[gi].s;li.alt='';lc.innerHTML=L[gi].c;}
+function cierra(){lb.hidden=true;document.body.style.overflow='';if(vuelta)vuelta.focus();}
+function mueve(k){gi=(gi+k+L.length)%L.length;pon();}
+document.addEventListener('click',function(e){var b=e.target.closest('.zoom');if(!b||lb.contains(b))return;
+ if(b.dataset.d!=null)abre(G.d,+b.dataset.d);else if(G[b.dataset.g])abre(G[b.dataset.g],0);});
+lb.addEventListener('click',function(e){var t=e.target;
+ if(t===li)zoom(!lb.classList.contains('z'));else if(t.classList.contains('zz'))zoom(!lb.classList.contains('z'));
+ else if(t.classList.contains('x')||t===lb||t.classList.contains('lb-v'))cierra();else if(t.classList.contains('a'))mueve(-1);else if(t.classList.contains('s'))mueve(1);});
+addEventListener('keydown',function(e){if(lb.hidden)return;if(e.key==='Escape')cierra();else if(e.key==='ArrowLeft'&&L.length>1)mueve(-1);else if(e.key==='ArrowRight'&&L.length>1)mueve(1);
+ else if(e.key==='Tab'){var f=[].filter.call(lb.querySelectorAll('button'),function(x){return !x.hidden;}),a=f.indexOf(document.activeElement);if(e.shiftKey&&a<=0){e.preventDefault();f[f.length-1].focus();}else if(!e.shiftKey&&a===f.length-1){e.preventDefault();f[0].focus();}}});
+})();
+</script>
+</body>
+</html>

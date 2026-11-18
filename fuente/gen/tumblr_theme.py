@@ -88,6 +88,9 @@ iframe.tmblr-iframe,iframe[class*="tmblr-iframe"]{top:auto!important;bottom:10px
 .ew-mf .ewmf-c:nth-child(even) .ewmf-p{animation-direction:reverse}
 .ew-mf .ewmf-p img{display:block;width:100%;height:auto}
 @keyframes mfSube{to{transform:translateY(-50%)}}
+/* banda con el patrón de estrellas y franjas (p. ej. /america250) */
+.ew-mf .ewpt{background:#334589 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='144' height='90' viewBox='0 0 144 90'%3E%3Crect width='144' height='90' fill='%23334589'/%3E%3Cg fill='%23C8372D'%3E%3Crect x='14' y='9' width='44' height='8'/%3E%3Crect x='14' y='25' width='44' height='8'/%3E%3Crect x='86' y='54' width='44' height='8'/%3E%3Crect x='86' y='70' width='44' height='8'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Cpath transform='translate(108 23) scale(15)' d='M0 -1 L.225 -.309 L.951 -.309 L.363 .118 L.588 .809 L0 .382 L-.588 .809 L-.363 .118 L-.951 -.309 L-.225 -.309Z'/%3E%3Cpath transform='translate(36 68) scale(15)' d='M0 -1 L.225 -.309 L.951 -.309 L.363 .118 L.588 .809 L0 .382 L-.588 .809 L-.363 .118 L-.951 -.309 L-.225 -.309Z'/%3E%3C/g%3E%3C/svg%3E") 0 0/108px 67.5px}
+.ew-mf .ewpt::after{background:linear-gradient(90deg,rgba(20,28,62,.94) 0,rgba(20,28,62,.8) 45%,rgba(20,28,62,.3) 100%)}
 @media (prefers-reduced-motion:reduce){.ew-mf .ewmf-p{animation:none}}
 .v-home .ew.ew-mf .ew-in{grid-template-columns:minmax(0,1fr);max-width:none;padding-bottom:110px}
 .v-home .ew.ew-mf .ew-tx{max-width:760px}
@@ -98,7 +101,7 @@ iframe.tmblr-iframe,iframe[class*="tmblr-iframe"]{top:auto!important;bottom:10px
 .v-home .ew.ew-mf .ew-cta{box-shadow:7px 7px 0 var(--yellow)}
 .v-home .ew.ew-mf .ew-tira{margin-top:0}
 .lt-web.ew-mf{background:#121110;color:#fff;padding-top:60px;padding-bottom:60px}
-.lt-web.ew-mf .ewmf::after{background:rgba(18,17,16,.72)}
+.lt-web.ew-mf .ewmf::after{background:rgba(18,17,16,.72)}.lt-web.ew-mf .ewpt::after{background:rgba(20,28,62,.74)}
 .lt-web.ew-mf .lt-kk{color:var(--yellow)}.lt-web.ew-mf .lt-ht em{color:var(--yellow)}.lt-web.ew-mf .lt-wp{color:#E8E3D8}
 .lt-web.ew-mf .lt-cta{box-shadow:4px 4px 0 var(--yellow)}
 @media (max-width:900px){.v-home .ew{padding-top:40px}.v-home .ew-in{grid-template-columns:1fr;gap:36px}.v-home .ew-post{display:block;margin:18px 0 0}.v-home .ew-tira{margin-top:44px}.v-home .ew-tr a{flex-basis:200px}.v-home .ew-tr img{height:120px}}
@@ -771,7 +774,7 @@ _TEM = [t['n'] for t in json.load(open(_CAT))['temas']]
 BIENVENIDA = r'''
 // /bienvenida: la página de presentación ocupa toda la ventana (se sirve desde los datos, igual que el resto del código)
 // páginas especiales a pantalla completa (/bienvenida, /eps50…): se sirven desde assets/<nombre>/index.html; %%B%% es su carpeta
-var INC_PE=(location.pathname.match(/^\/(bienvenida|eps50)(?:\.html)?\/?$/)||[])[1]||'';
+var INC_PE=(location.pathname.match(/^\/(bienvenida|eps50|america250)(?:\.html)?\/?$/)||[])[1]||'';
 window.INC_BV=!!INC_PE;
 (function(){if(!window.INC_BV)return;var h=document.documentElement;h.classList.add('montado');h.style.visibility='hidden';
  var base=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/'+INC_PE+'/';
