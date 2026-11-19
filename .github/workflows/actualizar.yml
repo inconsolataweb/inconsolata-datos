@@ -64,3 +64,6 @@ jobs:
           for f in tema/tema.css tema/tema.js datos/meta.json datos/catalogo.json datos/titulos.json datos/ajustes_posts.json datos/portada.json datos/avisos.json datos/portada_manual.json datos/archivo.json datos/indice.json; do
             curl -s -o /dev/null --max-time 60 -w "%{http_code} %{time_total}s $f\n" "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@$v/$f" || true
           done
+          for f in america250/index.html america250/portada.jpg eps50/index.html eps50/portada.jpg; do
+            curl -s -o /dev/null --max-time 60 -w "%{http_code} %{time_total}s @especiales/$f\n" "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/$f" || true
+          done
