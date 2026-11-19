@@ -404,6 +404,9 @@ def clasificar(p):
     textos = [i[0] for i in items] if sec in ('muchomas', 'extra') else [titulo_raw + ' ' + texto]
     temas = {r['tema'] for r in REGLAS if (r['tg'] and any(r['tg'].match(t) for t in tl)) or any(r['kw'].search(x) for x in textos)}
     temas |= {n for n in TEM if nz(n) in {nz(t) for t in tl}}
+    # «menos» desde el panel también quita temas por su nombre (los que salen solos por el texto, p. ej. «Historia»)
+    quita = {nz(t) for t in (AJ.get(str(p['id'])) or {}).get('menos', [])}
+    temas = {n for n in temas if nz(n) not in quita}
     tipos = [c for c, rx in TIPO_TAG if any(re.search(rx, t) for t in tl)]
     # tipo indicado a mano en cada pieza de mucho más y EXTRA!: «Tipo: cartografía»
     for w in re.findall(r'\bTipo\s*:\s*([A-Za-zÀ-ÿ ]+)', txt(cuerpo)) + tipos_pz:

@@ -1699,10 +1699,16 @@ function post(art,meta,cat,medido){
    vis.innerHTML='<div class="dclips">'+ims.map(function(im,i){return '<div class="dclip"><button type="button" class="shot" data-lb="'+i+'" aria-label="Ampliar recorte '+(i+1)+'"><img src="'+esc(im.src)+'" alt="'+esc(alt(i))+'"><span class="zoom">Ampliar \u00bb</span></button>'+pieH(i)+'</div>';}).join('')+'</div>';
    lay.classList.add('single');
   } else {
-   var h='<div class="main-sheet"><span class="tape" aria-hidden="true"></span><button type="button" class="shot" data-lb="0" aria-label="Ampliar imagen 1 de '+n+'"><img src="'+esc(ims[0].src)+'" alt="'+esc(alt(0))+'"><span class="zoom">Ampliar \u00bb</span></button>'+pieH(0)+'</div>';
-   if(n>1)h+='<div><div class="sheet-head"><span class="caps">Todas las im\u00e1genes \u00b7 '+n+'</span><span style="font-size:13px;font-weight:600">Pulsa para ampliar \u00bb</span></div><div class="contact'+(n<=4?' c2':'')+'">'+
-     ims.slice(1).map(function(im,j){var i=j+1;return '<div class="frame"><button type="button" class="shot" data-lb="'+i+'" aria-label="Ampliar imagen '+(i+1)+' de '+n+'"><img loading="lazy" src="'+esc(im.src)+'" alt="'+esc(alt(i))+'"><span class="zoom">Ampliar \u00bb</span></button><span class="n">'+(i+1)+' / '+n+' <span style="color:var(--accent)">\u25b8</span></span>'+pieH(i,'pie-f')+'</div>';}).join('')+'</div></div>';
-   vis.innerHTML=h; if(n===1)lay.classList.add('single');
+   // dos im\u00e1genes de proporciones parecidas: las dos abiertas, al mismo tama\u00f1o, una encima de la otra
+   var pr=function(im){return im.w&&im.h?im.w/im.h:0;},p0=pr(ims[0]),p1=n===2?pr(ims[1]):0;
+   if(n===2&&p0&&p1&&Math.abs(p0-p1)/Math.max(p0,p1)<.2){
+    vis.innerHTML='<div class="dos-sheets">'+ims.map(function(im,i){return '<div class="main-sheet">'+(i===0?'<span class="tape" aria-hidden="true"></span>':'')+'<button type="button" class="shot" data-lb="'+i+'" aria-label="Ampliar imagen '+(i+1)+' de 2"><img '+(i?'loading="lazy" ':'')+'src="'+esc(im.src)+'" alt="'+esc(alt(i))+'"><span class="zoom">Ampliar \u00bb</span></button>'+pieH(i)+'</div>';}).join('')+'</div>';
+   } else {
+     var h='<div class="main-sheet"><span class="tape" aria-hidden="true"></span><button type="button" class="shot" data-lb="0" aria-label="Ampliar imagen 1 de '+n+'"><img src="'+esc(ims[0].src)+'" alt="'+esc(alt(0))+'"><span class="zoom">Ampliar \u00bb</span></button>'+pieH(0)+'</div>';
+     if(n>1)h+='<div><div class="sheet-head"><span class="caps">Todas las im\u00e1genes \u00b7 '+n+'</span><span style="font-size:13px;font-weight:600">Pulsa para ampliar \u00bb</span></div><div class="contact'+(n<=4?' c2':'')+'">'+
+       ims.slice(1).map(function(im,j){var i=j+1;return '<div class="frame"><button type="button" class="shot" data-lb="'+i+'" aria-label="Ampliar imagen '+(i+1)+' de '+n+'"><img loading="lazy" src="'+esc(im.src)+'" alt="'+esc(alt(i))+'"><span class="zoom">Ampliar \u00bb</span></button><span class="n">'+(i+1)+' / '+n+' <span style="color:var(--accent)">\u25b8</span></span>'+pieH(i,'pie-f')+'</div>';}).join('')+'</div></div>';
+     vis.innerHTML=h; if(n===1)lay.classList.add('single');
+   }
   }
  } else { vis.remove(); lay.classList.add('single'); }
  ims.forEach(function(im){if(im.el){var r=im.el.closest('.npf_row')||im.el.closest('figure')||im.el;r.remove();}});

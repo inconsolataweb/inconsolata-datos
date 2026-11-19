@@ -290,6 +290,7 @@ iframe.tmblr-iframe,iframe[class*="tmblr-iframe"]{top:auto!important;bottom:10px
 @keyframes clIn{from{opacity:0;transform:translateY(-14px)}}
 @media (prefers-reduced-motion:reduce){.colav.go{animation:none}}
 @media (max-width:700px){.v-home .tira{flex-wrap:wrap;gap:6px 14px}.tira .tr-t{flex-basis:100%;order:3;font-size:21px}.colav{width:auto}}
+.dos-sheets{display:flex;flex-direction:column;gap:34px}.dos-sheets .main-sheet+.main-sheet{transform:rotate(.7deg)}
 @media (max-width:760px){.main-sheet .shot{min-height:0}}
 html.lite .main-sheet .shot{min-height:0}
 
