@@ -5,7 +5,7 @@ name: Refrescar jsDelivr
 on:
   push:
     branches: [main]
-    paths: ['assets/**', 'datos/**', 'tema/**']
+    paths: ['assets/**', 'datos/**', 'tema/**', '.github/workflows/purgar.yml']
 
 jobs:
   purgar:
@@ -16,8 +16,13 @@ jobs:
           fetch-depth: 2
       - name: Vaciar la caché de los archivos cambiados
         run: |
-          git diff --name-only HEAD~1 HEAD -- assets datos | while read f; do
+          # también el código del tema: si GitHub no responde al cargador (límite de consultas), la web tira de @main
+          { git diff --name-only HEAD~1 HEAD -- assets datos tema; echo tema/tema.js; echo tema/tema.css; } | sort -u | while read f; do
             curl -s "https://purge.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/$f" > /dev/null || true
+          done
+          sleep 5
+          for f in tema/tema.js tema/tema.css; do
+            curl -s -o /dev/null --max-time 60 -w "%{http_code} %{time_total}s @main/$f\n" "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/$f" || true
           done
       - name: Precalentar la versión nueva en jsDelivr
         run: |
