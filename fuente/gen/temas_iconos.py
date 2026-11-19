@@ -45,6 +45,7 @@ TI = {
  'Libros y literatura': g(f'<path d="M32 16 C24 10 14 10 6 12 V54 C14 52 24 52 32 58 C40 52 50 52 58 54 V12 C50 10 40 10 32 16 Z"/><path d="M32 16 V58"/><path d="M38 24 C44 22 48 22 52 23 M38 32 C44 30 48 30 52 31" stroke-width="3"/><path d="M12 20 C18 19 22 19 26 21 L26 40 C22 38 18 38 12 39 Z" {F}/>'),
  'Arte y arquitectura': g(f'<path d="M6 16 L32 4 L58 16 Z" {F}/><path d="M8 16 H56 M8 56 H56 M4 60 H60"/><path d="M14 22 V50 M26 22 V50 M38 22 V50 M50 22 V50"/>'),
  'Gastronomía': g(f'<path d="M16 6 V22 C16 28 26 28 26 22 V6 M21 6 V60"/><path d="M44 60 V6 C52 10 54 22 52 34 H44" {F}/>'),
+ 'Moda y estilo': g(f'<path d="M26 12 C26 6 38 6 38 12 C38 16 32 16 32 22"/><path d="M32 22 L4 40 H60 Z"/><path d="M22 40 L14 62 H50 L42 40 Z" {F}/>'),
  'Rediseños': g(f'<path d="M44 6 L58 20 L22 56 L6 58 L8 42 Z"/><path d="M38 12 L52 26"/><path d="M8 42 L22 56" stroke-width="3"/><path d="M6 58 L14 50" stroke-width="6"/><rect x="34" y="44" width="22" height="14" {F}/>'),
  'Tipografía': g(f'<path d="M4 56 L20 10 H24 L40 56"/><path d="M10 40 H34"/><path d="M0 56 H12 M32 56 H44"/><circle cx="51" cy="47" r="8" {F}/><path d="M59 34 V56"/>'),
  'Humor gráfico': g(f'<path d="M8 10 H56 V42 H30 L16 56 V42 H8 Z"/><circle cx="22" cy="26" r="3.5" {F}/><circle cx="32" cy="26" r="3.5" {F}/><circle cx="42" cy="26" r="3.5" {F}/>'),

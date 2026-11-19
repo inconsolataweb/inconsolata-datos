@@ -587,10 +587,18 @@ def main():
     nuevos, releidos = 0, 0
     vistos = 0
     leidos = set()
+    # los posts con etiquetas cambiadas desde el panel se releen aunque sean antiguos, pero solo cuando cambia su ajuste
+    # (ajustes_aplicados.json guarda el último aplicado a cada uno; así no se piden a Tumblr en cada actualización)
+    try:
+        APLICADOS = json.load(open(D('ajustes_aplicados.json')))
+    except Exception:
+        APLICADOS = {}
+    def firma(pid):
+        a = AJ.get(pid) or {}
+        return json.dumps([sorted(a.get('mas') or []), sorted(a.get('menos') or [])], ensure_ascii=False)
     def mas_ajustados():
-        # los posts con etiquetas cambiadas desde el panel se releen siempre, aunque sean antiguos
         for pid in AJ:
-            if pid not in leidos and pid in existentes and (AJ[pid].get('mas') or AJ[pid].get('menos')):
+            if pid not in leidos and pid in existentes and (AJ[pid].get('mas') or AJ[pid].get('menos')) and APLICADOS.get(pid) != firma(pid):
                 q = api_post(pid)
                 if q:
                     yield q
@@ -622,6 +630,10 @@ def main():
         else:
             nuevos += 1
         existentes[pid] = q
+        if AJ.get(pid, {}).get('mas') or AJ.get(pid, {}).get('menos'):
+            APLICADOS[pid] = firma(pid)
+    APLICADOS = {k: v for k, v in APLICADOS.items() if AJ.get(k, {}).get('mas') or AJ.get(k, {}).get('menos')}
+    json.dump(APLICADOS, open(D('ajustes_aplicados.json'), 'w'), ensure_ascii=False, indent=0, sort_keys=True)
     posts = sorted(existentes.values(), key=lambda q: q['d'], reverse=True)
     malos = {AUT.index(n) for n in NO_AUTORES if n in AUT}
     for q in posts:

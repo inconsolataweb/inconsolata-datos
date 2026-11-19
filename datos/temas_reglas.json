@@ -222,6 +222,12 @@
   "texto": "\\bgastronom\\w+|\\brecetas?\\b|\\bcocina\\b|\\brestaurantes?\\b|\\bvinos?\\b|\\bcerveza\\b|\\bhelados?\\b"
  },
  {
+  "tema": "Moda y estilo",
+  "bloque": "Cultura",
+  "etiquetas": "moda|moda y estilo|fashion|vogue|harper[’']s bazaar|l[’']officiel|l[’']officiel hommes",
+  "texto": "\\bindustria de la moda\\b|\\bmundo de la moda\\b|\\bcasas? de moda\\b|\\brevistas? de moda\\b|\\bsemanas? de la moda\\b|\\bfashion week\\b|\\balta costura\\b|\\bhaute couture\\b|\\bmet gala\\b|\\bgala del met\\b|\\bdise[ñn]ador(a|es|as)? de moda\\b|\\bmoda (masculina|femenina|infantil)\\b|\\bpasarelas? de (moda|cibeles|par[ií]s|mil[aá]n|nueva york)\\b|\\bdesfiles? de moda\\b|\\btendencias de (la )?moda\\b|\\b(firmas?|marcas?) de moda\\b|\\bgu[ií]as? de estilo\\b|\\bestilo masculino\\b"
+ },
+ {
   "tema": "Rediseños",
   "bloque": "El oficio",
   "etiquetas": "rediseño",
