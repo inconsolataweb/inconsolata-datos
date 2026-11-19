@@ -66,6 +66,7 @@ jobs:
           done
           a=$(curl -s --max-time 60 "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/tema/tema.js" | md5sum | cut -c1-8); b=$(md5sum tema/tema.js | cut -c1-8)
           echo "tema.js en @main: $a · en el repositorio: $b $([ "$a" = "$b" ] && echo '(al día)' || echo '(DESFASADO)')"
+          if [ "$a" != "$b" ]; then for f in tema/tema.js tema/tema.css; do curl -s "https://purge.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/$f" > /dev/null || true; done; echo "vaciada la copia de @main"; fi
           for f in america250/index.html america250/portada.jpg eps50/index.html eps50/portada.jpg; do
             curl -s -o /dev/null --max-time 60 -w "%{http_code} %{time_total}s @especiales/$f\n" "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/$f" || true
           done
