@@ -499,6 +499,8 @@ function post(art,meta,cat,medido){
   if(i.closest('blockquote'))return;
   var w=+(i.getAttribute('data-orig-width')||i.closest('figure')&&i.closest('figure').getAttribute('data-orig-width')||0),
       h=+(i.getAttribute('data-orig-height')||i.closest('figure')&&i.closest('figure').getAttribute('data-orig-height')||0);
+  // en la página que genera Tumblr, las medidas van en el enlace que envuelve la foto (data-big-photo-width/height)
+  var an=i.closest('[data-big-photo-width]');if(an){w=w||+(an.getAttribute('data-big-photo-width')||0);h=h||+(an.getAttribute('data-big-photo-height')||0);}
   w=w||+(i.getAttribute('data-mw')||0);h=h||+(i.getAttribute('data-mh')||0);
   ims.push({src:srcDe(i,99999),w:w,h:h,el:i});
  });
