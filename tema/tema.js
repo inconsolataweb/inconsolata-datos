@@ -51,8 +51,11 @@ document.addEventListener('error',function(e){var i=e.target;if(!i||i.tagName!==
 var INC_PE=(location.pathname.match(/^\/(bienvenida|eps50|america250)(?:\.html)?\/?$/)||[])[1]||'';
 window.INC_BV=!!INC_PE;
 (function(){if(!window.INC_BV)return;var h=document.documentElement;h.classList.add('montado');h.style.visibility='hidden';
- var base=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/'+INC_PE+'/';
- fetch(base+'index.html').then(function(r){if(!r.ok)throw new Error(r.status);return r.text();})
+ // los especiales pesados viven en la rama \u00abespeciales\u00bb (jsDelivr no sirve repositorios de m\u00e1s de 50 MB y cada rama cuenta aparte)
+ var EN_RAMA={eps50:1,america250:1},ESPB='https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/';
+ var base=EN_RAMA[INC_PE]?ESPB+INC_PE+'/':(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/'+INC_PE+'/';
+ var pidePE=function(u){return fetch(u+'index.html').then(function(r){if(!r.ok)throw new Error(r.status);return r.text();});};
+ pidePE(base).catch(function(){return pidePE(base.replace(/^https:\/\/cdn\.jsdelivr\.net\/gh\/([^/]+)\/([^@]+)@([^/]+)\//,'https://raw.githubusercontent.com/$1/$2/$3/'));})
  .then(function(t){window.INC_BIENVENIDA=1;t=t.split('%%B%%').join(base);document.open();document.write(t);document.close();})
  .catch(function(e){console.error('inconsolata\u00bb: bienvenida',e);h.style.visibility='';});})();
 if(!window.INC_BV){
@@ -527,7 +530,7 @@ var FONDOS={eps50:6,america250:'patron'};
 // fondo de la banda: muro de portadas (n\u00famero de tiras) o el patr\u00f3n de estrellas y franjas de la revista ('patron')
 function fondoHTML(fd,n){return FONDOS[fd]==='patron'?'<div class="ewmf ewpt" aria-hidden="true"></div>':muroFondo(fd,n);}
 function fondoDe(lk){var m=(lk||'').match(/^(?:https?:\/\/(?:www\.)?inconsolata\.com)?\/([a-z0-9-]+)\/?(?:[?#].*)?$/);return m&&FONDOS[m[1]]?m[1]:'';}
-function muroFondo(sl,n){var B=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/'+sl+'/s/',h='';
+function muroFondo(sl,n){var B='https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/'+sl+'/s/',h='';
  for(var c=0;c<n;c++){var im='<img src="'+B+c+'.jpg" alt="" onerror="this.onerror=null;this.src=this.src+\'?r=1\'">';h+='<div class="ewmf-c"><div class="ewmf-p" style="animation-duration:'+(150+c*23%60)+'s">'+im+im+'</div></div>';}
  return '<div class="ewmf" aria-hidden="true"><div class="ewmf-cols" style="--n:'+n+'">'+h+'</div></div>';}
 function webSec(p,W){var AJp=(typeof AJ!=='undefined'&&AJ[p.id]&&AJ[p.id].pies)||{};

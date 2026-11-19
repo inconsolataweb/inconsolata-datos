@@ -792,8 +792,11 @@ document.addEventListener('error',function(e){var i=e.target;if(!i||i.tagName!==
 var INC_PE=(location.pathname.match(/^\/(bienvenida|eps50|america250)(?:\.html)?\/?$/)||[])[1]||'';
 window.INC_BV=!!INC_PE;
 (function(){if(!window.INC_BV)return;var h=document.documentElement;h.classList.add('montado');h.style.visibility='hidden';
- var base=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/'+INC_PE+'/';
- fetch(base+'index.html').then(function(r){if(!r.ok)throw new Error(r.status);return r.text();})
+ // los especiales pesados viven en la rama «especiales» (jsDelivr no sirve repositorios de más de 50 MB y cada rama cuenta aparte)
+ var EN_RAMA={eps50:1,america250:1},ESPB='https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/';
+ var base=EN_RAMA[INC_PE]?ESPB+INC_PE+'/':(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/'+INC_PE+'/';
+ var pidePE=function(u){return fetch(u+'index.html').then(function(r){if(!r.ok)throw new Error(r.status);return r.text();});};
+ pidePE(base).catch(function(){return pidePE(base.replace(/^https:\/\/cdn\.jsdelivr\.net\/gh\/([^/]+)\/([^@]+)@([^/]+)\//,'https://raw.githubusercontent.com/$1/$2/$3/'));})
  .then(function(t){window.INC_BIENVENIDA=1;t=t.split('%%B%%').join(base);document.open();document.write(t);document.close();})
  .catch(function(e){console.error('inconsolata»: bienvenida',e);h.style.visibility='';});})();
 '''

@@ -78,7 +78,7 @@
   "enlace": "https://inconsolata.com/eps50",
   "texto": "El imprescindible suplemento dominical de El País celebra su medio siglo de vida con un repaso a sus mejores portadas.",
   "ruta": "El País Semanal",
-  "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/eps50/portada.jpg",
+  "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/eps50/portada.jpg",
   "imagen_r": 0.82
  },
  "832918800098787328": {
@@ -111,7 +111,7 @@
  "833642912001687552": {
   "enlace": "https://inconsolata.com/america250",
   "ruta": "Time",
-  "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/assets/america250/portada.jpg",
+  "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/america250/portada.jpg",
   "imagen_r": 0.733,
   "texto": "La revista Time celebra el 250º aniversario de Estados Unidos con una edición especial que recorre la historia del país década a década, de la Declaración de Independencia a la covid-19.",
   "mas": [

@@ -103,7 +103,7 @@ var FONDOS={eps50:6,america250:'patron'};
 // fondo de la banda: muro de portadas (número de tiras) o el patrón de estrellas y franjas de la revista ('patron')
 function fondoHTML(fd,n){return FONDOS[fd]==='patron'?'<div class="ewmf ewpt" aria-hidden="true"></div>':muroFondo(fd,n);}
 function fondoDe(lk){var m=(lk||'').match(/^(?:https?:\/\/(?:www\.)?inconsolata\.com)?\/([a-z0-9-]+)\/?(?:[?#].*)?$/);return m&&FONDOS[m[1]]?m[1]:'';}
-function muroFondo(sl,n){var B=(window.INC_BASE||'https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@main/')+'assets/'+sl+'/s/',h='';
+function muroFondo(sl,n){var B='https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/'+sl+'/s/',h='';
  for(var c=0;c<n;c++){var im='<img src="'+B+c+'.jpg" alt="" onerror="this.onerror=null;this.src=this.src+\'?r=1\'">';h+='<div class="ewmf-c"><div class="ewmf-p" style="animation-duration:'+(150+c*23%60)+'s">'+im+im+'</div></div>';}
  return '<div class="ewmf" aria-hidden="true"><div class="ewmf-cols" style="--n:'+n+'">'+h+'</div></div>';}
 function webSec(p,W){var AJp=(typeof AJ!=='undefined'&&AJ[p.id]&&AJ[p.id].pies)||{};
