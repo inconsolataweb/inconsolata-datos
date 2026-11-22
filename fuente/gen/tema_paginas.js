@@ -10,6 +10,11 @@ function contar(ps,f){var c={};ps.forEach(function(p){f(p).forEach(function(v){c
 // piezas de mucho más y EXTRA! (archivo.posts[].pz = [imagen, tipo, medios, autores, etiquetas]): en una ficha o un especial
 // se muestra la pieza de ese medio, autor o etiqueta, no la primera del post
 var CTXP=null;
+// cada trabajo por separado: las piezas de mucho más, EXTRA! y Actualidad Económica se listan y se cuentan una a una
+function obrasA(A){if(A._ob)return A._ob;var o=[];A.posts.forEach(function(p){
+ if((p.s==='m'||p.s==='x'||p.s==='a')&&p.pz&&p.pz.length)p.pz.forEach(function(z,k){var y=Object.create(p);y._pz=z;y._k=k;y.m=z[2]||[];y.a=z[3]||[];y.k=z[1]?[z[1]]:p.k;
+  y.h=Array.isArray(z[7])?z[7]:[];y.f=z[5]||p.f;y.n=1;o.push(y);});
+ else o.push(p);});A._ob=o;return o;}
 // fechas: en fichas, especiales y estadísticas cuenta la del trabajo (cuadro negro, o la de la pieza en mucho más y EXTRA!), no la de publicación
 function titP(p,v){return (v&&v.z&&v.z[6])||tituloP(p);}
 function fT(p){var v=vistaP(p);return (v.z&&v.z[5])||p.f||p.d;}
@@ -46,7 +51,7 @@ function inicial(n){return '<span class="mdc-av ini" aria-hidden="true">'+esc((n
 // ---------- medios
 function medioIdx(A,cat){
  var y=String(Y1),L=A.medios.map(function(m,i){return {i:i,n:m.n,p:m.p,c:cat.medios[i]||{},y:0};});
- A.posts.forEach(function(p){if((p.f||p.d).slice(0,4)===y)p.m.forEach(function(i){L[i].y++;});});
+ obrasA(A).forEach(function(p){if((p.f||p.d).slice(0,4)===y)p.m.forEach(function(i){L[i].y++;});});
  L=L.filter(function(o){return o.p>0;});
  var html=crumbs([['Medios']])+'<div class="idx-top"><div><h1 class="soft">Todos los <em>medios</em></h1><p>'+L.length+' medios han pasado por inconsolata» desde 2011. Los que tienen ficha llevan su logo; el resto te lleva a sus entradas en el buscador.</p></div>'+
   '<div class="idx-tools"><label class="sr" for="mq">Buscar medio</label><input id="mq" type="search" placeholder="Buscar medio…" autocomplete="off"><label class="sr" for="mo">Ordenar</label><select id="mo"><option value="p">Más entradas</option><option value="y">Más entradas en '+y+'</option><option value="n">A–Z</option></select>'+
@@ -132,7 +137,7 @@ function coronas(ST,n){if(!ST||!ST.years)return '';var y1=String(new Date().getF
  return '<div class="coronas">'+out.map(function(o){var tx=T[o[1]]+' medio más presente en inconsolata» en '+o[0]+(o[0]===y1?' (provisional: el año no ha terminado)':'');return '<span class="cor '+C[o[1]]+(o[0]===y1?' prov':'')+'" tabindex="0" aria-label="'+tx+'" data-tip="'+tx+'"><svg viewBox="0 0 64 44" aria-hidden="true"><path d="M4 40 L2 8 L18 22 L32 2 L46 22 L62 8 L60 40 Z"/></svg><b>'+o[0]+'</b></span>';}).join('')+'</div>';}
 
 function medioFicha(A,cat,FM,mi,ST){CTXP={m:mi};
- var m=A.medios[mi],c=cat.medios[mi]||{},f=FM[m.n]||{},ps=ordenaFT(A.posts.filter(function(p){return p.m.indexOf(mi)>=0;}));
+ var m=A.medios[mi],c=cat.medios[mi]||{},f=FM[m.n]||{},ps=ordenaFT(obrasA(A).filter(function(p){return p.m.indexOf(mi)>=0;}));
  document.title=m.n+' · inconsolata»';
  var auts=contar(ps,function(p){return p.a.filter(function(a){return (A.autores[a].m||[]).indexOf(m.n)>=0;});}).slice(0,8);
  var fund=+f.fundacion||0,cierre=+f.cierre||0;
@@ -170,7 +175,7 @@ function medioFicha(A,cat,FM,mi,ST){CTXP={m:mi};
 
 function chipMedio(cat,n){var c=cat.medios.find(function(x){return x.n===n;}),i=cat.medios.indexOf(c);
  return '<a class="ch-av" href="'+(c&&c.ficha?fichaMedio(c):'/buscador#m='+i)+'">'+(c&&c.avw?'<img src="'+esc(c.avw)+'" alt="">':'')+esc(n)+'</a>';}
-function autorFicha(A,cat,FM,AX,ai){CTXP={a:ai};var a=A.autores[ai],ps=ordenaFT(A.posts.filter(function(p){return p.a.indexOf(ai)>=0;})),x=AX[a.n]||{};
+function autorFicha(A,cat,FM,AX,ai){CTXP={a:ai};var a=A.autores[ai],ps=ordenaFT(obrasA(A).filter(function(p){return p.a.indexOf(ai)>=0;})),x=AX[a.n]||{};
  document.title=a.n+' · inconsolata»';
  var md=x.medio||(a.m||[])[0],mc=md?cat.medios.find(function(m){return m.n===md;}):null,fm=FM[md]||{};
  var pais=x.pais||fm.pais||'',cc=x.cc||fm.cc||'';
@@ -348,6 +353,12 @@ function cronoPag(A,cat,ES,CR){
 
 // ---------- montaje
 function fichaN(n){var c=(cat0&&cat0.medios||[]).find(function(m){return m.n===n;});return c&&c.ficha?fichaMedio(c):'/buscador#q='+encodeURIComponent(n);}
+// buscador y páginas de temas: cada pieza de mucho más y EXTRA! es una entrada, con su título, su medio, sus autores y sus temas
+function obrasBus(P,A){var pz={};if(A)A.posts.forEach(function(q){if(q.pz&&q.pz.length)pz[q.i]=q.pz;});var o=[];
+ P.forEach(function(p){var zs=(p.s==='m'||p.s==='x'||p.s==='a')&&pz[p.i];if(!zs){o.push(p);return;}
+  zs.forEach(function(z,k){o.push({i:p.i,u:p.u+(p.s==='a'?'#ae-':'#mm-')+(k+1),d:z[5]||p.d,s:p.s,k:z[1]?[z[1]]:p.k,t:z[6]||'',b:'',_pz:1,
+   x:fold((z[6]||'')+' '+(z[4]||[]).join(' ')),m:z[2]||[],a:z[3]||[],h:Array.isArray(z[7])?z[7]:[],g:p.g||[],im:z[0]||p.im,r:p.r,n:1});});});
+ return o;}
 function buscadorPag(D){
  __BUS_JS__
  document.querySelector('.v-buscador .y-now').textContent=Y1;
@@ -361,7 +372,7 @@ function pagina(meta,cat){
  var box=home.firstChild,hash=function(){return decodeURIComponent(location.hash.slice(1));};
  var pon=function(r,cls){box.className='v-pag v-'+RUTA+(cls?' '+cls:'');box.innerHTML=r.html;r.init();};
  var falla=function(e){console.error('inconsolata»: página',e);box.innerHTML='<div class="wrap"><p style="padding:60px 0">No se han podido cargar los datos. Prueba a recargar la página.</p></div>';};
- if(RUTA==='buscador'){document.title='Buscador · inconsolata»';get('indice').then(function(D){box.innerHTML=__BUS_HTML__;buscadorPag(D);}).catch(falla);return;}
+ if(RUTA==='buscador'){document.title='Buscador · inconsolata»';Promise.all([get('indice'),get('archivo').catch(function(){return null;})]).then(function(r){var D=r[0];D.posts=obrasBus(D.posts,r[1]);box.innerHTML=__BUS_HTML__;buscadorPag(D);}).catch(falla);return;}
  if(RUTA==='estadisticas'){document.title='Estadísticas · inconsolata»';get('estadisticas').then(function(ST){box.innerHTML=__EST_HTML__;estadisticasPag(ST);}).catch(falla);return;}
  if(RUTA==='cronologia'){Promise.all([get('archivo'),get('especiales'),get('cronologia')]).then(function(r){pon(cronoPag(r[0],cat,r[1],r[2]));}).catch(falla);return;}
  if(RUTA==='novedades'){document.title='Novedades · inconsolata»';get('avisos').then(function(A){pon(novPag(A,cat));}).catch(falla);return;}

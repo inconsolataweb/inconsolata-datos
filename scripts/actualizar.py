@@ -330,6 +330,13 @@ def con_ajustes(pid, tags):
     ya = {nz(t) for t in tags}
     return tags + [t for t in aj.get('mas', []) if nz(t) not in ya]
 
+def temas_de(texto, etiquetas, quita=()):
+    """Temas de un texto suelto y sus etiquetas, con las mismas reglas que un post (para cada pieza de mucho más y EXTRA!)."""
+    el = [e.lower().strip() for e in etiquetas]
+    ts = {r['tema'] for r in REGLAS if (r['tg'] and any(r['tg'].match(t) for t in el)) or r['kw'].search(texto)}
+    ts |= {n for n in TEM if nz(n) in {nz(t) for t in el}}
+    return sorted(TEM.index(t) for t in ts if t in TEM and nz(t) not in quita)
+
 def clasificar(p):
     ETQ[str(p['id'])] = p.get('tags', [])
     tags = con_ajustes(str(p['id']), p.get('tags', []))
@@ -448,7 +455,7 @@ def clasificar(p):
                         pa.add(AUT.index(a_))
             mt_t = re.search(r'Trabajo\s*:\s*(.*?)\s*(?:\||$)', pt)
             tit = mt_t.group(1).strip(' «»"\'“”.') if mt_t else ''
-            piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et, fecha_trabajo(pt.split('Trabajo', 1)[-1], fecha), tit])
+            piezas.append([miniatura(ult, 640) if ult else '', tp, pm, sorted(pa), et, fecha_trabajo(pt.split('Trabajo', 1)[-1], fecha), tit, pt])
             ult = None
     # Actualidad Económica (#aeco): cada imagen es el informe de un domingo; las fechas de la línea de fuente se reparten en orden
     # y, si hay lista «[n] Tema | Autor: …», cada informe toma su tema y sus autores
@@ -503,7 +510,7 @@ def clasificar(p):
             a0, a1 = int(mn.group(1)), int(mn.group(2) or mn.group(1))
             for k in range(a0, a1 + 1):
                 im = vis[k - 1] if 0 < k <= len(vis) else None
-                piezas.append([miniatura(im, 640) if im else '', tp, [MED.index(m_)] if m_ in MED else [], sorted(pa), et, fecha_trabajo('del ' + fe, fecha) if fe else ''])
+                piezas.append([miniatura(im, 640) if im else '', tp, [MED.index(m_)] if m_ in MED else [], sorted(pa), et, fecha_trabajo('del ' + fe, fecha) if fe else '', txt(partes[0]).split(']', 1)[-1].strip(' .'), txt(li)])
     # posts normales con trabajos de varios medios: cada imagen es una pieza con su medio y sus autores. Sale del pie de la imagen
     # puesto en el panel («Medio (Autor y Autor)») o, si no lo hay, de la lista de trabajos «Medio, del … | Autor: …» en el mismo orden
     if sec not in ('muchomas', 'extra', 'web') and len(medios) > 1:
@@ -546,6 +553,13 @@ def clasificar(p):
                 tp = TIPO_N.get(nz(F[0]), '') if len(F) > 1 else ''
                 piezas.append(pieza_de(txt(b[0][1]) if b else t_.split(',')[0], au, fe, im, tp))
         piezas = [z for z in piezas if z[2]]
+    # temas de cada pieza (índice 7): en mucho más y EXTRA!, los de su propio texto y etiquetas; en el resto, los del post
+    quita_t = {nz(t) for t in (AJ.get(str(p['id'])) or {}).get('menos', [])}
+    th_post = sorted(TEM.index(t) for t in temas if t in TEM)
+    for k_, z in enumerate(piezas):
+        z += [''] * max(0, 7 - len(z))
+        texto_z = z[7] if len(z) > 7 and isinstance(z[7], str) else None
+        z[:] = z[:7] + [temas_de(texto_z + ' ' + z[6], z[4], quita_t) if texto_z is not None else th_post]
     # fecha del trabajo (la del cuadro negro); en mucho más y EXTRA!, la de la pieza más reciente
     ftr = max([z[5] for z in piezas if z[5]] or ['']) if piezas else ''
     ftr = ftr or fecha_trabajo(' '.join(lineas_fuente), fecha)
@@ -663,6 +677,11 @@ def main():
     PZ.update({q['i']: q.pop('_pz') for q in posts if q.get('_pz')})
     for q in posts:
         q.pop('_tags', None); q.pop('_fr', None); q.pop('_res', None); q.pop('_pz', None)
+    # piezas guardadas de los posts que no se han releído ahora (para contar trabajos y no posts)
+    try:
+        PZ_VIEJO.update({q['i']: q['pz'] for q in json.load(open(D('archivo.json')))['posts'] if q.get('pz')})
+    except Exception:
+        pass
     aplicar_estructura(posts)
     recontar(posts)
     IDX['posts'] = posts
@@ -722,16 +741,24 @@ def aplicar_estructura(posts):
             for i in e['posts']:
                 en_esp.setdefault(i, set()).add(ix[e['padre']])
     exc = {ix[k]: {ix[x] for x in v if x in ix} for k, v in EST.get('excluye', {}).items() if k in ix}
-    for q in posts:
-        h = set(q['h'])
+    def ajusta(h, extra=()):
+        h = set(h)
         for t in list(h):
             if t in padre_de: h.add(padre_de[t])
-        h |= en_esp.get(q['i'], set())
+        h |= set(extra)
         for t, otros in exc.items():
             if t in h and h & otros: h.discard(t)
-        q['h'] = sorted(h)
+        return sorted(h)
+    for q in posts:
+        q['h'] = ajusta(q['h'], en_esp.get(q['i'], set()))
+    # las piezas de mucho más y EXTRA! siguen la misma jerarquía (subtema → tema padre, exclusiones)
+    for pz in list(PZ.values()) + list(PZ_VIEJO.values()):
+        for z in pz:
+            if len(z) > 7 and isinstance(z[7], list):
+                z[7] = ajusta(z[7])
 
 def recontar(posts):
+    posts = list(obras(posts))
     for key, cat in (('m', IDX['medios']), ('a', IDX['autores']), ('h', IDX['temas'])):
         c = Counter(i for q in posts for i in q[key])
         ys = {}
@@ -799,6 +826,20 @@ def iconos_especiales():
 RES = {}
 IM2 = {}   # miniatura más grande (640 px) para la versión móvil de la portada
 PZ = {}
+PZ_VIEJO = {}
+
+def obras(posts):
+    """Cada trabajo por separado: un mucho más, un EXTRA! o un post de Actualidad Económica cuenta una vez por pieza
+    (con su medio, sus autores, su tipo, sus temas y su fecha); el resto de posts, una vez."""
+    for q in posts:
+        pz = (PZ.get(q['i']) or PZ_VIEJO.get(q['i'])) if q['s'] in ('m', 'x', 'a') else None
+        if not pz:
+            yield q
+            continue
+        for z in pz:
+            yield {'i': q['i'], 'd': q['d'], 's': q['s'], 'm': z[2], 'a': z[3] if len(z) > 3 else [],
+                   'k': [z[1]] if len(z) > 1 and z[1] else q['k'], 'h': z[7] if len(z) > 7 and isinstance(z[7], list) else [],
+                   'f': (z[5] if len(z) > 5 and z[5] else '') or q.get('f') or q['d'], 'n': 1}
 def escribir_portada(idx, frames, webs=None):
     """Datos ligeros de la portada: lo último, el último mucho más y EXTRA! con sus fotogramas, el escaparate de temas,
     los medios del año y las efemérides («tal día como hoy», un archivo por mes)."""
@@ -876,7 +917,7 @@ def escribir_portada(idx, frames, webs=None):
     malos_a = {i for i, a in enumerate(idx['autores']) if a['n'] in NO_AUTORES}
     def con_pz(q):
         o = {k: v for k, v in q.items() if k not in ('x', 'b', 'r')}
-        pz = PZ.get(q['i']) or viejo.get(q['i'])
+        pz = PZ.get(q['i']) or PZ_VIEJO.get(q['i']) or viejo.get(q['i'])
         if pz:
             o['pz'] = [z[:3] + [[i for i in z[3] if i not in malos_a]] + z[4:] if len(z) > 3 and isinstance(z[3], list) else z for z in pz]
         return o
@@ -903,7 +944,8 @@ def escribir_portada(idx, frames, webs=None):
         json.dump(res, open(D('efemerides/%s.json' % mm), 'w'), ensure_ascii=False, separators=(',', ':'))
 
 def estadisticas(P):
-    # cuenta la fecha del trabajo (la del cuadro negro), no la de publicación
+    # cuenta trabajos (cada pieza de mucho más y EXTRA! por separado) y la fecha del trabajo, no la de publicación
+    P = list(obras(P))
     fd = lambda p: p.get('f') or p['d']
     M, A, T = MED, AUT, TEM
     global MEDIO_AUT     # medio principal de cada autor, para poner su avatar junto al nombre
