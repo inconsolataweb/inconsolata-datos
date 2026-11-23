@@ -944,7 +944,8 @@ def escribir_portada(idx, frames, webs=None):
         json.dump(res, open(D('efemerides/%s.json' % mm), 'w'), ensure_ascii=False, separators=(',', ':'))
 
 def estadisticas(P):
-    # cuenta trabajos (cada pieza de mucho más y EXTRA! por separado) y la fecha del trabajo, no la de publicación
+    # medios, autores, temas y tipos cuentan trabajos (cada pieza de mucho más y EXTRA! por separado); «entradas» e imágenes, los posts
+    POSTS = P
     P = list(obras(P))
     fd = lambda p: p.get('f') or p['d']
     M, A, T = MED, AUT, TEM
@@ -958,11 +959,12 @@ def estadisticas(P):
         cm, ca, ck, ct = Counter(), Counter(), Counter(), Counter()
         for p in ps:
             cm.update(p['m']); ca.update(p['a']); ck.update(p['k']); ct.update(p['h'])
-        out = {'posts': len(ps), 'n_medios': len(cm), 'n_autores': len(ca),
+        pp = [q for q in POSTS if not year or fd(q).startswith(str(year))]
+        out = {'posts': len(pp), 'trabajos': len(ps), 'n_medios': len(cm), 'n_autores': len(ca),
                'medios': [[M[i], c, i] for i, c in cm.most_common(25)], 'autores': [[A[i], c, i, MEDIO_AUT.get(i)] for i, c in ca.most_common(15)],
-               'tipos': dict(ck), 'temas': [[T[i], c, i] for i, c in ct.most_common(24)], 'imgs': sum(p['n'] for p in ps)}
+               'tipos': dict(ck), 'temas': [[T[i], c, i] for i, c in ct.most_common(24)], 'imgs': sum(q['n'] for q in pp)}
         if year:
-            out['meses'] = [sum(1 for p in ps if fd(p)[5:7] == '%02d' % m) for m in range(1, 13)]
+            out['meses'] = [sum(1 for q in pp if fd(q)[5:7] == '%02d' % m) for m in range(1, 13)]
             out['nuevos'] = sorted([[M[i], cm[i], i] for i in cm if first[i] == year], key=lambda x: -x[1])[:16]
         return out
     y1 = datetime.now(timezone.utc).year
@@ -973,6 +975,7 @@ def estadisticas(P):
         pres[i] = len({fd(p)[:4] for p in P if i in p['m']})
     total['fieles'] = [[M[i], c, i] for i, c in pres.most_common(12)]
     total['per_year'] = {y: years[y]['posts'] for y in years}
+    total['trabajos_year'] = {y: years[y]['trabajos'] for y in years}
     total['medios_year'] = {y: years[y]['n_medios'] for y in years}
     json.dump({'total': total, 'years': years}, open(D('estadisticas.json'), 'w'), ensure_ascii=False)
 

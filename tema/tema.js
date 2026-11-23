@@ -1422,7 +1422,7 @@ function hbars(id, rows, key) {
   var mx = rows.length ? rows[0][1] : 1;
   document.getElementById(id).innerHTML = rows.map(function (r) {
     var href = BUS + key + '=' + r[2] + (Y !== 'all' ? '&y=' + Y : '');
-    return '<div class="rw" data-tip="' + esc(r[0]) + ': ' + fmt(r[1]) + ' entradas"><a href="' + href + '" title="' + esc(r[0]) + '">' + avh(key, r) + esc(r[0]) + '</a><div class="tr"><i style="width:' + (r[1] / mx * 100) + '%"></i></div><span class="n">' + fmt(r[1]) + '</span></div>';
+    return '<div class="rw" data-tip="' + esc(r[0]) + ': ' + fmt(r[1]) + ' trabajos"><a href="' + href + '" title="' + esc(r[0]) + '">' + avh(key, r) + esc(r[0]) + '</a><div class="tr"><i style="width:' + (r[1] / mx * 100) + '%"></i></div><span class="n">' + fmt(r[1]) + '</span></div>';
   }).join('');
 }
 function chips(id, rows, key, unit) {
@@ -1438,6 +1438,7 @@ function render() {
   function diff(a, b) { if (!b) return ''; var x = a - b; return '<small>' + (x >= 0 ? '+' : '\u2212') + fmt(Math.abs(x)) + ' respecto a ' + (Y - 1) + '</small>'; }
   document.getElementById('kpis').innerHTML =
     '<div class="kpi"><b>' + fmt(d.posts) + '</b><span>entradas ' + lbl + '</span>' + diff(d.posts, prev && prev.posts) + '</div>' +
+    (d.trabajos != null ? '<div class="kpi"><b>' + fmt(d.trabajos) + '</b><span>trabajos</span>' + diff(d.trabajos, prev && prev.trabajos) + '</div>' : '') +
     '<div class="kpi"><b>' + fmt(d.imgs) + '</b><span>im\u00e1genes</span>' + diff(d.imgs, prev && prev.imgs) + '</div>' +
     '<div class="kpi"><b>' + fmt(d.n_medios) + '</b><span>medios distintos</span>' + diff(d.n_medios, prev && prev.n_medios) + '</div>' +
     '<div class="kpi"><b>' + fmt(d.n_autores) + '</b><span>autores citados</span>' + diff(d.n_autores, prev && prev.n_autores) + '</div>';
@@ -1451,7 +1452,7 @@ function render() {
   } else vh.innerHTML = 'Entradas <em>por a\u00f1o</em><small>pulsa una barra</small>';
   Object.keys(T.per_year).forEach(function (y) {
     var v = T.per_year[y];
-    h += '<button type="button" data-y="' + y + '" aria-pressed="' + (String(Y) === y) + '" aria-label="' + y + ': ' + v + ' entradas" data-tip="' + y + ': ' + fmt(v) + ' entradas \u00b7 ' + T.medios_year[y] + ' medios" style="height:' + (v / mx * 100) + '%"><span class="v">' + v + '</span></button>';
+    h += '<button type="button" data-y="' + y + '" aria-pressed="' + (String(Y) === y) + '" aria-label="' + y + ': ' + v + ' entradas" data-tip="' + y + ': ' + fmt(v) + ' entradas' + (T.trabajos_year ? ' \u00b7 ' + fmt(T.trabajos_year[y]) + ' trabajos' : '') + ' \u00b7 ' + T.medios_year[y] + ' medios" style="height:' + (v / mx * 100) + '%"><span class="v">' + v + '</span></button>';
     ax += '<span>' + "'" + y.slice(2) + '</span>';
   });
   document.getElementById('vb').innerHTML = h; document.getElementById('vax').innerHTML = ax;

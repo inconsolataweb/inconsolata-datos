@@ -76,7 +76,7 @@ function hbars(id, rows, key) {
   var mx = rows.length ? rows[0][1] : 1;
   document.getElementById(id).innerHTML = rows.map(function (r) {
     var href = BUS + key + '=' + r[2] + (Y !== 'all' ? '&y=' + Y : '');
-    return '<div class="rw" data-tip="' + esc(r[0]) + ': ' + fmt(r[1]) + ' entradas"><a href="' + href + '" title="' + esc(r[0]) + '">' + esc(r[0]) + '</a><div class="tr"><i style="width:' + (r[1] / mx * 100) + '%"></i></div><span class="n">' + fmt(r[1]) + '</span></div>';
+    return '<div class="rw" data-tip="' + esc(r[0]) + ': ' + fmt(r[1]) + ' trabajos"><a href="' + href + '" title="' + esc(r[0]) + '">' + esc(r[0]) + '</a><div class="tr"><i style="width:' + (r[1] / mx * 100) + '%"></i></div><span class="n">' + fmt(r[1]) + '</span></div>';
   }).join('');
 }
 function chips(id, rows, key, unit) {
@@ -92,13 +92,14 @@ function render() {
   function diff(a, b) { if (!b) return ''; var x = a - b; return '<small>' + (x >= 0 ? '+' : '−') + fmt(Math.abs(x)) + ' respecto a ' + (Y - 1) + '</small>'; }
   document.getElementById('kpis').innerHTML =
     '<div class="kpi"><b>' + fmt(d.posts) + '</b><span>entradas ' + lbl + '</span>' + diff(d.posts, prev && prev.posts) + '</div>' +
+    (d.trabajos != null ? '<div class="kpi"><b>' + fmt(d.trabajos) + '</b><span>trabajos</span>' + diff(d.trabajos, prev && prev.trabajos) + '</div>' : '') +
     '<div class="kpi"><b>' + fmt(d.imgs) + '</b><span>imágenes</span>' + diff(d.imgs, prev && prev.imgs) + '</div>' +
     '<div class="kpi"><b>' + fmt(d.n_medios) + '</b><span>medios distintos</span>' + diff(d.n_medios, prev && prev.n_medios) + '</div>' +
     '<div class="kpi"><b>' + fmt(d.n_autores) + '</b><span>autores citados</span>' + diff(d.n_autores, prev && prev.n_autores) + '</div>';
   var h = '', ax = '', mx = Math.max.apply(null, Object.values(T.per_year));
   Object.keys(T.per_year).forEach(function (y) {
     var v = T.per_year[y];
-    h += '<button type="button" data-y="' + y + '" aria-pressed="' + (String(Y) === y) + '" aria-label="' + y + ': ' + v + ' entradas" data-tip="' + y + ': ' + fmt(v) + ' entradas · ' + T.medios_year[y] + ' medios" style="height:' + (v / mx * 100) + '%"><span class="v">' + v + '</span></button>';
+    h += '<button type="button" data-y="' + y + '" aria-pressed="' + (String(Y) === y) + '" aria-label="' + y + ': ' + v + ' entradas" data-tip="' + y + ': ' + fmt(v) + ' entradas' + (T.trabajos_year ? ' · ' + fmt(T.trabajos_year[y]) + ' trabajos' : '') + ' · ' + T.medios_year[y] + ' medios" style="height:' + (v / mx * 100) + '%"><span class="v">' + v + '</span></button>';
     ax += '<span>' + "'" + y.slice(2) + '</span>';
   });
   document.getElementById('vb').innerHTML = h; document.getElementById('vax').innerHTML = ax;
@@ -159,7 +160,7 @@ page = f"""<!doctype html>
 <div class="vbars" id="vb"></div><div class="vax" id="vax"></div></section>
 <div class="cols">
 <section class="blk"><h2 class="soft">Medios <em>más presentes</em><small class="ylbl"></small></h2><div class="hb" id="hm"></div>
-<p class="note">Número de entradas en las que aparece el medio. Un «mucho más» o un EXTRA! cuenta una vez por cada medio que incluye.</p></section>
+<p class="note">Número de trabajos en los que aparece el medio: cada pieza de un «mucho más» o un EXTRA! cuenta por separado.</p></section>
 <section class="blk"><h2 class="soft">Autores <em>más citados</em><small class="ylbl"></small></h2><div class="hb" id="ha"></div></section>
 </div>
 <section class="blk"><h2 class="soft">Tipos <em>de pieza</em><small class="ylbl"></small></h2><div class="tipos-row" id="tp"></div>
