@@ -16,7 +16,7 @@ function obrasA(A){if(A._ob)return A._ob;var o=[];A.posts.forEach(function(p){
   y.h=Array.isArray(z[7])?z[7]:[];y.f=z[5]||p.f;y.n=1;o.push(y);});
  else o.push(p);});A._ob=o;return o;}
 // fechas: en fichas, especiales y estadísticas cuenta la del trabajo (cuadro negro, o la de la pieza en mucho más y EXTRA!), no la de publicación
-function titP(p,v){return (v&&v.z&&v.z[6])||tituloP(p);}
+function titP(p,v){return (p.s!=='x'&&v&&v.z&&v.z[6])||tituloP(p);}  // las piezas de un EXTRA! llevan el título del EXTRA!
 function fT(p){var v=vistaP(p);return (v.z&&v.z[5])||p.f||p.d;}
 function fw(p){return p.fw||p.f||p.d;}
 function ordenaFT(ps){ps.forEach(function(p){p.fw=fT(p);});return ps.sort(function(a,b){return b.fw.localeCompare(a.fw);});}
@@ -356,7 +356,7 @@ function fichaN(n){var c=(cat0&&cat0.medios||[]).find(function(m){return m.n===n
 // buscador y páginas de temas: cada pieza de mucho más y EXTRA! es una entrada, con su título, su medio, sus autores y sus temas
 function obrasBus(P,A){var pz={};if(A)A.posts.forEach(function(q){if(q.pz&&q.pz.length)pz[q.i]=q.pz;});var o=[];
  P.forEach(function(p){var zs=(p.s==='m'||p.s==='x'||p.s==='a')&&pz[p.i];if(!zs){o.push(p);return;}
-  zs.forEach(function(z,k){o.push({i:p.i,u:p.u+(p.s==='a'?'#ae-':'#mm-')+(k+1),d:z[5]||p.d,s:p.s,k:z[1]?[z[1]]:p.k,t:z[6]||'',b:'',_pz:1,
+  zs.forEach(function(z,k){o.push({i:p.i,u:p.u+(p.s==='a'?'#ae-':'#mm-')+(k+1),d:z[5]||p.d,s:p.s,k:z[1]?[z[1]]:p.k,t:p.s==='x'?'':(z[6]||''),b:'',_pz:1,
    x:fold((z[6]||'')+' '+(z[4]||[]).join(' ')),m:z[2]||[],a:z[3]||[],h:Array.isArray(z[7])?z[7]:[],g:p.g||[],im:z[0]||p.im,r:p.r,n:1});});});
  return o;}
 function buscadorPag(D){

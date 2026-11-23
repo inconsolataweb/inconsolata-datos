@@ -489,7 +489,7 @@ def clasificar(p):
             partes = re.split(r'<br\s*/?>', li)
             if not mn or len(partes) < 2 or '|' not in partes[-1]:
                 continue
-            F = [txt(f).strip() for f in partes[-1].split('|')]
+            F = [txt(f).strip().rstrip(' .;,') for f in partes[-1].split('|')]
             tp, et, au, md, fe = '', [], '', '', ''
             for k, f in enumerate(F):
                 mf = re.match(r'(.*?),?\s+del?\s+(\d{1,2}\s+de\s+\w+(?:\s+de\s+\d{4})?)\s*$', f)
