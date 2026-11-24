@@ -1,357 +1,63 @@
 {
- "831827785244868608": {
-  "pies": {
-   "1": "El País (Rodrigo Silva, Luiza Cauduro y Nacho Catalán)",
-   "2": "El Correo (Josemi Benítez, Gonzalo de las Heras, Isabel Toledo y Óscar Beltrán de Olátora)",
-   "3": "ABC (Javier Torres, Emma Esser, Marcos Jiménez y Julián de Velasco)",
-   "4": "El Mundo (Emilio Amade, Álvaro Matilla, Juan C. Sánchez y Alberto Hernández)",
-   "5": "Cinco Días (Belén Trincado)",
-   "6": "El Periódico",
-   "7": "La Vanguardia",
-   "8": "La Razón (Tania Nieto y Teresa Gallardo)"
-  },
-  "subrayados": [
-   "contextualizar cómo tuvo lugar el accidente"
-  ]
- },
- "831918987644452864": {
-  "pies": {
-   "1": "El Mundo",
-   "2": "El Mundo (Emilio Amade, Javier Aguirre, Juan C. Sánchez y Álvaro Matilla)",
-   "3": "La Vanguardia",
-   "4": "La Voz de Galicia",
-   "5": "La Vanguardia"
-  },
-  "subrayados": [
-   "entender qué falló en la cadena de decisiones"
-  ]
- },
- "832076806134841344": {
-  "enlace": "https://inconsolata.com/bienvenida",
-  "texto": "Quince años después de su nacimiento, la web del diseño periodístico renueva su web e identidad visual en el rediseño más ambicioso de su historia.",
-  "pies": {
-   "2": "La portada",
-   "3": "Fichas de medios",
-   "4": "Fichas de autores",
-   "5": "El buscador",
-   "6": "Estadísticas",
-   "7": "mucho más",
-   "8": "EXTRA!",
-   "9": "En el móvil",
-   "10": "Cronología"
-  }
- },
- "832281317249007616": {
-  "pies": {
-   "1": "Le Monde (Julie Cassotti, Francesca Fattori, Flavie Holzinger, Audrey Lagadec, Riccardo Pravettoni y Victor Simonnet)",
-   "2": "El Mundo (Alberto Hernández)",
-   "3": "Ara (Eduard Forroll)",
-   "4": "Corriere della Sera (Sabina Castagnaviz)",
-   "5": "El País",
-   "6": "The New York Times (Leanne Abraham y Alicia Parlapiano)"
-  }
- },
- "832371502828666880": {
-  "entradilla": "Las Provincias regresa a los lugares afectados por la DANA de 2026 en un suplemento especial dedicado a las víctimas de la riada.",
-  "subrayados": [
-   "“No os olvidamos”"
-  ]
- },
- "832463945905438720": {
-  "entradilla": "Las 'midterms' cumplieron los pronósticos y azotaron a Trump una humillante derrota que marcará la segunda mitad de su mandato. Analizamos mapas, gráficos e infografías sobre las elecciones legislativas norteamericanas.",
-  "pies": {
-   "1": "The New York Times (web/app)",
-   "2": "The New York Times (Albert Sun, Minho Kim, Marco Hernandez y Emily Davies)",
-   "3": "La Stampa",
-   "4": "Corriere della Sera (Andrea Venier)",
-   "5": "The Wall Street Journal (Danny Dougherty, Aaron Zitner y Anthony DeBarros)",
-   "6": "The Guardian",
-   "7": "Financial Times (Steven Bernard, Jonathan Vincent, Oliver Hawkins, Martin Stabe)",
-   "8": "Ara (Esther Utrilla)",
-   "9": "La Vanguardia"
-  },
-  "subrayados": [
-   "una humillación histórica para Trump"
-  ]
- },
- "832822059783602176": {
-  "enlace": "https://inconsolata.com/eps50",
-  "texto": "El imprescindible suplemento dominical de El País celebra su medio siglo de vida con un repaso a sus mejores portadas.",
-  "ruta": "El País Semanal",
-  "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/eps50/portada.jpg",
-  "imagen_r": 0.82
- },
- "832918800098787328": {
-  "entradilla": "El Diario Vasco nos explica con todo detalle cómo recoger adecuadamente las setas en la temporada de otoño: descubre los mejores hábitats, técnicas y herramientas para llenarte la cesta.",
-  "subrayados": [
-   "sobre cómo recoger adecuadamente los hongos"
-  ]
- },
- "823399609397362688": {
-  "mas": [
-   "aeco"
-  ]
- },
- "742233992208826368": {
-  "mas": [
-   "aeco"
-  ]
- },
- "833460250811170816": {
-  "subrayados": [
-   "la cumbre del clima de la ONU"
-  ]
- },
- "833552075590860800": {
-  "subrayados": [
-   "los tiburones son indispensables para los ecosistemas marinos"
-  ],
-  "entradilla": "Libé dedica su edición especial anual sobre los animales a los tiburones, unos animales cuya mala reputación camufla la importancia que tienen en numerosos ecosistemas marinos."
- },
- "833642912001687552": {
-  "enlace": "https://inconsolata.com/america250",
-  "ruta": "Time",
-  "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/america250/portada.jpg",
-  "imagen_r": 0.733,
-  "texto": "La revista Time celebra el 250º aniversario de Estados Unidos con una edición especial que recorre la historia del país década a década, de la Declaración de Independencia a la covid-19.",
-  "mas": [
-   "historia"
-  ]
- },
- "64313792934": {
-  "mas": [
-   "moda"
-  ]
- },
- "101276818782": {
-  "mas": [
-   "moda"
-  ]
- },
- "115862347047": {
-  "mas": [
-   "moda"
-  ]
- },
- "131565998907": {
-  "mas": [
-   "moda"
-  ]
- },
- "149418931497": {
-  "mas": [
-   "moda"
-  ]
- },
- "150080557022": {
-  "mas": [
-   "moda"
-  ]
- },
- "151985045387": {
-  "mas": [
-   "moda"
-  ]
- },
- "157110151027": {
-  "mas": [
-   "moda"
-  ]
- },
- "158673619882": {
-  "mas": [
-   "moda"
-  ]
- },
- "165870111382": {
-  "mas": [
-   "moda"
-  ]
- },
- "166852818327": {
-  "mas": [
-   "moda"
-  ]
- },
- "168722601947": {
-  "mas": [
-   "moda"
-  ]
- },
- "169078391627": {
-  "mas": [
-   "moda"
-  ]
- },
- "172866774547": {
-  "mas": [
-   "moda"
-  ]
- },
- "187030018672": {
-  "mas": [
-   "moda"
-  ]
- },
- "187492008157": {
-  "mas": [
-   "moda"
-  ]
- },
- "611320045586513920": {
-  "mas": [
-   "moda"
-  ]
- },
- "621916628304658432": {
-  "mas": [
-   "moda"
-  ]
- },
- "622364319856934912": {
-  "mas": [
-   "moda"
-  ]
- },
- "631329736047689728": {
-  "mas": [
-   "moda"
-  ]
- },
- "649001067814731776": {
-  "mas": [
-   "moda"
-  ]
- },
- "659879673320325120": {
-  "mas": [
-   "moda"
-  ]
- },
- "665671679358500864": {
-  "mas": [
-   "moda"
-  ]
- },
- "800121255495958528": {
-  "mas": [
-   "moda"
-  ]
- },
- "120791734077": {
-  "mas": [
-   "moda"
-  ]
- },
- "181924119412": {
-  "mas": [
-   "moda"
-  ]
- },
- "162440982177": {
-  "mas": [
-   "moda"
-  ]
- },
- "78747785486": {
-  "mas": [
-   "moda"
-  ]
- },
- "89080341547": {
-  "mas": [
-   "moda"
-  ]
- },
- "154469784727": {
-  "mas": [
-   "moda"
-  ]
- },
- "171730849177": {
-  "mas": [
-   "moda"
-  ]
- },
- "143946485112": {
-  "mas": [
-   "moda"
-  ]
- },
- "163412872967": {
-  "mas": [
-   "moda"
-  ]
- },
- "775298072353882112": {
-  "mas": [
-   "moda"
-  ]
- },
- "112153640272": {
-  "mas": [
-   "moda"
-  ]
- },
- "44474080796": {
-  "mas": [
-   "moda"
-  ]
- },
- "184968564867": {
-  "mas": [
-   "moda"
-  ]
- },
- "145856507277": {
-  "mas": [
-   "moda"
-  ]
- },
- "185129643717": {
-  "mas": [
-   "moda"
-  ]
- },
- "800757524423999488": {
-  "mas": [
-   "moda"
-  ]
- },
- "124171643177": {
-  "mas": [
-   "moda"
-  ]
- },
- "122181959957": {
-  "mas": [
-   "moda"
-  ]
- },
- "68179743642": {
-  "mas": [
-   "moda"
-  ]
- },
- "66364257941": {
-  "mas": [
-   "moda"
-  ]
- },
- "184108903192": {
-  "mas": [
-   "moda"
-  ]
- },
- "81790891101": {
-  "mas": [
-   "moda"
-  ]
- },
- "833730199789125632": {
-  "menos": [
-   "Biodiversidad",
-   "Historia"
-  ]
- }
+"831827785244868608": {"pies": {"1":"El País (Rodrigo Silva, Luiza Cauduro y Nacho Catalán)","2":"El Correo (Josemi Benítez, Gonzalo de las Heras, Isabel Toledo y Óscar Beltrán de Olátora)","3":"ABC (Javier Torres, Emma Esser, Marcos Jiménez y Julián de Velasco)","4":"El Mundo (Emilio Amade, Álvaro Matilla, Juan C. Sánchez y Alberto Hernández)","5":"Cinco Días (Belén Trincado)","6":"El Periódico","7":"La Vanguardia","8":"La Razón (Tania Nieto y Teresa Gallardo)"}, "subrayados": ["contextualizar cómo tuvo lugar el accidente"]},
+"831918987644452864": {"pies": {"1":"El Mundo","2":"El Mundo (Emilio Amade, Javier Aguirre, Juan C. Sánchez y Álvaro Matilla)","3":"La Vanguardia","4":"La Voz de Galicia","5":"La Vanguardia"}, "subrayados": ["entender qué falló en la cadena de decisiones"]},
+"832076806134841344": {"enlace": "https://inconsolata.com/bienvenida", "texto": "Quince años después de su nacimiento, la web del diseño periodístico renueva su web e identidad visual en el rediseño más ambicioso de su historia.", "pies": {"2":"La portada","3":"Fichas de medios","4":"Fichas de autores","5":"El buscador","6":"Estadísticas","7":"mucho más","8":"EXTRA!","9":"En el móvil","10":"Cronología"}},
+"832281317249007616": {"pies": {"1":"Le Monde (Julie Cassotti, Francesca Fattori, Flavie Holzinger, Audrey Lagadec, Riccardo Pravettoni y Victor Simonnet)","2":"El Mundo (Alberto Hernández)","3":"Ara (Eduard Forroll)","4":"Corriere della Sera (Sabina Castagnaviz)","5":"El País","6":"The New York Times (Leanne Abraham y Alicia Parlapiano)"}},
+"832371502828666880": {"entradilla": "Las Provincias regresa a los lugares afectados por la DANA de 2026 en un suplemento especial dedicado a las víctimas de la riada.", "subrayados": ["“No os olvidamos”"]},
+"832463945905438720": {"entradilla": "Las 'midterms' cumplieron los pronósticos y azotaron a Trump una humillante derrota que marcará la segunda mitad de su mandato. Analizamos mapas, gráficos e infografías sobre las elecciones legislativas norteamericanas.", "pies": {"1":"The New York Times (web/app)","2":"The New York Times (Albert Sun, Minho Kim, Marco Hernandez y Emily Davies)","3":"La Stampa","4":"Corriere della Sera (Andrea Venier)","5":"The Wall Street Journal (Danny Dougherty, Aaron Zitner y Anthony DeBarros)","6":"The Guardian","7":"Financial Times (Steven Bernard, Jonathan Vincent, Oliver Hawkins, Martin Stabe)","8":"Ara (Esther Utrilla)","9":"La Vanguardia"}, "subrayados": ["una humillación histórica para Trump"]},
+"832822059783602176": {"enlace": "https://inconsolata.com/eps50", "texto": "El imprescindible suplemento dominical de El País celebra su medio siglo de vida con un repaso a sus mejores portadas.", "ruta": "El País Semanal", "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/eps50/portada.jpg", "imagen_r": 0.82},
+"832918800098787328": {"entradilla": "El Diario Vasco nos explica con todo detalle cómo recoger adecuadamente las setas en la temporada de otoño: descubre los mejores hábitats, técnicas y herramientas para llenarte la cesta.", "subrayados": ["sobre cómo recoger adecuadamente los hongos"]},
+"823399609397362688": {"mas": ["aeco"]},
+"742233992208826368": {"mas": ["aeco"]},
+"833460250811170816": {"subrayados": ["la cumbre del clima de la ONU"]},
+"833552075590860800": {"subrayados": ["los tiburones son indispensables para los ecosistemas marinos"], "entradilla": "Libé dedica su edición especial anual sobre los animales a los tiburones, unos animales cuya mala reputación camufla la importancia que tienen en numerosos ecosistemas marinos."},
+"833642912001687552": {"enlace": "https://inconsolata.com/america250", "ruta": "Time", "imagen": "https://cdn.jsdelivr.net/gh/inconsolataweb/inconsolata-datos@especiales/america250/portada.jpg", "imagen_r": 0.733, "texto": "La revista Time celebra el 250º aniversario de Estados Unidos con una edición especial que recorre la historia del país década a década, de la Declaración de Independencia a la covid-19.", "mas": ["historia"]},
+"64313792934": {"mas": ["moda"]},
+"101276818782": {"mas": ["moda"]},
+"115862347047": {"mas": ["moda"]},
+"131565998907": {"mas": ["moda"]},
+"149418931497": {"mas": ["moda"]},
+"150080557022": {"mas": ["moda"]},
+"151985045387": {"mas": ["moda"]},
+"157110151027": {"mas": ["moda"]},
+"158673619882": {"mas": ["moda"]},
+"165870111382": {"mas": ["moda"]},
+"166852818327": {"mas": ["moda"]},
+"168722601947": {"mas": ["moda"]},
+"169078391627": {"mas": ["moda"]},
+"172866774547": {"mas": ["moda"]},
+"187030018672": {"mas": ["moda"]},
+"187492008157": {"mas": ["moda"]},
+"611320045586513920": {"mas": ["moda"]},
+"621916628304658432": {"mas": ["moda"]},
+"622364319856934912": {"mas": ["moda"]},
+"631329736047689728": {"mas": ["moda"]},
+"649001067814731776": {"mas": ["moda"]},
+"659879673320325120": {"mas": ["moda"]},
+"665671679358500864": {"mas": ["moda"]},
+"800121255495958528": {"mas": ["moda"]},
+"120791734077": {"mas": ["moda"]},
+"181924119412": {"mas": ["moda"]},
+"162440982177": {"mas": ["moda"]},
+"78747785486": {"mas": ["moda"]},
+"89080341547": {"mas": ["moda"]},
+"154469784727": {"mas": ["moda"]},
+"171730849177": {"mas": ["moda"]},
+"143946485112": {"mas": ["moda"]},
+"163412872967": {"mas": ["moda"]},
+"775298072353882112": {"mas": ["moda"]},
+"112153640272": {"mas": ["moda"]},
+"44474080796": {"mas": ["moda"]},
+"184968564867": {"mas": ["moda"]},
+"145856507277": {"mas": ["moda"]},
+"185129643717": {"mas": ["moda"]},
+"800757524423999488": {"mas": ["moda"]},
+"124171643177": {"mas": ["moda"]},
+"122181959957": {"mas": ["moda"]},
+"68179743642": {"mas": ["moda"]},
+"66364257941": {"mas": ["moda"]},
+"184108903192": {"mas": ["moda"]},
+"81790891101": {"mas": ["moda"]},
+"833730199789125632": {"menos": ["Biodiversidad", "Historia"]},
+"834183033394544640": {"entradilla": "The New York Times analiza cómo Israel ha continuado destruyendo aldeas, cultivos e infraestructuras del sur del Líbano después del alto el fuego acordado en abril de 2025 con Hezbolá."}
 }
