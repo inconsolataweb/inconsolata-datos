@@ -3,7 +3,7 @@
   "tema": "Elecciones",
   "bloque": "Actualidad",
   "etiquetas": "elecciones.*|usa20\\d\\d|20n|20d|26j|28a|10n|23j|24m|26m|28m|27s|29m|europeas 2014|9 ?-?n|encuestas",
-  "texto": "\\belecci[oó]n(es)?\\b|\\belectoral(es)?\\b|\\bcomicios\\b|\\bescrutinio\\b|\\bsondeos?\\b|\\bencuestas? electoral"
+  "texto": "\\belecci[oó]n(es)?\\b|\\belectoral(es)?\\b|\\bcomicios\\b|\\bescrutinio\\b|\\bsondeos?\\b|\\bencuestas? electoral|\\besca[ñn]os\\b|\\bd['’ ]?hondt\\b"
  },
  {
   "tema": "Elecciones en EEUU",

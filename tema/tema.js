@@ -1034,7 +1034,10 @@ function espPag(A,cat,ES,x){var byId={},by={};A.posts.forEach(function(p){byId[p
  var pi=cat.temas.findIndex(function(t){return t.n===x.padre;}),ic=icoE(cat,x),madre=x.cap_de?by[x.cap_de]:null;
  CTXP={e:[].concat.apply(x.tags||[],(x.capitulos||[]).map(function(c){return (by[c]&&by[c].tags)||[];})).map(fold)};
  // los recopilatorios (mucho m\u00e1s, EXTRA!) entran pieza a pieza: una tarjeta por cada pieza con la etiqueta del especial
+ var ti=cat.temas.findIndex(function(t){return t.n===(x.tema||x.padre);});
  var trozos=function(L){var o=[];L.forEach(function(p){var c=CTXP.e,zs=(p.pz||[]).map(function(z,k){return [z,k];}).filter(function(q){return (q[0][4]||[]).some(function(t){return c.indexOf(fold(t))>=0;});});
+  // sin etiqueta propia en ninguna pieza: entran las del tema del especial (si las hay); si tampoco, el post entero
+  if(zs.length<1&&ti>=0)zs=(p.pz||[]).map(function(z,k){return [z,k];}).filter(function(q){return Array.isArray(q[0][7])&&q[0][7].indexOf(ti)>=0;});
   if(zs.length<1)o.push(p);else zs.forEach(function(q){var y=Object.create(p);y._pz=q[0];y._k=q[1];y.m=q[0][2].length?q[0][2]:[];y.a=q[0][3];y.k=[q[0][1]];o.push(y);});});return o;};
  ps=ordenaFT(trozos(ps));
  var carta=function(p){var v=vistaP(p),ie=v.z?icoEsp(espDeEtq(v.z[4]),'',false):icoEsp(espSlI(p.i),'',false),auts=v.a.slice(0,3).map(function(i){return A.autores[i].n;});
